@@ -437,15 +437,16 @@ $ git push
 
 다음번엔 `github action` 을 이용해 테스트 코드를 작성해주도록 해야겠다.
 
-### 추신
+# 지속적 배포 (`Continuous Deploy`)
 
 ---
 
-나는 배포와 상관없이 `docs` 폴더 내에서 공부한 내용들을 정리하고자 한다.
+지속적 배포는 깃허브 `main branch` 의 변화가 일어날 때 마다 자동으로 배포 해주는 파이프라인을 의미한다.
 
-그렇기 때문에 `develop branch` 도 `upstream` 으로 지정해서 `push` 가 가능하도록 하고 원격 저장소에서 `main , develop branch` 두 개 모두 접근 가능하도록 할 것이다.
+나는 `Vercel` 을 이용해 해당 레파지토리의 `main branch` 를 연결해줘 지속적 배포가 가능하도록 하였다.
 
-```bash
-$ git add .
-$ git commit -m 'CI pip'
-```
+> _알바 갈 시간이 얼마 남지 않아 빠르게 참고한 레퍼런스만 남기겠다._ > _매우 간단하니 쉽게 따라 할 수 있을 것이다._ > https://2dowon.github.io/docs/react/deploy-by-vercel/
+
+![alt text](image-2.png)
+
+실제 `Vercel` 에서 지속적 배포 되고 있는 모습을 보면 `main branch` 가 변경 될 때 마다 지속적으로 빌드되어 제공되고 있는 모습을 볼 수 있다.
