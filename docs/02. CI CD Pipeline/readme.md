@@ -205,14 +205,117 @@ _
 - `feature branch` : `dev branch` 에서 분기된 `branch` 로 특정 단위의 작업을 시행하기 위해 생성된다. 이후 완료된 작업은 `dev branch` 에 통합된다.
 - `realse branch` : `dev branch` 에서 분기된 `branch` 로 작업들을 배포하기 위해 존재하는 `branch` 이다. 작업 단위들을 테스트 하고 테스트가 통과되면 `main branch , dev branch` 에 통합된다.
 
-## `git flow brnach` 실행하기
+## `git flow brnach` 준비하기
+
+---
+
+### `git flow init`
 
 ---
 
 깃허브에선 `git flow` 과정을 자동화 해둔 커맨드들이 존재한다. 야무지게 써주도록 하자
 
 ```dotnetcli
-git init flow
+git flow init
+```
+
+```
+Which branch should be used for bringing forth production releases?
+   - main
+Branch name for production releases: [main]
+Branch name for "next release" development: [develop]
+
+How to name your supporting branch prefixes?
+Feature branches? [feature/]
+Bugfix branches? [bugfix/]
+Release branches? [release/]
+Hotfix branches? [hotfix/]
+Support branches? [support/]
+Version tag prefix? []
+Hooks and filters directory? [C:/Users/ttddc/OneDrive/바탕 화면/github/yonglog/.git/hooks]
 ```
 
 클론해둔 레파지토리 폴더의 터미널에서 다음과 같은 명령어를 입력하면 위에서 설명한 `Main branch` 들은 자동으로 생성되어 있다.
+
+```dotnetcli
+$ git branch
+
+* develop
+  main
+```
+
+이렇게 자동으로 `branch` 가 생성되어 있고 현재 `develop branch` 에 `checkout` 되어 있는 모습을 볼 수 있다.
+
+### `feature branch` 생성하기
+
+---
+
+오케이 지금 `develop branch` 에 있으니 `feature branch` 를 생성해서 작업을 해보도록 하자
+
+```dotnetcli
+$ git flow feature start first-feature-test
+```
+
+새로운 `feature branch` 를 만드는 커맨드는 `git flow feature start <branch name>` 이다.
+
+나는 `first-feature-test` 라는 `branch` 를 만들었다.
+
+```dotnetcli
+Switched to a new branch 'feature/first-feature-test'
+M       "docs/02. CI CD \355\214\214\354\235\264\355\224\204\353\235\274\354\235\270 \353\247\214\353\223\244\352\270\260/readme.md"
+
+Summary of actions:
+- A new branch 'feature/first-feature-test' was created, based on 'develop'
+- You are now on branch 'feature/first-feature-test'
+
+Now, start committing on your feature. When done, use:
+
+     git flow feature finish first-feature-test
+```
+
+이렇게 실행해주고 나면 `feature/first-feature-test` 라는 `brach` 가 생성되고 자동으로 해당 브랜치로 이동된다.
+
+```dotnetcli
+PS C:\Users\ttddc\OneDrive\바탕 화면\github\yonglog\app> git branch
+  develop
+* feature/first-feature-test
+  main
+```
+
+이후 해당 `branch` 에서 작업 후 작업 단위를 `add , commit` 해주자
+
+```dotnetcli
+PS C:\Users\ttddc\OneDrive\바탕 화면\github\yonglog\app> git add .
+warning: in the working copy of 'app/src/app/page.tsx', LF will be replaced by CRLF the next time Git touches it
+
+PS C:\Users\ttddc\OneDrive\바탕 화면\github\yonglog\app> git commit -m 'Home 문구 수정'
+[feature/first-feature-test 7951880] Home 문구 수정
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+```
+
+이렇게 수정된 사항들이 `feature branch` 에 작업되어 커밋되었다.
+
+이러한 커밋 사항은 현재까지 `main branch , dev branch` 에는 영향을 미치지 않는다.
+
+```dotnetcli
+PS C:\Users\ttddc\OneDrive\바탕 화면\github\yonglog\app> git push
+fatal: The current branch feature/first-feature-test has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+   git push --set-upstream origin feature/first-feature-test
+
+To have this happen automatically for branches without a tracking
+upstream, see 'push.autoSetupRemote' in 'git help config'.
+```
+
+옳지 않은 방법이지만 습관적으로 `git push` 를 입력했더니 다음과 같은 에러가 발생했다.
+
+현재의 브랜치는 원격 저장소와 호환되는 브랜치가 아니기 때문에 이런 일이 발생한 것이다.
+
+원격 저장소와 연결된 브랜치는 `main branch` 하나이기 때문에 `git push` 는 `main branch` 에서만 사용 가능하다. (설정을 통해 변경 할 수 있지만 계층 구조를 나누기 위해 다른 브랜치에선 `push` 가 안되도록 하자)
+
+### `feature branch` 통합하기
+
+---
+
+통합 가보자
