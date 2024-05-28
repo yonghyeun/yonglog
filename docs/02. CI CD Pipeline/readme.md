@@ -318,4 +318,134 @@ upstream, see 'push.autoSetupRemote' in 'git help config'.
 
 ---
 
-통합 가보자
+통합하기 전 `feature` 에서 `readme.md` 와 프로젝트의 작업을 조금 수정해주었다.
+
+수정된 데이터를 통합해보자
+
+```bash
+$ git flow feature finish first-feature-test
+```
+
+다음처럼 해당 `feature branch` 이름을 이용해 작업을 종료 시킬 수 있다.
+
+종료된 작업은 자동으로 `develop` 에 `merge` 되고 작업이 종료된 `branch` 는 제거된다.
+
+```bash
+Switched to branch 'develop'
+Merge made by the 'ort' strategy.
+app/src/app/page.tsx | 4 +-
+.../cicd.png | Bin
+.../gitflow.jpg | Bin
+.../image.png | Bin
+.../readme.md | 107 ++++++++++++++++++++-
+5 files changed, 106 insertions(+), 5 deletions(-)
+rename docs/{02. CI CD 파이프라인 만들기 => 02. CI CD Pipeline}/cicd.png (100%)
+rename docs/{02. CI CD 파이프라인 만들기 => 02. CI CD Pipeline}/gitflow.jpg (100%)
+rename docs/{02. CI CD 파이프라인 만들기 => 02. CI CD Pipeline}/image.png (100%)
+rename docs/{02. CI CD 파이프라인 만들기 => 02. CI CD Pipeline}/readme.md (73%)
+Deleted branch feature/first-feature-test (was cddf484).
+
+Summary of actions:
+
+- The feature branch 'feature/first-feature-test' was merged into 'develop'
+- Feature branch 'feature/first-feature-test' has been locally deleted
+- You are now on branch 'develop'
+```
+
+### `release branch` 준비하기
+
+---
+
+자 이제 `feature branch` 에서 작업한 작업 단위가 `dev branch` 에 통합되었으니
+
+`dev branch -> main branch` 로 통합 시키기 위해 `realse branch` 를 생성해보자
+
+`realse branch` 는 `dev branch` 에서 분기 된 후 , `dev branch` 가 `realse branch` 에 통합되면 `realse branch` 는 본인에게 통합된 내용을 `main branch` 에 통합시킨다.
+
+방법은 동일하게
+
+```bash
+$ git flow release start first-release
+```
+
+와 같이 `release branch` 를 생성해준다.
+
+해당 부분에선 `main branch` 로 통합하기 전 다양한 일을 할 수 있지만 지금은 테스트만 할 것이니 바로 작업을 종료해주자
+
+### `release brnach` 통합하기
+
+```bash
+$ git flow release finish first-release
+```
+
+다음과 같이 `release branch` 를 종료해주면 다음과 같은 문구가 뜬다.
+
+```bash
+#
+# Write a message for tag:
+#first-release
+# Lines starting with '#' will be ignored.
+```
+
+이는 `main branch` 에 통합 될 때 붙을 태그 이름을 적으라는 것으로 `# first-release` 에 붙은 부분을 제거하고 원하는 태그명을 적어주면 된다.
+
+태그 명을 적은후엔 `esc => :wq(wirte and quit)` 을 입력해주면 성공적으로 통합이 된다.
+
+```bash
+$ git flow release finish first-release
+Branches 'main' and 'origin/main' have diverged.
+And local branch 'main' is ahead of 'origin/main'.
+Switched to branch 'main'
+Your branch is ahead of 'origin/main' by 5 commits.
+  (use "git push" to publish your local commits)
+Switched to branch 'develop'
+Merge made by the 'ort' strategy.
+Deleted branch release/first-release (was e951284).
+
+Summary of actions:
+- Release branch 'release/first-release' has been merged into 'main'
+- The release was tagged 'first-release'
+- Release tag 'first-release' has been back-merged into 'develop'
+- Release branch 'release/first-release' has been locally deleted
+- You are now on branch 'develop'
+```
+
+`Summary` 부분을 보자. `release branch` 에 존재하던 정보들은 `tag` 이름이 붙은 채로 `main branch` 에 통합되었고 `develop` 에도 통합되었다고 한다.
+
+이를 통해 `develop branch` 는 `main branch` 의 가장 최근 부분과 동기화 되도록 유지한다.
+
+### 원격 저장소에 `push` 하기
+
+---
+
+```bash
+$ git checkout main
+$ git push
+```
+
+이후 `main` 브랜치로 이동 한 후 통합되어 `commit` 된 내용들을 `push` 해주기만 하면 된다.
+
+![alt text](image-1.png)
+
+`Git graph` 익스텐션을 이용해 `branch` 들이 분기되었다가 통합되는 모습을 볼 수 있다.
+
+이렇게 지속적 통합을 하기 위한 파이프라인을 생성해보았다.
+
+`feature -> develop -> release -> main` 으로 가는 흐름을 통해 작업 단위들을 독립적인 단위로 해줄 수 있었다.
+
+다만 이는 완벽한 `git flow` 전략이 아닌데 그 이유는 `release` 단계에서 테스트 단계가 존재하지 않기 때문이다.
+
+다음번엔 `github action` 을 이용해 테스트 코드를 작성해주도록 해야겠다.
+
+### 추신
+
+---
+
+나는 배포와 상관없이 `docs` 폴더 내에서 공부한 내용들을 정리하고자 한다.
+
+그렇기 때문에 `develop branch` 도 `upstream` 으로 지정해서 `push` 가 가능하도록 하고 원격 저장소에서 `main , develop branch` 두 개 모두 접근 가능하도록 할 것이다.
+
+```bash
+$ git add .
+$ git commit -m 'CI pip'
+```
