@@ -1,0 +1,116 @@
+# 마주한 오류
+
+---
+
+아니 분명 `npm run dev` 에서는 컴파일 에러 없이 잘 작동하는데 `build` 하려고 하니 타입 에러가 발생한다.
+
+```bash
+PS C:\Users\ttddc\OneDrive\바탕 화면\github\yonglog\app> npm run build
+
+> app@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.3
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types  .Failed to compile.
+
+.next/types/app/page.ts:28:13
+Type error: Type 'OmitWithTag<Readonly<{ children?: ReactNode; }>, keyof PageProps, "default">' does not satisfy the constraint '{ [x: string]: never; }'.
+  Property 'children' is incompatible with index signature.
+    Type 'string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<...> | null' is not assignable to type 'never'.
+      Type 'null' is not assignable to type 'never'.
+
+  26 |
+  27 | // Check the prop type of the entry function
+> 28 | checkFields<Diff<PageProps, FirstArg<TEntry['default']>, 'default'>>()
+     |             ^
+  29 |
+  30 | // Check the arguments and return type of the generateMetadata function
+  31 | if ('generateMetadata' in entry) {
+```
+
+이런식으로 `Page` 컴포넌트에 사용된 `children` 의 타입이 `never` 여야만 하는데 `ReactNode` 로 설정해뒀기 때문이라고 한다.
+
+```tsx
+const Page = ({ children }: Readonly<{ children?: React.ReactNode }>) => {
+...}
+```
+
+완전 엥스러운 에러이다.
+
+---
+
+근데 찾아보니 엥스러운게 아니고 나의 머리가 댕스러운거였다.
+
+나는 하위 경로에 렌더링 될 컴포넌트들은 상위 경로의 `Page` 컴포넌트에서 `props.children` 에 렌더링 되는줄 알고 있었다.
+
+그런데 이는 매우 바보같은 생각이였다. 호호호
+
+`Page` 컴포넌트는 오류에 뜨는 것 처럼 `props` 를 받을 수가 없다.
+
+하위 경로의 컴포넌트를 렌더링 하기 위해 `children` 을 `props` 로 받는 컴포넌트는 오로지 `layout` 컴포넌트들뿐 ..
+
+```tsx
+import Introduce from '@/components/Introduce';
+import CategoryList from '@/components/Category';
+import SideBar from '@/components/Sidebar';
+
+const Page = () => {
+  return (
+    <section className='mx-0 sm:mx-auto w-full  lg:w-1/2'>
+      <div className='hidden md:block'>
+        <Introduce />
+      </div>
+      <CategoryList />
+      {/* 게시글 리스트와 SideBar를 위치시키기 위함 */}
+      <section className='w-full lg:w-[120%] flex gap-5 h-[150vh]'>
+        {/* TODO page 생성 후 border 지우기 */}
+        <section className='border bg-white w-full lg :w-8/12'>
+          {/* TODO 게시글 리스트들 넣기 */}
+        </section>
+        <div className='hidden lg:block lg:flex-2 sticky top-0 w-4/12'>
+          <SideBar />
+        </div>
+      </section>
+    </section>
+  );
+};
+
+export default Page;
+```
+
+`Page` 컴포넌트에 `props.children` 을 제거해주고 다시 빌드해봤다.
+
+```bash
+PS C:\Users\ttddc\OneDrive\바탕 화면\github\yonglog\app> npm run build
+
+> app@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.3
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+ ✓ Linting and checking validity of types
+ ✓ Collecting page data
+ ✓ Generating static pages (5/5)
+ ✓ Collecting build traces
+ ✓ Finalizing page optimization
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    137 B          87.1 kB
+└ ○ /_not-found                          871 B          87.8 kB
++ First Load JS shared by all            87 kB
+  ├ chunks/23-0627c91053ca9399.js        31.5 kB
+  ├ chunks/fd9d1056-2821b0f0cabcd8bd.js  53.6 kB
+  └ other shared chunks (total)          1.86 kB
+
+
+○  (Static)  prerendered as static content
+```
+
+아 잘만 되는구만유
+
+나름 공식문서를 꼼꼼히 읽었다고 생각했는데 잘못 읽었었나보다.
