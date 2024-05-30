@@ -2,7 +2,7 @@ import Introduce from '@/components/Introduce';
 import CategoryList from '@/components/Category';
 import SideBar from '@/components/Sidebar';
 
-const Page = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const Page = ({ children }: Readonly<{ children?: React.ReactNode }>) => {
   return (
     <section className='mx-0 sm:mx-auto w-full  lg:w-1/2'>
       <div className='hidden md:block'>
