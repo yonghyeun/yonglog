@@ -18,128 +18,8 @@
 
 > _물론 공식문서를 보고 클래스명을 찾아 다녀야하는 런닝커브가 좀 있다 .. 나는 완전 끼고 산다 😂_
 
-### 필요한 라이브러리 설치하기
-
-> _사실 생각해보니 나는 `nextJS` 앱을 만들 때 이미 `tailwind` 를 사용하기로 해뒀기 때문에 밑의 과정은 필요가 없었다._ > _바로 `configuration file` 초기화 하기 부터 봐도 될 것 같다._
-
----
-
-```bash
-$ npm install -D tailwindcss postcss autoprefixer
-```
-
-- `-D` : 예전부터 개발모드로 `install` 한다는 것이 어떤 뜻인지 궁금했는데 이는 **개발시에만 필요한 라이브러리**나 도구로 런타임시 필요하지 않은 라이브러리로 설치 할 떄 사용한다고 한다.
-
-```tsx
-  "dependencies": {
-    /* 일반 모드는 dependencies 에 설치 됨 */
-    "next": "14.2.3",
-    "react": "^18",
-    "react-dom": "^18"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3",
-    /* 개발모드로 설치된 것들은 devDependencies에 */
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5"
-  }
-```
-
-- `tailwind`
-
-유틸리티 우선의 `CSS` 프레임 워크로 다양한 유틸리티 클래스를 제공하여 `tailwind` 에서 제공하는 유틸리티 클래스를 이용하여 스타일을 빠르고 유연하게 바꿀 수 있다.
-
-- `postcss`
-
-`CSS` 를 변환하고 확장하기 위한 도구로 `CSS` 를 최적화 하기 위한 다양한 플러그인들을 제공한다.
-
-이후에 나올 `autoprefixer` 도 `postcss` 의 플러그인중 하나이다.
-
-최적화를 위한 기능 중 예시는 사용하지 않는 스타일 속성을 빌드 시 제거하는 트리쉐이킹등이 있다.
-
-- `autoprefixer`
-
-`autoprefixer` 는 `postcss` 의 플러그인 중 하나로 말 그대로 자동으로 접두사를 붙여준다.
-
-브라우저간 스타일 속성이 최근 브라우저에 맞춘 스타일 속성이 구형 브라우저에는 적용이 되지 않을 수 있다.
-
-이 때 `autoprefixer`는 오래된 브라우저를 위해 자동으로 `-wewbkit-flex` 라는 접두사를 붙여 다양한 브라우저에서도 호환 가능하게 해준다.
-
-### `Configuration File` 초기화하기
-
----
-
-```bash
-$ npx tailwindcss init -p
-
-Created Tailwind CSS config file: tailwind.config.js
-Created PostCSS config file: postcss.config.js
-```
-
-초기화를 통해 `tailwind , postcss` 의 `config` 파일들을 생성한다.
-
-> ### `config` 파일 ?
->
-> `config` 파일은 소프트웨어나 프로그램의 설정을 정의하고 관리하기 위한 파일이다.
-> 해당 파일들을 설정함으로서 동작하는 방식을 사용자가 원하는대로 조정 할 수 있다.
-
-```tsx
-/* tailwind.config.ts */
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
-  content: [
-    /* tailwind 가 스타일을 적용할 파일들 */
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-export default config;
-```
-
-`tailwind` 의 `config` 를 설정해준다. 나는 따로 테마나 플러그인을 사용하지 않을 것이기 때문에 나머지 장소는 비워주었다.
-
-```js
-/* postcss.config.mjs */
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
-
-export default {
-  plugins: [tailwindcss, , autoprefixer],
-};
-```
-
-### `tailwind CSS` 적용하기
-
----
-
-`NextJS` 에서 `root layout` 에서 `import` 해서 사용할 , 즉 `globals.css` 파일에서 `tailwind` 를 불러와줘야 한다.
-
-```tsx
-/* app/layout.tsx */
-import './globals.css';
-...
-```
-
-모든 파일에 적용될 `root layout` 에서 사용하는 `css` 파일에 다음과 같이 설정한다.
-
-```css
-@tailwind base; // base style 을 css에 삽입
-@tailwind components; // components style 을 css에 삽입
-@tailwind utilities; // utilities style 을 css 에 삽입
-```
-
-이는 `tailwind` 에서 사용하는 특별한 지시어로 `tailwind` 의 핵심 기능들을 `CSS` 파일에 삽입하는 역할을 한다.
+> `tailwind` 환경 설정 하기 위해 이것 저것 만져보고 그랬는데 잘못 설정해서 충돌이 났다.
+> 알고보니 `create-next-app` 할 떄 `tailwind` 쓸거냐는 물음에 `YES` 를 선택하기만 해도 필요한 환경 설정은 끝난다.
 
 # 디자인 레퍼런스들 찾아보기
 
@@ -213,8 +93,4 @@ import './globals.css';
 
 글 본문은 대부분 비슷하다. 글 본문엔 인디게이터가 존재하는 곳이 있고 존재하지 않는 곳이 있었는데 나는 인디게이터를 추가해주려 한다. :)
 
-<<<<<<< HEAD
-대부분의 디자인 레퍼런스는 우아한 기술 블로그를 참고하여 만들도록 하자 화이
-=======
 대부분의 디자인 레퍼런스는 우아한 기술 블로그를 참고하여 만들도록 하자 화이팅
->>>>>>> release/hotpix
