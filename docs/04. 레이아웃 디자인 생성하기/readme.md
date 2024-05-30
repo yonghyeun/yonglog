@@ -81,11 +81,11 @@ export default function RootLayout({
 ### `app/page.tsx`
 
 ```tsx
-import Introduce from '@/components/Introduce';
+iimport Introduce from '@/components/Introduce';
 import CategoryList from '@/components/Category';
 import SideBar from '@/components/Sidebar';
 
-const Page = ({ children }: { children: React.ReactNode }) => {
+const Page = () => {
   return (
     <section className='mx-0 sm:mx-auto w-full  lg:w-1/2'>
       <div className='hidden md:block'>
@@ -96,7 +96,7 @@ const Page = ({ children }: { children: React.ReactNode }) => {
       <section className='w-full lg:w-[120%] flex gap-5 h-[150vh]'>
         {/* TODO page 생성 후 border 지우기 */}
         <section className='border bg-white w-full lg :w-8/12'>
-          {children}
+          {/* TODO 게시글 리스트들 넣기 */}
         </section>
         <div className='hidden lg:block lg:flex-2 sticky top-0 w-4/12'>
           <SideBar />
@@ -118,7 +118,11 @@ export default Page;
 
 > `tailwind` 최고 🤩 너무 편해 ~!~!~!~!~!~!
 
-이제 위 이미지에서 하얀 배경에 해당하는 라우팅 경로 별 렌더링 될 `layout` , `page` 들을 작성해줘야겠다.
+이제 위의 흰 블록에 들어갈 서버 컴포넌트들을 작성해줘야겠다.
+
+흰 블록에 들어갈 서버 컴포넌트는 블로그 포스트에 존재하는 제목과 미리보기 글 , 날짜 , 썸네일 등이 담긴 컴포넌트들이 들어갈 예정이다.
+
+그리고 그 컴포넌트를 클릭하면 해당 블로그 포스팅으로 라우팅 시킬 예정이다.
 
 하단에 있는 내용들은 모두 `/` 경로를 렌더링 할 떄 사용한 컴포넌트들이다.
 
