@@ -16,8 +16,13 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <body>
-        <GlobalNav /> {/* position : fixed */}
-        {children}
+        <header>
+          <GlobalNav /> {/* position : fixed */}
+        </header>
+        <main>{children}</main>
+        <footer className='flex justify-center py-4'>
+          <p>&copy; 2024 Yonghyeun. Created using Next.js.</p>
+        </footer>
       </body>
     </html>
   );

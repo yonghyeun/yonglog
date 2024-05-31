@@ -7,7 +7,7 @@
  */
 
 // TODO 짱구린 색상 센스 어떻게 할지 생각해보기
-const Emphasis = 'inline text-indigo-200';
+const Emphasis = 'text-indigo-200';
 
 const Profile = () => (
   <section className='flex flex-col justify-center items-center space-y-4 ml-12'>
@@ -24,19 +24,20 @@ const Profile = () => (
 
 const Title = () => (
   <section className='py-4'>
-    <span className='text-xl'>
-      <span className='block mb-2 font-semibold'>
-        열심히 <p className={Emphasis}>공부</p>한 내용을{' '}
-        <p className={Emphasis}>기록</p>하고 <p className={Emphasis}>공유</p>
+    <section className='text-xl'>
+      <p className='block mb-2 font-semibold'>
+        열심히 <span className={Emphasis}>공부</span>한 내용을{' '}
+        <span className={Emphasis}>기록</span>하고{' '}
+        <span className={Emphasis}>공유</span>
         하여
-      </span>
-      <span className='block mb-2 font-semibold'>
-        함께 <p className={Emphasis}>성장</p> 하고싶어 만든{' '}
-      </span>
-      <span className='block  mb-2  font-semibold'>
-        <p className={Emphasis}>기술 블로그</p>입니다.
-      </span>
-    </span>
+      </p>
+      <p className='block mb-2 font-semibold'>
+        함께 <span className={Emphasis}>성장</span> 하고싶어 만든{' '}
+      </p>
+      <p className='block  mb-2  font-semibold'>
+        <span className={Emphasis}>기술 블로그</span>입니다.
+      </p>
+    </section>
   </section>
 );
 
