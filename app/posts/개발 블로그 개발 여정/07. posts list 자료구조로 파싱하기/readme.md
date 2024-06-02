@@ -1,0 +1,333 @@
+---
+title: 'Post들이 저장된 FileSystem 파싱하기'
+description: '로컬 파일에 저장된 MDX 파일을 불러오자'
+date: '2024-06-01'
+tag: ['react', 'nextjs', 'mdx']
+---
+
+```json
+📦posts
+┣ 📂don't upload
+┗ 📂개발블로그 개발 여정
+┃ ┣ 📂01. 기술블로그 제작을 시작하며
+┃ ┃ ┗ 📜readme.mdx
+┃ ┣ 📂02. CI,CD 파이프라인 구성하기
+┃ ┃ ┣ 📜cicd.png
+┃ ┃ ┣ 📜gitflow.jpg
+┃ ┃ ┣ 📜image-1.png
+┃ ┃ ┣ 📜image-2.png
+┃ ┃ ┣ 📜image.png
+┃ ┃ ┗ 📜readme.mdx
+┃ ┣ 📂03. tailwind 환경 설정 및 디자인 레퍼런스 찾기
+┃ ┣ ┗ /* 이하 생략 .. */
+┃ ┣ 📂04. 메인 페이지 레이아웃 디자인 생성하기
+┃ ┣ 📂05. Build 시 발생하는 typeError 해결하기
+┃ ┗ 📂06. MDX 의존성 라이브러리 설치하기
+```
+
+이전 챕터에서 `posts` 라는 폴더 내에 시리즈 별 포스트들을 정의해주었다. (아직은 하나밖에 존재하지 않지만)
+
+이제 `posts` 폴더 내에 정의된 파일 구조를 파싱하여 자료구조를 만들도록 하자
+
+자료구조를 만들어 `posts` 들의 게시글들을 이용해 게시글 리스트나 라우팅 경로에 따라 게시글을 렌더링 하기 위함이다.
+
+# `@/posts` 폴더 파싱하여 자료구조 만들기
+
+---
+
+`NextJS` 의 가장 큰 장점이라 한다면 브라우저 상의 로직 뿐 아니라, 서버 단의 로직 또한 다룰 수 있기 때문에 렌더링 과정에서 나의 로컬 파일을 접근하고 사용 할 수 있다는 점이다.
+
+만약 `NextJS` 와 같은 풀스택 프레임워크가 아닌 `React` 만을 이용해서 구현했다고 생각한다면 글들만을 저장하는 데이터베이스를 생성하고
+
+데이터베이스에 `API` 요청을 보내 정보를 가져와야 했겠지만 `NextJS` 에선 단순히 로컬 파일에 접근하여 직접 사용하는 것이 가능하다.
+
+## 타입 선언하기
+
+---
+
+```ts
+// @/types/post.d.ts
+type Source = string;
+export type FilePaths = Array<Source>;
+export type Directory = Source & { __directory: true };
+export type MDXSource = Source & { __mdx: true };
+export type PostInfo = {
+  content: string;
+  meta: {
+    title: string;
+    description: string;
+    date: string;
+    series: string;
+    postId: number;
+    tag?: Array<string>;
+  };
+};
+export type SeriesName = string;
+```
+
+`post` 들을 가져올 때 사용할 타입들을 `@types/post.d.ts` 에 정의해준다.
+
+컴파일 시에만 사용할 타입들이기 때문에 `.d.ts` 로 정의해주었다.
+
+타입 선언들은 사용하는 예시를 보며 파악하도록 하고 , `Dierectory , MDXSource` 타입들을 살펴보자
+아아
+
+기본 `Source` 타입에서 `__` 가 붙은 `nominal type` 을 확장해준 모습을 볼 수 있다.
+
+> ### `normianl type system`
+>
+> In computer science, a type system is nominal (also called nominative or name-based) if compatibility and equivalence of data types is determined by explicit declarations and/or the name of the types. Nominal systems are used to determine if types are equivalent, as well as if a type is a subtype of another. Nominal type systems contrast with structural systems, where comparisons are based on the structure of the types in question and do not require explicit declarations.
+>
+> 🪢 [위키피디아 -
+> Toggle the table of contents
+> Nominal type system](https://en.wikipedia.org/wiki/Nominal_type_system)
+
+이렇게 `nominal type` 을 이용해 고유한 타입을 생성해줄 수 있다.
+
+예를 들어 `Direcotry` 는 기본적인 타이핑 구조가 `Source` 와 같지만 `Directory` 타입으로 선언된 객체는 `{__directory : true}` 인 `nominal type`으로 확장되었기 때문에
+
+`Source` 와 다른 `Direcotry` 라는 고유한 타입을 가질 수 있다.
+
+> 일반적인 타입 선언과 다르게 `nominal type` 은 실제 자료 구조에서 `__directory : true` 라는 타입을 가질 필요가 없다.
+> 그저 `nominal type` 은 고유한 타입을 선언하기 위한 구별자에 불과하다.
+> **유형 정의에만 사용 될 뿐 런타임 데이터엔 필요하지 않다.**
+
+이를 통해 타입 안정성을 보장하고 오류를 방지 할 수 있다.
+
+## `app/lib/post.tsx`
+
+---
+
+최상단 경로 `/` 에서 로컬 폴더에 존재하는 `Post` 들을 가져오는 메소드를 정의해주자
+
+### 사용할 라이브러리
+
+---
+
+```bash
+npm install gray-matter
+```
+
+써드파티 라이브러리 하나를 설치해주자
+
+해당 라이브러리는 `MDX` 파일을 파싱했을 때 `---` 블록으로 나눴던 `meta` 데이터와 본문 데이터를 구분하여 파싱해준다.
+
+```
+---
+// -- 블록 내부는 meta 로 파싱된다.
+title: 'MDX를 사용하기 위한 라이브러리들 설치 및 환경 설정'
+series: '개발블로그 제작기'
+description: '필요한 라이브러리들을 설치하고 환경 설정을 해보자'
+date: '2024-05-31'
+tag: ['react', 'nextjs', 'mdx']
+---
+// -- 이하의 내용은 data 로 파싱된다.
+# `MDX` 를 사용하기 위한 라이브러리 설치하기
+
+```
+
+```tsx
+const fs = require('fs'); // 파일 시스템에 접근하기 위한 기본 라이브러리
+const path = require('path'); // file path 를 조작하기 위한 기본 라이브러리
+const matter = require('gray-matter'); // mdx 파일을 파싱하기 위한 서드파티 라이브러리
+```
+
+### 타입 가드 설정하기
+
+---
+
+```tsx
+/**
+ * source 가 특정 경로인지, 파일인지를 확인하는 메소드
+ */
+const isDirectory = (source: Source): source is Directory => {
+  return fs.lstatSync(source).isDirectory();
+};
+
+/**
+ * source 에 존재하는 file이 mdx 파일인지 확인하는 메소드
+ * 이 때 반환값에 타입 가드를 설정해주도록 한다.
+ * md 파일이나 mdx 파일일 겨우에만 MDXSource 로 판단하기로 한다.
+ */
+const isMDX = (source: Source): source is MDXSource => {
+  const fileName = path.basename(source);
+  return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
+};
+```
+
+두 메소드는 파일 경로에 대해 해당 파일이 `Directory` 인지, 혹은 `MDX` 파일인지를 확인하는 타입가드이다.
+
+해당 타입 가드를 통해 위에서 선언한 `nominal type` 인 `Directory , MDXSource` 타입으로 선언해줄 수 있다.
+
+- `fs.lstatSync` : 파일의 정보를 담은 `fs.Stats` 객체를 동기적으로 확인한다.
+- `path.basename` : 해당 경로의 마지막 부분을 확인한다.
+- `path.extname` : 해당 경로 마지막 부분의 확장자를 확인한다.
+
+### 필요한 정보들 가져오기
+
+---
+
+```tsx
+/**
+ * Directory 인 source 하위에 존재하는 모든 폴더,파일들의 경로를 반환하는 메소드
+ */
+const getAllPath = (source: Source): FilePaths => {
+  return fs
+    .readdirSync(source)
+    .map((fileName: string) => path.join(source, fileName));
+};
+
+const getSeriesName = (source: MDXSource): SeriesName => {
+  const seriesPath = path.join(source, '../..');
+  return path.basename(seriesPath);
+};
+
+const getPostId = (source: MDXSource): number => {
+  const postPath = path.join(source, '..');
+  const directoryName = path.basename(postPath);
+  return parseInt(directoryName.split('.')[0], 10);
+};
+```
+
+- `getAllPath` : `source` 에 존재하는 모든 파일들의 경로를 반환한다.
+- `getSeriesName` , `getPostId` : 이 두 메소드는 `meta` 데이터를 생성하기 위해 생성한 메소드이다.
+
+```json
+📦posts
+ ┗ 📂개발 블로그 개발 여정
+ ┃ ┣ 📂01. 기술블로그 제작을 시작하며
+ ┃ ┃ ┗ 📜readme.mdx
+```
+
+다음과 같이 `mdx` 파일의 경로인 `MDXSource` 를 만났을 때 `../..` 에 존재하는 폴더 명을 이용해 시리즈 이름을 반환하고 , `..` 경로에 존재하는 폴더 명을 이용해 해당 포스트의 `id` 를 반환한다.
+
+매번 `MDX` 파일에 메타 데이터들을 적어주기 귀찮았기 때문에 해당 메소드를 생성해주었다.
+
+### `posts` 폴더 파싱하여 자료구조 만들기
+
+---
+
+```tsx
+const parsePosts = (source: Source): Array<PostInfo> => {
+  const Posts: Array<PostInfo> = [];
+
+  const parseRecursively = (source: Source): void => {
+    getAllPath(source).forEach((fileSource: Source) => {
+      if (isDirectory(fileSource)) {
+        parseRecursively(fileSource);
+      } else {
+        if (isMDX(fileSource)) {
+          const fileContent = fs.readFileSync(fileSource, 'utf8');
+          const { data, content } = matter(fileContent);
+
+          Posts.push({
+            meta: {
+              ...data,
+              series: getSeriesName(fileSource),
+              postId: getPostId(fileSource),
+            },
+            content: content,
+          });
+        }
+      }
+    });
+  };
+
+  parseRecursively(source);
+
+  return Posts;
+```
+
+`parsePosts` 라는 메소드를 정의해 `source` 내부에 존재하는 모든 `mdx` 파일을 파싱해오는 메소드를 생성해주었다.
+
+내부에서 `parseRecursively` 라는 메소드를 재귀적으로 호출하여 `source` 의 최하단 하위경로까지 탐색하며 `.mdx` 파일을 만날 때 까지 탐색한다.
+
+이후 `.mdx` 인 파일을 만나면 `gray-matter` 를 이용해 해당 `.mdx` 파일의 메타 데이터와 본문 데이터를 파싱 한 후 여러 메타 정보를 혼합해 `Posts` 배열에 추가한다.
+
+이후 `Posts` 를 반환하면 `/posts` 폴더에 존재하는 모든 `.mdx` 파일들을 메타정보들과 함께 파싱해오는 것이 가능하다.
+
+```tsx
+/**
+ * Posts 에서 Date 를 기준으로 정렬 후 전송
+ */
+const getAllPosts = (): Array<PostInfo> => {
+  const POST_PATH = '../app/posts';
+  const posts = parsePosts(POST_PATH);
+
+  return posts.toSorted((prev, cur) => {
+    const prevDate = new Date(prev.meta.date);
+    const curDate = new Date(cur.meta.date);
+
+    if (prevDate.getTime() === curDate.getTime()) {
+      const prevPostId = prev.meta.postId;
+      const curPostId = cur.meta.postId;
+      return curPostId - prevPostId;
+    }
+
+    return curDate.getTime() - prevDate.getTime();
+  });
+};
+
+export { getAllPosts };
+```
+
+마지막으로 `parsePosts` 메소드를 `posts` 를 인수로 건내 모든 `mdx` 파일들을 파싱 해온후 해당 파일들을 정렬한 후 반환하는 `getAllPosts` 메소드를 정의해주었다.
+
+정렬 기준은 최신순으로 정렬하는데, 만약 날짜가 같다면 `postId` 를 통해 정렬하도록 하였다.
+
+# `getAllPosts` 가 잘 작동하는지 확인해보자
+
+---
+
+```tsx
+import CategoryList from '@/components/Category';
+import SideBar from '@/components/Sidebar';
+import Introduce from '@/components/Introduce';
+
+import { getAllPosts } from './lib/post';
+
+const Page = async () => {
+  const allPosts = getAllPosts();
+  return (
+    <section className='mx-0 sm:mx-auto w-full lg:w-1/2'>
+      <div className='hidden md:block'>
+        <Introduce />
+      </div>
+      <CategoryList />
+      {/* 게시글 리스트와 SideBar를 위치시키기 위함 */}
+      <section className='w-full lg:w-[120%] flex gap-5 h-[100vh]'>
+        {/* TODO page 생성 후 border 지우기 */}
+        <section className='border bg-black-200 w-full lg:w-8/12 px-4'>
+          {allPosts.map(({ meta }, id) => {
+            return (
+              <div key={id} className='my-4 border px-4 py-4'>
+                <p>
+                  <span className='mr-2'>{meta.date}</span>
+                  <span>{meta.tag?.join(' ')}</span>
+                  <span>{meta.postId}</span>
+                </p>
+                <h1>{meta?.series}</h1>
+                <h1>{meta.title}</h1>
+                <p>{meta.description}</p>
+              </div>
+            );
+          })}
+        </section>
+        <div className='hidden lg:block lg:flex-2 sticky top-0 w-4/12'>
+          <SideBar />
+        </div>
+      </section>
+    </section>
+  );
+};
+
+export default Page;
+```
+
+`/` 경로의 페이지에서 `getAllPosts` 를 호출한 후 반환된 `allPosts` 를 이용해 게시글 리스트를 렌더링해줬다.
+
+우선 꾸미는 작업은 나중에 하기로 했기 때문에 기본적인 스타일링만 해주고 살펴보았다.
+
+![alt text](image.png)
+
+잘 작동하고 잘 가져와진다. :)
