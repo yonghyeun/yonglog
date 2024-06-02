@@ -3,6 +3,56 @@
 @tailwind utilities;
 
 body {
-  background-color: rgb(31 41 55);
-  color: #f1f5ff;
+  background-color: #f1f5ff;
+  color: black;
+}
+
+@layer components {
+  .bg-left-double-arrow {
+    background-image: url('/arr_left_d.svg'); /* Path relative to the public directory */
+    background-size: auto 0.8em;
+    width: 1.5em;
+    height: 1.5em;
+    color: inherit;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .bg-right-double-arrow {
+    background-image: url('/arr_right_d.svg');
+    background-size: auto 0.8em;
+    width: 1.5em;
+    height: 1.5em;
+    color: inherit;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .bg-left-arrow {
+    background-image: url('/arr_left-arrow.svg');
+    background-size: auto 0.8em;
+    width: 1.5em;
+    height: 1.5em;
+    color: inherit;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .bg-right-arrow {
+    background-image: url('/arr_right.svg');
+    background-size: auto 0.8em;
+    width: 1.5em;
+    height: 1.5em;
+    color: inherit;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: center;
+    display: inline-block;
+  }
 }
