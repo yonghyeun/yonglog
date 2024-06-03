@@ -53,7 +53,7 @@ export const getAllTags = (): CountArray => {
     tag?.forEach((tagName) => incrementCount(TagInfo, tagName));
   });
 
-  return Object.entries(TagInfo).toSorted((prev, cur) => prev[1] - cur[1]);
+  return Object.entries(TagInfo).toSorted((prev, cur) => cur[1] - prev[1]);
 };
 
 export const getAllSeries = (): CountArray => {
@@ -63,7 +63,7 @@ export const getAllSeries = (): CountArray => {
     incrementCount(SeriesInfo, series);
   });
 
-  return Object.entries(SeriesInfo).toSorted((prev, cur) => prev[1] - cur[1]);
+  return Object.entries(SeriesInfo).toSorted((prev, cur) => cur[1] - prev[1]);
 };
 ```
 
@@ -139,7 +139,6 @@ export default SideBar;
 아직 미완성인 컴포넌트이지만 `tagList , seriesList` 를 `getAllTags , getAllSeries` 를 이용해 생성해주었다.
 
 ![alt text](image-1.png)
-
 아 굿 ~~
 
 `getAllPosts` 메소드만 만들어두니 할 수 있는게 무진장 많아졌다.

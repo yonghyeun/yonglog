@@ -2,14 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: freesentation;
+  src: url('/fonts/Freesentation-4Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-  background-color: #f1f5ff;
+  background-color: #e1e8ef;
   color: black;
+  font-family: 'freesentation', 'sans-serif';
 }
 
 @layer components {
   .bg-left-double-arrow {
-    background-image: url('/arr_left_d.svg'); /* Path relative to the public directory */
+    background-image: url('/assets/arr_left_d.svg');
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
@@ -21,7 +30,7 @@ body {
   }
 
   .bg-right-double-arrow {
-    background-image: url('/arr_right_d.svg');
+    background-image: url('/assets/arr_right_d.svg');
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
@@ -33,7 +42,7 @@ body {
   }
 
   .bg-left-arrow {
-    background-image: url('/arr_left-arrow.svg');
+    background-image: url('/assets/arr_left-arrow.svg');
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
@@ -45,7 +54,7 @@ body {
   }
 
   .bg-right-arrow {
-    background-image: url('/arr_right.svg');
+    background-image: url('/assets/arr_right.svg');
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;

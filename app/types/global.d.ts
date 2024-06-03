@@ -1,5 +1,5 @@
 type Key = string;
 type Count = number;
 
-export type CountableObject = Record<Key, Count>;
-export type CountableArray = Array<[Key, Count]>;
+export type CountObject = Record<Key, Count>;
+export type CountArray = Array<[Key, Count]>;
