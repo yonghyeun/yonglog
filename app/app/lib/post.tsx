@@ -25,6 +25,7 @@ import type {
   FilePaths,
   Directory,
   MDXSource,
+  ImgSource,
   PostInfo,
   SeriesName,
 } from '@/types/post';
@@ -43,6 +44,25 @@ const isDirectory = (source: Source): source is Directory => {
 const isMDX = (source: Source): source is MDXSource => {
   const fileName = path.basename(source);
   return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
+};
+
+const getValidThumbnail = (source: MDXSource): ImgSource | null => {
+  const thumbnailPath = path.join(source, '../../thumbnail');
+  const paths = ['jpg', 'png', 'gif', 'svg'].map(
+    (extname) => `${thumbnailPath}.${extname}` as ImgSource,
+  );
+  const validThumbnail = paths.find((path) => fs.existsSync(path));
+
+  if (validThumbnail) {
+    const relativePath = path.relative(
+      path.join(process.cwd(), 'public'),
+      validThumbnail,
+    );
+    const publicPath = `/${relativePath.replace(/\\/g, '/')}`;
+    return publicPath as ImgSource;
+  }
+
+  return null;
 };
 
 /**
@@ -82,6 +102,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
               ...data,
               series: getSeriesName(fileSource),
               postId: getPostId(fileSource),
+              seriesThumbnail: getValidThumbnail(fileSource),
             },
             content: content,
           });
@@ -99,7 +120,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */
 const getAllPosts = (): Array<PostInfo> => {
-  const POST_PATH = '../app/posts';
+  const POST_PATH = '../app/public/posts';
   const posts = parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {

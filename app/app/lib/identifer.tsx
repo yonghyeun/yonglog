@@ -16,7 +16,7 @@ export const getAllTags = (): CountArray => {
     tag?.forEach((tagName) => incrementCount(TagInfo, tagName));
   });
 
-  return Object.entries(TagInfo).toSorted((prev, cur) => prev[1] - cur[1]);
+  return Object.entries(TagInfo).toSorted((prev, cur) => cur[1] - prev[1]);
 };
 
 export const getAllSeries = (): CountArray => {
@@ -26,5 +26,5 @@ export const getAllSeries = (): CountArray => {
     incrementCount(SeriesInfo, series);
   });
 
-  return Object.entries(SeriesInfo).toSorted((prev, cur) => prev[1] - cur[1]);
+  return Object.entries(SeriesInfo).toSorted((prev, cur) => cur[1] - prev[1]);
 };

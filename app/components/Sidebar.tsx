@@ -11,7 +11,7 @@ const SideBar = () => {
   const serieseList = getAllSeries();
   return (
     <section className='sticky flex-2 top-[5rem] right-0'>
-      <h2 className='text-indigo-200 font-bold text-xl mb-2'>시리즈</h2>
+      <h2 className='text-gray-900 font-bold text-xl mb-2'>시리즈</h2>
       <ul>
         {serieseList.map(([seriesName, count], id) => (
           <Seriese title={`${seriesName} (${count})`} key={id} />
