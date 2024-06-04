@@ -1,8 +1,11 @@
 import { getPageList } from '@/app/lib/pagination';
 import { getAllPosts } from '@/app/lib/post';
+import { getNewSearchParms } from '@/app/lib/route';
+import { SearchParams } from '@/types/global';
+import Link from 'next/link';
 
-const Pagination = () => {
-  const currentPage = 8; // 추후에 props 로 받도록 수정 예정
+const Pagination = ({ searchParams }: { searchParams: SearchParams }) => {
+  const currentPage = Number(searchParams.page || '1');
 
   const totalPosts = getAllPosts();
   const { avaliablePage, totalPages } = getPageList(currentPage, totalPosts);
@@ -13,10 +16,18 @@ const Pagination = () => {
         {currentPage > 1 && (
           <>
             <li>
-              <a className='bg-left-double-arrow mr-2'></a>
+              <Link
+                href={getNewSearchParms(searchParams, { page: '1' })}
+                className='bg-left-double-arrow mr-2'
+              ></Link>
             </li>
             <li>
-              <a className='bg-left-arrow mr-4'></a>
+              <Link
+                href={getNewSearchParms(searchParams, {
+                  page: String(currentPage - 1),
+                })}
+                className='bg-left-double-arrow mr-2'
+              ></Link>
             </li>
           </>
         )}
@@ -30,10 +41,20 @@ const Pagination = () => {
         {currentPage < totalPages && (
           <>
             <li>
-              <a className='bg-right-arrow mr-2'></a>
+              <Link
+                href={getNewSearchParms(searchParams, {
+                  page: String(currentPage + 1),
+                })}
+                className='bg-right-arrow mr-2'
+              ></Link>
             </li>
             <li>
-              <a className='bg-right-double-arrow mr-4'></a>
+              <Link
+                href={getNewSearchParms(searchParams, {
+                  page: String(totalPages),
+                })}
+                className='bg-right-double-arrow mr-2'
+              ></Link>
             </li>
           </>
         )}
