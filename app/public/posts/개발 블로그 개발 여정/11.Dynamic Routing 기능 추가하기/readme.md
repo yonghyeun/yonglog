@@ -134,3 +134,69 @@ export type SarchParams = {
   series: string;
 };
 ```
+
+### `getNewSearchParams`
+
+---
+
+```tsx
+import type { SearchParams } from '@/types/global';
+
+export const getNewSearchParms = (
+  prevParams: SearchParams,
+  newParams: SearchParams,
+): string => {
+  const searchParams = new URLSearchParams(prevParams);
+
+  Object.entries(newParams).forEach(([paramsKey, paramsValue]) => {
+    searchParams.set(paramsKey, paramsValue);
+  });
+
+  return `?${searchParams.toString()}`;
+};
+```
+
+기존의 `serchParams` 를 받아 새로운 `searchParams` 를 가져오는 메소드를 정의해주었다.
+
+만약 `?tag=react` 인 경우 `Pagination` 에서 `?page=2` 로 변경되는 경우엔 기존 `searchParams` 인 `tag` 를 유지한 채로 새로운 `searchParams` 를 추가해줘야 하기 때문이다.
+
+### `/` 경로 라우팅 로직 추가
+
+```tsx
+import CategoryList from '@/components/Category';
+import SideBar from '@/components/Sidebar';
+import Introduce from '@/components/Introduce';
+import Pagination from '@/components/Pagination';
+import { PostList } from '@/components/PostList';
+import { getAllPosts } from './lib/post';
+
+import type { SearchParams } from '@/types/global.d.ts';
+
+const Page = ({ searchParams }: { searchParams: SearchParams }) => {
+  const allPosts = getAllPosts();
+  return (
+    <section className='mx-0 sm:mx-auto w-full lg:w-1/2'>
+      <div className='hidden md:block'>
+        <Introduce />
+      </div>
+      <CategoryList searchParams={searchParams} />
+      {/* 게시글 리스트와 SideBar를 위치시키기 위함 */}
+      <section className='w-full lg:w-[120%] flex gap-5'>
+        {/* TODO page 생성 후 border 지우기 */}
+        <section className=' bg-black-200 w-full lg:w-8/12 px-4'>
+          <PostList postList={allPosts} />
+          <Pagination searchParams={searchParams} />
+        </section>
+        <div className='hidden lg:block lg:flex-2 sticky top-0 w-4/12'>
+          <SideBar searchParams={searchParams} />
+        </div>
+      </section>
+    </section>
+  );
+};
+
+export default Page;
+```
+
+이후 `/` 경로의 `page.tsx` 에서 `searchParams` 를 `props` 로 받은 후
+라우팅을 해야 할 `CategoryList ,  Pagination , SideBar` 에게 `drilling` 시켜준다.

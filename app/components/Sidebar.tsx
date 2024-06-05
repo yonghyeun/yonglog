@@ -5,18 +5,19 @@ import { getNewSearchParms } from '@/app/lib/route';
 
 import type { SearchParams } from '@/types/global';
 
-// TODO 라우팅 기능 넣기
 // TODO 경로에 따라 활성 비활성화 상태 넣기
 const Seriese = ({
   title,
+  count,
   searchParams,
 }: {
   title: string;
+  count: number;
   searchParams: SearchParams;
 }) => (
   <li className='mb-2'>
-    <Link href={getNewSearchParms(searchParams, { series: title })}>
-      {title}
+    <Link href={getNewSearchParms(searchParams, { series: title, page: '1' })}>
+      {`${title} (${count})`}
     </Link>
   </li>
 );
@@ -29,7 +30,8 @@ const SideBar = ({ searchParams }: { searchParams: SearchParams }) => {
       <ul>
         {serieseList.map(([seriesName, count], id) => (
           <Seriese
-            title={`${seriesName} (${count})`}
+            title={seriesName}
+            count={count}
             searchParams={searchParams}
             key={id}
           />

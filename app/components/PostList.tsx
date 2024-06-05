@@ -1,3 +1,4 @@
+import { SearchParams } from '@/types/global';
 import type { PostInfo } from '@/types/post';
 
 import Image from 'next/image';
@@ -27,6 +28,18 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
   </div>
 );
 
-export const PostList = ({ postList }: { postList: Array<PostInfo> }) => {
-  return postList.map(({ meta }, id) => <PostItem meta={meta} key={id} />);
+export const PostList = ({
+  postList,
+  page,
+}: {
+  postList: Array<PostInfo>;
+  page: SearchParams['page'];
+}) => {
+  const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
+  const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
+
+  const slicedPostList = postList.slice(offSet, offSet + POSTS_PER_PAGES);
+  return slicedPostList.map(({ meta }, id) => (
+    <PostItem meta={meta} key={id} />
+  ));
 };
