@@ -9,7 +9,7 @@ export const getPageList = (
   currentPage: number,
   totalPosts: Array<PostInfo>,
 ): PaginationInfo => {
-  const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES); // 5
+  const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const totalPages = Math.ceil(totalPosts.length / POSTS_PER_PAGES);
   const MAX_NAV_PAGES = 5;
 

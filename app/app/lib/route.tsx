@@ -10,5 +10,5 @@ export const getNewSearchParms = (
     searchParams.set(paramsKey, paramsValue);
   });
 
-  return searchParams.toString();
+  return `?${searchParams.toString()}`;
 };

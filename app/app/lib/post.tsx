@@ -1,25 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-const matter = require('gray-matter');
-
-// type Source = string;
-// type FilePaths = Array<Source>;
-// type Directory = Source & { __directory: true };
-// type MDXSource = Source & { __mdx: true };
-// type PostInfo = {
-//   path: string;
-//   content: string;
-//   meta: {
-//     title: string;
-//     description: string;
-//     date: string;
-//     series: string;
-//     postId: number;
-//     tag?: Array<string>;
-//   };
-// };
-// type SerieName = string;
-
+import type { SearchParams } from '@/types/global';
 import type {
   Source,
   FilePaths,
@@ -29,6 +8,10 @@ import type {
   PostInfo,
   SeriesName,
 } from '@/types/post';
+
+const fs = require('fs');
+const path = require('path');
+const matter = require('gray-matter');
 
 /**
  * source 가 특정 경로인지, 파일인지를 확인하는 메소드
@@ -119,7 +102,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 /**
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */
-const getAllPosts = (): Array<PostInfo> => {
+export const getAllPosts = (): Array<PostInfo> => {
   const POST_PATH = '../app/public/posts';
   const posts = parsePosts(POST_PATH);
 
@@ -137,4 +120,21 @@ const getAllPosts = (): Array<PostInfo> => {
   });
 };
 
-export { getAllPosts };
+/**
+ * SearchParms 에 맞게 적절한 PostList 를 반환하는 메소드
+ */
+export const selectPosts = (
+  // TODO filter 조건 리팩토링 하기
+  searchParams: SearchParams,
+): Array<PostInfo> => {
+  const allPosts = getAllPosts();
+  const { tag, series } = searchParams;
+
+  const filteredPost = allPosts.filter(
+    (post) =>
+      (!tag || post.meta.tag.includes(tag)) &&
+      (!series || post.meta.series === series),
+  );
+
+  return filteredPost;
+};

@@ -12,7 +12,7 @@ export type PostInfo = {
     date: string;
     series: string;
     postId: number;
-    tag?: Array<string>;
+    tag: Array<string>;
     seriesThumbnail?: ImgSource;
   };
 };
