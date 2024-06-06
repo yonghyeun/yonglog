@@ -1,8 +1,13 @@
 ---
-title: '/ 경로 UI 디자인 하기'
-description: '차근차근 못생긴 UI들을 개선해보자'
-date: '2024-06-03'
-tag: ['react', 'nextjs', 'mdx']
+title: / 경로 UI 디자인 하기
+description: 차근차근 못생긴 UI들을 개선해보자
+date: 'Mon Jun 03 2024'
+time: 1717372800001
+tag:
+  - react
+  - nextjs
+  - mdx
+postId: 745641
 ---
 
 # `UI` 마무리 하기

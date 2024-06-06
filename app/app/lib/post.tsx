@@ -1,4 +1,3 @@
-import type { SearchParams } from '@/types/global';
 import type {
   Source,
   FilePaths,
@@ -62,12 +61,6 @@ const getSeriesName = (source: MDXSource): SeriesName => {
   return path.basename(seriesPath);
 };
 
-const getPostId = (source: MDXSource): number => {
-  const postPath = path.join(source, '..');
-  const directoryName = path.basename(postPath);
-  return parseInt(directoryName.split('.')[0], 10);
-};
-
 const parsePosts = (source: Source): Array<PostInfo> => {
   const Posts: Array<PostInfo> = [];
 
@@ -80,12 +73,31 @@ const parsePosts = (source: Source): Array<PostInfo> => {
           const fileContent = fs.readFileSync(fileSource, 'utf8');
           const { data, content } = matter(fileContent);
 
+          /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
+          if (!data.postId) {
+            data.postId = Math.ceil(Math.random() * 9 * 100000);
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+          /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
+          if (!data.date) {
+            console.log(data);
+            data.date = new Date().toDateString();
+            data.time = new Date().getTime();
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+
+          /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
+          const directoryPath = path.join(fileSource, '..');
+          const relatevePath = directoryPath.split('public')[1];
+
           Posts.push({
             meta: {
               ...data,
               series: getSeriesName(fileSource),
-              postId: getPostId(fileSource),
               seriesThumbnail: getValidThumbnail(fileSource),
+              path: relatevePath,
             },
             content: content,
           });
@@ -107,16 +119,10 @@ export const getAllPosts = (): Array<PostInfo> => {
   const posts = parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {
-    const prevDate = new Date(prev.meta.date);
-    const curDate = new Date(cur.meta.date);
+    const prevTime = prev.meta.time;
+    const curTime = cur.meta.time;
 
-    if (prevDate.getTime() === curDate.getTime()) {
-      const prevPostId = prev.meta.postId;
-      const curPostId = cur.meta.postId;
-      return curPostId - prevPostId;
-    }
-
-    return curDate.getTime() - prevDate.getTime();
+    return curTime - prevTime;
   });
 };
 
@@ -147,4 +153,13 @@ export const selectPosts = (searchParams: URLSearchParams): Array<PostInfo> => {
       (!series || meta.series === series)
     );
   });
+};
+
+export const getPostContent = (postId: string): PostInfo => {
+  const allPosts = getAllPosts();
+  const searchedPost = allPosts.find(
+    (post) => post.meta.postId === Number(postId),
+  );
+
+  return searchedPost as PostInfo;
 };
