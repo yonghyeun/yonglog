@@ -120,21 +120,31 @@ export const getAllPosts = (): Array<PostInfo> => {
   });
 };
 
+const isPostHasTag = (
+  postTag: PostInfo['meta']['tag'],
+  searchParmsTag: string,
+) => {
+  // searchParamsTagArray
+  const SPTArray = searchParmsTag.split('&');
+  return SPTArray.every((spt) => postTag.includes(spt));
+};
+
 /**
  * SearchParms 에 맞게 적절한 PostList 를 반환하는 메소드
  */
-export const selectPosts = (
-  // TODO filter 조건 리팩토링 하기
-  searchParams: SearchParams,
-): Array<PostInfo> => {
+export const selectPosts = (searchParams: URLSearchParams): Array<PostInfo> => {
   const allPosts = getAllPosts();
-  const { tag, series } = searchParams;
+  const tag = searchParams.get('tag');
+  const series = searchParams.get('series');
 
-  const filteredPost = allPosts.filter(
-    (post) =>
-      (!tag || post.meta.tag.includes(tag)) &&
-      (!series || post.meta.series === series),
-  );
-
-  return filteredPost;
+  if (!tag && !series) {
+    return allPosts;
+  }
+  return allPosts.filter((post) => {
+    const { meta } = post;
+    return (
+      (!tag || isPostHasTag(meta.tag, tag)) &&
+      (!series || meta.series === series)
+    );
+  });
 };
