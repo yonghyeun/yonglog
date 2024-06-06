@@ -1,8 +1,14 @@
 ---
-title: '서버 컴포넌트에 Dynamic Routing 추가하기'
-description: '라우팅 기능을 추가하여 숨을 불어넣어보자'
-date: '2024-06-06'
-tag: ['react', 'nextjs', 'mdx']
+title: 서버 컴포넌트에 Dynamic Routing 추가하기
+description: 라우팅 기능을 추가하여 숨을 불어넣어보자
+date: 'Thu Jun 06 2024'
+time: 1717632000000
+tag:
+  - react
+  - nextjs
+  - routing
+  - mdx
+postId: 582634
 ---
 
 > # 구현된 프로젝트 결과

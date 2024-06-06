@@ -1,8 +1,13 @@
 ---
-title: 'Post들이 저장된 FileSystem 파싱하기'
-description: '로컬 파일에 저장된 MDX 파일을 불러오자'
-date: '2024-06-01'
-tag: ['react', 'nextjs', 'mdx']
+title: Post들이 저장된 FileSystem 파싱하기
+description: 로컬 파일에 저장된 MDX 파일을 불러오자
+date: 'Sat Jun 01 2024'
+time: 1717200000000
+tag:
+  - react
+  - nextjs
+  - mdx
+postId: 804032
 ---
 
 ```json

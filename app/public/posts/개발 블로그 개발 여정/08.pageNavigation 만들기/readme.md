@@ -1,8 +1,13 @@
 ---
-title: 'PageNavigation UI 만들기'
-description: 'PageNavigation UI를 만들어보자'
-date: '2024-06-02'
-tag: ['react', 'nextjs', 'mdx']
+title: PageNavigation UI 만들기
+description: PageNavigation UI를 만들어보자
+date: 'Sun Jun 02 2024'
+time: 1717286400000
+tag:
+  - react
+  - nextjs
+  - mdx
+postId: 690282
 ---
 
 ![alt text](image.png)

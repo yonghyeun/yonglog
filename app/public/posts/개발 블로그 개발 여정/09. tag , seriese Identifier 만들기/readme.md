@@ -1,8 +1,13 @@
 ---
 title: 'tag , series Identifier 만들기'
 description: '로컬 파일 읽어와 tag, series 컴포넌트 수정하기'
-date: '2024-06-03'
-tag: ['react', 'nextjs', 'mdx']
+date: 'Mon Jun 03 2024'
+time: 1717372800000
+tag:
+  - react
+  - nextjs
+  - mdx
+postId: 422495
 ---
 
 # `tag , seriese` 인디게이터 만들기
