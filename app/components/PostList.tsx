@@ -1,10 +1,13 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { selectPosts } from '@/app/lib/post';
 import type { PostInfo } from '@/types/post';
 
-import Image from 'next/image';
-
 export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
-  <div className='my-4 px-4 pb-8 border-b-[1px] border-[#c1c8cf] flex justify-between '>
+  <Link
+    href={{ pathname: String(meta.postId) }}
+    className='my-4 px-4 pb-8 border-b-[1px] border-[#c1c8cf] flex justify-between '
+  >
     <div className='w-5/6'>
       <p className='text-gray-500 mb-2 text-sm'>
         <span className='mr-2'>{meta.date}</span>
@@ -25,7 +28,7 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
         />
       )}
     </div>
-  </div>
+  </Link>
 );
 
 export const PostList = ({

@@ -14,6 +14,10 @@ const config: Config = {
         'right-double-arrow': 'url(/asset/arr_right_d.svg)',
         'right-arrow': 'url(/asset/arr_right.svg)',
       },
+      fontFamily: {
+        'ibm-plex-mono': ['var(--ibm-plex-mono)', 'monospace'],
+        jetbrains: ['JetBrains Mono', 'monospace'],
+      },
     },
   },
   plugins: [],
