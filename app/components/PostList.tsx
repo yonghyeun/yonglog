@@ -1,4 +1,4 @@
-import { SearchParams } from '@/types/global';
+import { selectPosts } from '@/app/lib/post';
 import type { PostInfo } from '@/types/post';
 
 import Image from 'next/image';
@@ -29,12 +29,12 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
 );
 
 export const PostList = ({
-  postList,
-  page,
+  searchParams,
 }: {
-  postList: Array<PostInfo>;
-  page: SearchParams['page'];
+  searchParams: URLSearchParams;
 }) => {
+  const page = searchParams.get('page') || '1';
+  const postList = selectPosts(searchParams);
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
 
