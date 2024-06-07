@@ -3,9 +3,13 @@ import path from 'path';
 import Image from 'next/image';
 import { MDXComponents } from 'mdx/types';
 
+/**
+ * @param {MDXComponents}   [components = []] - 서드파티 라이브러리 등에서 제공하는 컴포넌트를 인수로 받을 수 있음
+ * @param {string} [postPath] - post 들이 존재하는 Directory 의 경로이다. 파싱되는 img 태그의 주소를 생성 할 떄 사용된다.
+ */
 export const useMDXComponents = (
   components: MDXComponents = {},
-  imagePath: string,
+  postPath: string,
 ): MDXComponents => {
   return {
     h1: ({ children }) => (
@@ -26,7 +30,7 @@ export const useMDXComponents = (
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className='text-xl py-2 mb-2 border-gray-300 font-semibold leading-7'>
+      <h4 className='text-xl border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7'>
         {children}
       </h4>
     ),
@@ -39,19 +43,17 @@ export const useMDXComponents = (
       <p className='py-1 text-[18px] indent-[1px]'>{children}</p>
     ),
 
-    strong: ({ children }) => (
-      <strong className='font-bold text-indigo-700'>{children}</strong>
-    ),
+    strong: ({ children }) => <strong>{children}</strong>,
     // TODO 코드 포맷터 라이브러리로 추가하기
     code: ({ children, className, ...props }) => {
       return (
-        <code className={'font-ibm-plex-mono '} {...props}>
+        <code className={'font-ibm-plex-mono px-[1px] '} {...props}>
           {children}
         </code>
       );
     },
     pre: ({ children }) => (
-      <pre className='bg-indigo-200 font-jetbrains px-12 py-8 my-8 text-wrap text-[14px]   '>
+      <pre className='bg-indigo-200 font-jetbrains px-12 py-8 my-8 text-wrap text-[80%]'>
         {children}
       </pre>
     ),
@@ -67,7 +69,7 @@ export const useMDXComponents = (
       width?: number;
       height?: number;
     }) => {
-      const imageSrc = path.join(imagePath, src).replace(/\\/g, '/');
+      const imageSrc = path.join(postPath, src).replace(/\\/g, '/');
 
       return (
         <span className='flex justify-center w-full mt-8 mb-8'>
@@ -77,7 +79,6 @@ export const useMDXComponents = (
             width={width}
             height={height}
             style={{
-              maxWidth: '100%',
               width: 'auto',
               height: 'auto',
               borderRadius: '8px',
