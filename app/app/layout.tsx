@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='kr'>
-      <body>
+      <body id='scroll-target'>
         <header>
           <GlobalNav /> {/* position : fixed */}
         </header>

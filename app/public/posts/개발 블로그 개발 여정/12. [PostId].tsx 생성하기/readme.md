@@ -268,7 +268,7 @@ export default PostPage;
 
 이제 하나씩 문제점을 손대면서 완성해보자 :)
 
-# 커스텀 컴포넌트 만들기
+# `mdx, mdx` 파일을 이쁘게 꾸미기 위해 커스텀 컴포넌트 만들기
 
 ---
 
@@ -284,3 +284,265 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 그렇기 때문에 렌더링 되는 `contnet` 가 매우 심심해보인다.
 
 스타일링 할 커스텀 컴포넌트로 정의하고 `props` 로 넘겨주자 :)
+
+### `app/lib/mdxComponents.tsx`
+
+---
+
+`MDXRemote` 컴포넌트는 `props` 로 `MDXRemoteProps` 를 받는다.
+
+```tsx
+export declare function MDXRemote(
+  props: MDXRemoteProps,
+): Promise<React.ReactElement<any, string | React.JSXElementConstructor<any>>>;
+
+export type MDXRemoteProps = {
+  source: VFileCompatible;
+  options?: SerializeOptions;
+  /**
+   * An object mapping names to React components.
+   * The key used will be the name accessible to MDX.
+   *
+   * For example: `{ ComponentName: Component }` will be accessible in the MDX as `<ComponentName/>`.
+   */
+  components?: React.ComponentProps<typeof MDXProvider>['components'];
+};
+```
+
+이 떄 `MDXRemoteProps` 의 `components` 를 보면 `MDXProvider['components']` 즉 , `MDXComponents` 를 `props`로 받는다.
+
+```tsx
+export type MDXComponents = NestedMDXComponents & {
+  [Key in StringComponent]?: Component<JSX.IntrinsicElements[Key]>;
+} & {
+  /**
+   * If a wrapper component is defined, the MDX content will be wrapped inside of it.
+   */
+  wrapper?: Component<any>;
+};
+```
+
+`MDXComponents` 는 `StringComponent` 를 키로 갖고 특정 `JSX` 객체를 반환하는 컴포넌트를 `value` 로 갖는데 다음과 같이 생겼다.
+
+```tsx
+    // StringComponent : Component<JSX.IntrinsicElements[key]> 의 예씨
+    h1: ({ children }) => (
+      <>
+        <h1 className=' text-4xl border-b-[2px]  py-8 mb-4 border-gray-300 font-semibold'>
+          {children}
+        </h1>
+      </>
+```
+
+다음과 같은 값들을 객체로 반환하는 `useMDXComponets` 훅을 생성해주자
+
+```tsx
+import path from 'path';
+
+import Image from 'next/image';
+import { MDXComponents } from 'mdx/types';
+
+/**
+ * @param {MDXComponents}   [components = []] - 서드파티 라이브러리 등에서 제공하는 컴포넌트를 인수로 받을 수 있음
+ * @param {string} [postPath] - post 들이 존재하는 Directory 의 경로이다. 파싱되는 img 태그의 주소를 생성 할 떄 사용된다.
+ */
+export const useMDXComponents = (
+  components: MDXComponents = {},
+  postPath: string,
+): MDXComponents => {
+  return {
+    h1: ({ children }) => (
+      <>
+        <h1 className=' text-4xl border-b-[2px]  py-8 mb-4 border-gray-300 font-semibold'>
+          {children}
+        </h1>
+      </>
+    ),
+    h2: ({ children }) => (
+      <h2 className='  text-3xl border-b-[1px]  py-8 mb-4 border-gray-300 font-semibold leading-7'>
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className='  text-xl border-b-[1px] py-4 mb-2 border-gray-300 font-semibold leading-7'>
+        {children}
+      </h3>
+    ),
+    h4: ({ children }) => (
+      <h4 className='text-xl border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7'>
+        {children}
+      </h4>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className='text-wrap border-l-4 border-gray-300 pl-4 pr-2 mt-2 mb-2 py-2 bg-indigo-200 italic text-gray-600 leading-7 '>
+        {children}
+      </blockquote>
+    ),
+    p: ({ children }) => (
+      <p className='py-1 text-[18px] indent-[1px]'>{children}</p>
+    ),
+
+    strong: ({ children }) => <strong>{children}</strong>,
+    // TODO 코드 포맷터 라이브러리로 추가하기
+    code: ({ children, className, ...props }) => {
+      return (
+        <code className={'font-ibm-plex-mono px-[1px] '} {...props}>
+          {children}
+        </code>
+      );
+    },
+    pre: ({ children }) => (
+      <pre className='bg-indigo-200 font-jetbrains px-12 py-8 my-8 text-wrap text-[80%]'>
+        {children}
+      </pre>
+    ),
+    img: ({
+      src,
+      alt,
+      width = 600,
+      height = 400,
+      ...props
+    }: {
+      src: string;
+      alt?: string;
+      width?: number;
+      height?: number;
+    }) => {
+      const imageSrc = path.join(postPath, src).replace(/\\/g, '/');
+
+      return (
+        <span className='flex justify-center w-full mt-8 mb-8'>
+          <Image
+            src={imageSrc}
+            alt={alt || 'image'}
+            width={width}
+            height={height}
+            style={{
+              maxWidth: '100%',
+              width: 'auto',
+              height: 'auto',
+              borderRadius: '8px',
+              display: 'block',
+            }}
+          />
+        </span>
+      );
+    },
+    a: ({ href, children }) => (
+      <a href={href} className='text-blue-500'>
+        🪢 {children}
+      </a>
+    ),
+    ...components,
+  };
+};
+```
+
+`useMDXComponents` 훅이 반환하는 `MDXComponents` 는 `MDXRemote` 컴포넌트의 `props` 로 전달되어
+
+`MDXRemote` 가 `Babel loader` 를 이용해 `md` 파일을 `jsx` 객체들로 반환 했을 때 사용 할 `jsx` 객체들의 스타일을 담고 있다.
+
+즉 , 만약 `MDXRemote` 가 어떤 문장을 단순한 `p` 태그로 컴파일 했을 때 , `MDXComponents` 의
+
+```tsx
+    p: ({ children }) => (
+      <p className='py-1 text-[18px] indent-[1px]'>{children}</p>
+    ),
+```
+
+를 호출하여 사용한다.
+
+### `app/[postId]/page.tsx`
+
+---
+
+```tsx
+import { useMDXComponents } from '../lib/mdxComponents'; // useMDXComponnets 로 커스텀 컴포넌트 호출
+
+import { getPostContent } from '../lib/post';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+
+const PostPage = ({ params }: { params: { postId: string } }) => {
+  const { meta, content } = getPostContent(params.postId);
+  const components = useMDXComponents({}, meta.path);
+
+  return (
+    <>
+      <section>
+        {Object.entries(meta).map(([key, value], id) => {
+          return (
+            <h1 key={id}>
+              {key} : {value}
+            </h1>
+          );
+        })}
+      </section>
+      <section>
+        {/* MDXRemote 에게 커스텀 컴포넌트를 건내준다 */}
+        <MDXRemote source={content} components={components} />
+      </section>
+    </>
+  );
+};
+
+export default PostPage;
+```
+
+다음과 같이 `/[postId]` 경로에서 렌더링 될 페이지에서 `MDXRemote` 에게 컴파일 시킬 `md` 파일을 `source` 에 담아 보내주고 스타일링 할 때 사용 할 `components` 에 `useMDXComponents` 가 반환하는 `MDXComponent` 를 건내주자
+
+![alt text](image-3.png)
+
+잘 작동한다 :)
+
+# 제목 영역 꾸미기
+
+---
+
+![alt text](image-4.png)
+
+현재는 단순히 `content` 부분을 `MDXRemote` 에서 컴파일 시켜 렌더링 하고 있다.
+
+상단에 존재할 제목 영역을 `meta` 데이터를 이용해 꾸며주자 :)
+
+### `/components/PostTitle.tsx`
+
+---
+
+```tsx
+import type { PostInfo } from '@/types/post';
+
+const PostTitle = ({ meta }: { meta: PostInfo['meta'] }) => {
+  const { title, tag, date, series } = meta;
+  return (
+    <>
+      <section className='mb-4 py-4 border-b-[2px]  border-gray-300 '>
+        <h1 className=' text-5xl py-4 font-semibold'>{title}</h1>
+        <p className='text-gray-500 flex justify-end'>{series}</p>
+      </section>
+      <section className='flex justify-between'>
+        <p>
+          {tag.map((pTag, id) => {
+            return (
+              <span
+                key={id}
+                className='mr-2 border px-2 py-1 bg-gray-300 rounded-lg '
+              >
+                {pTag}
+              </span>
+            );
+          })}
+        </p>
+        <p>{date}</p>
+      </section>
+    </>
+  );
+};
+
+export default PostTitle;
+```
+
+다음과 같이 `meta` 데이터를 `props` 로 받아서 렌더링 하는 `PostTitle` 컴포넌트를 생성해주었다.
+
+![alt text](image-5.png)
+
+짜자잔

@@ -81,7 +81,6 @@ const parsePosts = (source: Source): Array<PostInfo> => {
           }
           /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
           if (!data.date) {
-            console.log(data);
             data.date = new Date().toDateString();
             data.time = new Date().getTime();
             const updatedContent = matter.stringify(content, data);

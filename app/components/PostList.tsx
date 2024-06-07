@@ -5,7 +5,9 @@ import type { PostInfo } from '@/types/post';
 
 export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
   <Link
-    href={{ pathname: String(meta.postId) }}
+    href={{
+      pathname: String(meta.postId),
+    }}
     className='my-4 px-4 pb-8 border-b-[1px] border-[#c1c8cf] flex justify-between '
   >
     <div className='w-5/6'>
@@ -37,7 +39,8 @@ export const PostList = ({
   searchParams: URLSearchParams;
 }) => {
   const page = searchParams.get('page') || '1';
-  const postList = selectPosts(searchParams);
+  const postList = selectPosts(searchParams); // 내 로컬 파일에 접근해서 => 데이터를 가져와라
+
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
 
