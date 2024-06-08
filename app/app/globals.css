@@ -10,6 +10,12 @@
   font-display: swap;
 }
 
+:root {
+  --font-freesensation: 'Freesensation', sans-serif;
+  --font-jetBrainsMono: 'JetBrains Mono', monospace;
+  --font-ibmPlexMono: 'IBM Plex Mono', monospace;
+}
+
 html {
   scroll-behavior: smooth !important;
 }
@@ -18,6 +24,16 @@ body {
   background-color: #e1e8ef;
   color: black;
   font-family: 'freesentation', 'sans-serif';
+}
+
+pre {
+  overflow-x: auto;
+  font-family: var(--font-jetBrainsMono);
+}
+
+code {
+  font-family: var(--font-jetBrainsMono);
+  font-size: 80%;
 }
 
 @layer components {

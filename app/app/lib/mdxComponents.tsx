@@ -45,18 +45,6 @@ export const useMDXComponents = (
 
     strong: ({ children }) => <strong>{children}</strong>,
     // TODO 코드 포맷터 라이브러리로 추가하기
-    code: ({ children, className, ...props }) => {
-      return (
-        <code className={'font-ibm-plex-mono px-[1px] '} {...props}>
-          {children}
-        </code>
-      );
-    },
-    pre: ({ children }) => (
-      <pre className='bg-indigo-200 font-jetbrains px-12 py-8 my-8 text-wrap text-[80%]'>
-        {children}
-      </pre>
-    ),
     img: ({
       src,
       alt,

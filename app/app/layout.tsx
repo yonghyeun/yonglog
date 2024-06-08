@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
 import './globals.css';
 import GlobalNav from '@/components/GlobalNav';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'yonglog',
@@ -14,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='kr'>
-      <body id='scroll-target'>
+      <body>
         <header>
           <GlobalNav /> {/* position : fixed */}
         </header>
