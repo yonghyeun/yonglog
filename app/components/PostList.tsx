@@ -41,6 +41,9 @@ export const PostList = ({
   const page = searchParams.get('page') || '1';
   const postList = selectPosts(searchParams); // 내 로컬 파일에 접근해서 => 데이터를 가져와라
 
+  console.log(searchParams.toString());
+  console.log(postList.length); // 디버깅을 위해 사용 할 length
+
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
 
