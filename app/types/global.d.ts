@@ -9,3 +9,14 @@ export type SearchParams = {
   page?: string;
   series?: string;
 };
+
+export type CheckIsActive = (
+  SearchParams: URLSearchParams,
+  newParams: SearchParams,
+) => boolean;
+
+export type GetNewSearchParams = (
+  searchParams: URLSearchParams,
+  newParams: SearchParams,
+  isActive: boolean,
+) => string;
