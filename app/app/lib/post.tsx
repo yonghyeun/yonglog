@@ -7,6 +7,7 @@ import type {
   PostInfo,
   SeriesName,
 } from '@/types/post';
+import { PiFileRsDuotone } from 'react-icons/pi';
 
 const fs = require('fs');
 const path = require('path');
@@ -24,6 +25,10 @@ const isDirectory = (source: Source): source is Directory => {
  * 이 때 반환값에 타입 가드를 설정해주도록 한다.
  */
 const isMDX = (source: Source): source is MDXSource => {
+  console.log('---isMDX 내부---');
+  console.log(path.join(source));
+  console.log('----');
+
   const fileName = path.basename(source);
   return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
 };
@@ -70,6 +75,9 @@ const parsePosts = (source: Source): Array<PostInfo> => {
         parseRecursively(fileSource);
       } else {
         if (isMDX(fileSource)) {
+          console.log('---isMDX 외부---');
+          console.log(path.join(fileSource));
+          console.log('----');
           const fileContent = fs.readFileSync(fileSource, 'utf8');
           const { data, content } = matter(fileContent);
 
@@ -115,11 +123,6 @@ const parsePosts = (source: Source): Array<PostInfo> => {
  */
 export const getAllPosts = (): Array<PostInfo> => {
   const POST_PATH = path.join(process.cwd(), 'public/posts');
-
-  if (!fs.existsSync(POST_PATH)) {
-    console.error(`Path does not exist: ${POST_PATH}`);
-    return [];
-  }
   const posts = parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {

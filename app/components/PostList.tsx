@@ -45,9 +45,6 @@ export const PostList = ({
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
 
   const slicedPostList = postList.slice(offSet, offSet + POSTS_PER_PAGES);
-
-  console.log(POSTS_PER_PAGES);
-  console.log(slicedPostList.length);
   slicedPostList.forEach((post) => console.log(post.meta.title));
   return slicedPostList.map(({ meta }, id) => (
     <PostItem meta={meta} key={id} />
