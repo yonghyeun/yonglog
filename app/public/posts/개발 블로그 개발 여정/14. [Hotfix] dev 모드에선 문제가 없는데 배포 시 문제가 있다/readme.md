@@ -73,7 +73,7 @@ export const PostList = ({
   const postList = selectPosts(searchParams);
   // 디버깅을 위해 사용 할 length
   console.log(searchParams.toString());
-  console.log(postList.length);
+  postList.forEach((post) => console.log(post.meta.title));
 
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
@@ -84,3 +84,5 @@ export const PostList = ({
   ));
 };
 ```
+
+그래서 `public/posts` 폴더에 있는 `post` 들을 가져오는데 있어 문제가 있는건가 싶어 `PostList` 가 렌더링 될 떄 디버깅을 위해 로그를 찍도록 하였다.
