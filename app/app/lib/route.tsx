@@ -43,7 +43,7 @@ const removeTagParams = (
 export const getNewSearchParms = (
   searchParams: URLSearchParams,
   newParams: SearchParams,
-  isActive?: boolean,
+  isActive: boolean,
 ): string => {
   Object.entries(newParams).forEach(([key, value]) => {
     if (key === 'tag') {
