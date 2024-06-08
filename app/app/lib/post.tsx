@@ -114,7 +114,12 @@ const parsePosts = (source: Source): Array<PostInfo> => {
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */
 export const getAllPosts = (): Array<PostInfo> => {
-  const POST_PATH = '../app/public/posts';
+  const POST_PATH = path.join(process.cwd(), 'public/posts');
+
+  if (!fs.existsSync(POST_PATH)) {
+    console.error(`Path does not exist: ${POST_PATH}`);
+    return [];
+  }
   const posts = parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {
