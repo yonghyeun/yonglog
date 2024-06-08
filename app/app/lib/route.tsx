@@ -1,13 +1,10 @@
-import type { SearchParams } from '@/types/global';
+import type { CheckIsActive, GetNewSearchParams } from '@/types/global';
 
 const areTagsActive = (exsitTags: string, newTag: string): boolean => {
   return exsitTags.split('&').some((tag) => tag === newTag);
 };
 
-export const checkIsActive = (
-  searchParams: URLSearchParams,
-  newParams: SearchParams,
-): boolean => {
+export const checkIsActive: CheckIsActive = (searchParams, newParams) => {
   return Object.entries(newParams).every(([key, value]) => {
     const currentParams = searchParams.get(key);
 
@@ -40,11 +37,11 @@ const removeTagParams = (
     .join('&');
 };
 
-export const getNewSearchParms = (
-  searchParams: URLSearchParams,
-  newParams: SearchParams,
-  isActive: boolean,
-): string => {
+export const getNewSearchParms: GetNewSearchParams = (
+  searchParams,
+  newParams,
+  isActive,
+) => {
   Object.entries(newParams).forEach(([key, value]) => {
     if (key === 'tag') {
       searchParams.set(

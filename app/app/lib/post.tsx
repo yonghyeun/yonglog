@@ -114,7 +114,8 @@ const parsePosts = (source: Source): Array<PostInfo> => {
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */
 export const getAllPosts = (): Array<PostInfo> => {
-  const POST_PATH = '../app/public/posts';
+  // 배포시에도 인식 할 수 있도록 절대 경로로 수정
+  const POST_PATH = path.join(process.cwd(), 'public/posts');
   const posts = parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {
