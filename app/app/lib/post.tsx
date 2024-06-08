@@ -115,6 +115,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
  */
 export const getAllPosts = (): Array<PostInfo> => {
   const POST_PATH = path.join(process.cwd(), 'public/posts');
+  console.log(POST_PATH);
 
   if (!fs.existsSync(POST_PATH)) {
     console.error(`Path does not exist: ${POST_PATH}`);

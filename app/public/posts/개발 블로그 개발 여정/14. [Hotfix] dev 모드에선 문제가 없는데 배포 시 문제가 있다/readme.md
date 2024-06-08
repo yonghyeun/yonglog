@@ -48,4 +48,39 @@ const Page = ({ searchParams }: { searchParams: SearchParams }) => {
 export default Page;
 ```
 
-현재 `/` 경로에 존재하는 `page.tsx` 에서 `PostList` 컴포넌트 부분이 서버에서 렌더링 되지 않는다.
+![alt text](image.png)
+
+현재 배포 시 `/` 경로에 존재하는 `page.tsx` 에서 `PostList` 컴포넌트 부분이 서버에서 렌더링 되지 않는다.
+
+`dev` 모드에선 문제 없이 `PostList` 부분이 렌더링이 잘 됨에도 불구하고 왜그럴까 ?
+
+### `components/PostList.tsx`
+
+---
+
+```tsx
+import Link from 'next/link';
+import Image from 'next/image';
+import { selectPosts } from '@/app/lib/post';
+import type { PostInfo } from '@/types/post';
+
+export const PostList = ({
+  searchParams,
+}: {
+  searchParams: URLSearchParams;
+}) => {
+  const page = searchParams.get('page') || '1';
+  const postList = selectPosts(searchParams);
+  // 디버깅을 위해 사용 할 length
+  console.log(searchParams.toString());
+  console.log(postList.length);
+
+  const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
+  const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
+
+  const slicedPostList = postList.slice(offSet, offSet + POSTS_PER_PAGES);
+  return slicedPostList.map(({ meta }, id) => (
+    <PostItem meta={meta} key={id} />
+  ));
+};
+```
