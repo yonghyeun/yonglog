@@ -297,30 +297,20 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 };
 ```
 
-이 두 단계를 디버깅 포인트로 잡고 로깅을 다시 해보자
-
-```tsx
-  if (isMDX(fileSource)) {
-          console.log('---isMDX 외부---');
-          console.log(path.join(fileSource));
-          console.log('----');
-          const fileContent = fs.readFileSync(fileSource, 'utf8');
-          const { data, content } = matter(fileContent);
-```
-
 ```tsx
 /**
  * source 에 존재하는 file이 mdx 파일인지 확인하는 메소드
  * 이 때 반환값에 타입 가드를 설정해주도록 한다.
  */
 const isMDX = (source: Source): source is MDXSource => {
-  console.log('---isMDX 내부---');
-  console.log(path.join(source));
-  console.log('----');
-
   const fileName = path.basename(source);
+
+  const isMDXBool =
+    path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
+  console.log(fileName, isMDXBool);
+
   return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
 };
 ```
 
-두 포인트에 로깅을 잡고 배포를 다시 해보자
+해당 포인트에 로깅을 잡고 배포를 다시 해보자

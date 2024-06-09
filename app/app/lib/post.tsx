@@ -25,11 +25,12 @@ const isDirectory = (source: Source): source is Directory => {
  * 이 때 반환값에 타입 가드를 설정해주도록 한다.
  */
 const isMDX = (source: Source): source is MDXSource => {
-  console.log('---isMDX 내부---');
-  console.log(path.join(source));
-  console.log('----');
-
   const fileName = path.basename(source);
+
+  const isMDXBool =
+    path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
+  console.log(fileName, isMDXBool);
+
   return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
 };
 
@@ -75,9 +76,6 @@ const parsePosts = (source: Source): Array<PostInfo> => {
         parseRecursively(fileSource);
       } else {
         if (isMDX(fileSource)) {
-          console.log('---isMDX 외부---');
-          console.log(path.join(fileSource));
-          console.log('----');
           const fileContent = fs.readFileSync(fileSource, 'utf8');
           const { data, content } = matter(fileContent);
 
