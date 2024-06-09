@@ -285,3 +285,22 @@ const parsePosts = (source: Source): Array<PostInfo> => {
   return Posts;
 };
 ```
+
+### `isDirectory` 디버깅
+
+---
+
+```tsx
+/**
+ * source 가 특정 경로인지, 파일인지를 확인하는 메소드
+ */
+const isDirectory = (source: Source): source is Directory => {
+  if (path.extname(source) === '.mdx' || path.extname(source) === '.md') {
+    console.log(path.basename(source), fs.lstatSync(source).isDirectory());
+  }
+
+  return fs.lstatSync(source).isDirectory();
+};
+```
+
+해당 부분에 로그를 로깅이 되도록 해봤다.
