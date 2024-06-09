@@ -261,46 +261,63 @@ const isMDX = (source: Source): source is MDXSource => {
 
 그렇지 않다. `vercel` 을 살펴보면 `md` 확장자 , `md` 확장자 가릴 것 없이 잘 배포 되고 있는 모습을 볼 수 있다.
 
-두 가지 포인트에 디버깅 포인트를 잡아보자
-
-```tsx
-const parsePosts = (source: Source): Array<PostInfo> => {
-  const Posts: Array<PostInfo> = [];
-
-  const parseRecursively = (source: Source): void => {
-    getAllPath(source).forEach((fileSource: Source) => {
-      if (isDirectory(fileSource)) {
-        parseRecursively(fileSource);
-        /* md 파일들이 isDrectory 를 통과하지 못했거나 */
-      } else {
-        if (isMDX(fileSource)) {
-          /* md 파일들이 isMDX 를 통과하지 못했을 것이다. */
-        }
-      }
-    });
-  };
-
-  parseRecursively(source);
-
-  return Posts;
-};
-```
-
-### `isDirectory` 디버깅
+## 어떻게 해결할까 ?
 
 ---
 
-```tsx
-/**
- * source 가 특정 경로인지, 파일인지를 확인하는 메소드
- */
-const isDirectory = (source: Source): source is Directory => {
-  if (path.extname(source) === '.mdx' || path.extname(source) === '.md') {
-    console.log(path.basename(source), fs.lstatSync(source).isDirectory());
-  }
+사실 여러 디버깅 포인트를 잡고 로그도 해보고 그랬는데 이유는 모르겠지만 `md` 확장자 파일에 대해서는 파일을 읽어오지 못하더라
 
-  return fs.lstatSync(source).isDirectory();
+내 생각에는 `vercel` 패포와 관련된 `json` 을 만져줘야 할 것 같은데 이 부분은 나중에 기능을 확장해나가면서 수정해주도록 하기로 하고
+
+모든 포스팅에 사용 할 모든 파일들을 `md` 파일이 아닌 `mdx` 파일로 변경해주었다.
+
+확장자를 `mdx` 로 모두 변경해주었기 떄문에 이제는 문제 없이 모든 포스팅들을 불러올 수 있을 것이다.
+
+# `vercel` 에서 `process.env` 파일을 읽어오지 못하는 문제를 해결해보자
+
+```tsx
+export const PostList = ({
+  searchParams,
+}: {
+  searchParams: URLSearchParams;
+}) => {
+  const page = searchParams.get('page') || '1';
+  const postList = selectPosts(searchParams); // 내 로컬 파일에 접근해서 => 데이터를 가져와라
+
+  const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
+  const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
+
+  const slicedPostList = postList.slice(offSet, offSet + POSTS_PER_PAGES);
+  return slicedPostList.map(({ meta }, id) => (
+    <PostItem meta={meta} key={id} />
+  ));
 };
 ```
 
-해당 부분에 로그를 로깅이 되도록 해봤다.
+위에서 말했듯 `/` 경로에서 `PostList` 들이 렌더링 되지 않는 문제에 대해서 원인을 찾았었다.
+
+## 원인 파악 : `process.env` 파일이 배포된 `vercel` 에선 존재하지 않았다.
+
+즉 해당 메소드에선 `process.env` 에서` POSTS_PER_PAGES` 를 불러와 가져온 `postList` 들을 `slice` 하는데
+
+배포 할 떄 `process.env` 에 해당하는 `env.local` 파일을 `git.ignore` 한 채로 올리기 때문에 `process.env` 에 접근하지 못하는 것이였다.
+
+## 어떻게 해결할까 ?
+
+`next.config.js` 파일에서 `env` 프로퍼티에 사용 할 값들을 추가해주었다.
+
+```tsx
+// next.config.js
+const nextConfig = {
+  /* 이전 코드 생략 */
+  env: {
+    POSTS_PER_PAGES: process.env.POSTS_PER_PAGES, // 배포 시 env.local 의 파일을 env 파일로 사용
+  },
+};
+```
+
+`.env.local` 파일로 생성해둔 환경 변수들은 개발 시에만 사용 되는 말 그대로 지역 환경 변수들이다.
+
+배포 시에 사용 할 `env` 파일을 생성해주든지 , `next.config` 에서 배포 시 사용 할 `env` 들을 선언해주면 된다.
+
+이를 통해 배포 된 파일에서도 `process.env` 에 접근하면 개발 시 사용 한` env` 와 동일한 환경 변수에 접근 할 수 있다.
