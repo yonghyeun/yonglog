@@ -7,7 +7,6 @@ import type {
   PostInfo,
   SeriesName,
 } from '@/types/post';
-import { PiFileRsDuotone } from 'react-icons/pi';
 
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +16,10 @@ const matter = require('gray-matter');
  * source 가 특정 경로인지, 파일인지를 확인하는 메소드
  */
 const isDirectory = (source: Source): source is Directory => {
+  if (path.extname(source) === '.mdx' || path.extname(source) === '.md') {
+    console.log(path.basename(source), fs.lstatSync(source).isDirectory());
+  }
+
   return fs.lstatSync(source).isDirectory();
 };
 
@@ -26,11 +29,6 @@ const isDirectory = (source: Source): source is Directory => {
  */
 const isMDX = (source: Source): source is MDXSource => {
   const fileName = path.basename(source);
-
-  const isMDXBool =
-    path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
-  console.log(fileName, isMDXBool);
-
   return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
 };
 

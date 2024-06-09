@@ -261,7 +261,7 @@ const isMDX = (source: Source): source is MDXSource => {
 
 그렇지 않다. `vercel` 을 살펴보면 `md` 확장자 , `md` 확장자 가릴 것 없이 잘 배포 되고 있는 모습을 볼 수 있다.
 
-디버깅 할 포인트들을 `parsePosts` 내부를 통해 살펴보자
+두 가지 포인트에 디버깅 포인트를 잡아보자
 
 ```tsx
 const parsePosts = (source: Source): Array<PostInfo> => {
@@ -271,21 +271,10 @@ const parsePosts = (source: Source): Array<PostInfo> => {
     getAllPath(source).forEach((fileSource: Source) => {
       if (isDirectory(fileSource)) {
         parseRecursively(fileSource);
+        /* md 파일들이 isDrectory 를 통과하지 못했거나 */
       } else {
         if (isMDX(fileSource)) {
-          /* 이 곳에 확장자명이 md , mdx 인 파일이 모두 잘 들어왔는지 확인 */
-          const fileContent = fs.readFileSync(fileSource, 'utf8');
-          const { data, content } = matter(fileContent);
-          /* 나머지 코드 생략 */
-          Posts.push({
-            meta: {
-              ...data,
-              series: getSeriesName(fileSource),
-              seriesThumbnail: getValidThumbnail(fileSource),
-              path: relatevePath,
-            },
-            content: content,
-          });
+          /* md 파일들이 isMDX 를 통과하지 못했을 것이다. */
         }
       }
     });
@@ -296,21 +285,3 @@ const parsePosts = (source: Source): Array<PostInfo> => {
   return Posts;
 };
 ```
-
-```tsx
-/**
- * source 에 존재하는 file이 mdx 파일인지 확인하는 메소드
- * 이 때 반환값에 타입 가드를 설정해주도록 한다.
- */
-const isMDX = (source: Source): source is MDXSource => {
-  const fileName = path.basename(source);
-
-  const isMDXBool =
-    path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
-  console.log(fileName, isMDXBool);
-
-  return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
-};
-```
-
-해당 포인트에 로깅을 잡고 배포를 다시 해보자
