@@ -45,6 +45,19 @@ export const PostList = ({
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
 
   const slicedPostList = postList.slice(offSet, offSet + POSTS_PER_PAGES);
+
+  // ! 디버깅을 위한 것으로 나중에 제거하기
+  console.log('selectPosts 로 가져온 포스트 들의 개수 : ', postList.length);
+  console.log(
+    '환경 변수에 저장된 POSTS_PER_PAES : ',
+    process.env.POSTS_PER_PAES,
+  );
+  console.log(
+    'slicedPostList 로 가져온 포스트 들의 개수 : ',
+    slicedPostList.length,
+  );
+  // ! 디버깅을 위한 것으로 나중에 제거하기
+
   return slicedPostList.map(({ meta }, id) => (
     <PostItem meta={meta} key={id} />
   ));

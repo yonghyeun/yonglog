@@ -304,20 +304,10 @@ export const PostList = ({
 
 ## 어떻게 해결할까 ?
 
-`next.config.js` 파일에서 `env` 프로퍼티에 사용 할 값들을 추가해주었다.
+![vercel 의 환경 변수 셋팅](image-5.png)
 
-```tsx
-// next.config.js
-const nextConfig = {
-  /* 이전 코드 생략 */
-  env: {
-    POSTS_PER_PAGES: process.env.POSTS_PER_PAGES, // 배포 시 env.local 의 파일을 env 파일로 사용
-  },
-};
-```
+`vercel` 의 프로젝트 셋팅에서 환경 변수를 셋팅 하는 곳이 있다.
 
-`.env.local` 파일로 생성해둔 환경 변수들은 개발 시에만 사용 되는 말 그대로 지역 환경 변수들이다.
+해당 공간에 사용 할 환경변수를 쳐주거나 `env` 파일을 업로드 하는 것이 가능하다.
 
-배포 시에 사용 할 `env` 파일을 생성해주든지 , `next.config` 에서 배포 시 사용 할 `env` 들을 선언해주면 된다.
-
-이를 통해 배포 된 파일에서도 `process.env` 에 접근하면 개발 시 사용 한` env` 와 동일한 환경 변수에 접근 할 수 있다.
+나는 해당 곳에 환경변수에서 사용 할 값을 설정해주었다.
