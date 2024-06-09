@@ -117,6 +117,8 @@ export const getAllPosts = (): Array<PostInfo> => {
   const POST_PATH = path.join(process.cwd(), 'public/posts');
   const posts = parsePosts(POST_PATH);
 
+  posts.forEach((post) => console.log(post.meta.title));
+
   return posts.toSorted((prev, cur) => {
     const prevTime = prev.meta.time;
     const curTime = cur.meta.time;

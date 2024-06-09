@@ -21,6 +21,9 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js'],
   typescript: { ignoreBuildErrors: true }, // dev 모드 시 type 오류 없다면 빌드 시 타입 오류 제거
+  env: {
+    POSTS_PER_PAEGES: process.env.POSTS_PER_PAEGES, // 배포 시 env.local 의 파일을 env 파일로 사용
+  },
 };
 
 export default withMDX(nextConfig);
