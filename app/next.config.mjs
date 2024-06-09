@@ -1,7 +1,7 @@
-import nextMDX from '@next/mdx';
-import rehypePrettyCode from 'rehype-pretty-code';
 import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from 'rehype-pretty-code';
 
+import nextMDX from '@next/mdx';
 /** @type {import('rehype-pretty-code').Options} */
 const options = {
   theme: 'github-dark',
@@ -17,9 +17,10 @@ const withMDX = nextMDX({
 });
 
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: true,
-  pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js'],
+  pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js', 'mjs'],
   typescript: { ignoreBuildErrors: true }, // dev 모드 시 type 오류 없다면 빌드 시 타입 오류 제거
 };
 

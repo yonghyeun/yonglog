@@ -1,6 +1,9 @@
-import PostTitle from '@/components/PostTitle';
+import rehypePrettyCode from 'rehype-pretty-code';
+import remarkGfm from 'remark-gfm';
 
+import PostTitle from '@/components/PostTitle';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+
 import { useMDXComponents } from '../lib/mdxComponents';
 import { getPostContent } from '../lib/post';
 
@@ -14,7 +17,23 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
         <PostTitle meta={meta} />
       </header>
       <main className='px-14'>
-        <MDXRemote source={content} components={components} />
+        <MDXRemote
+          source={content}
+          components={components}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+              rehypePlugins: [
+                [
+                  rehypePrettyCode,
+                  {
+                    theme: 'material-theme-palenight',
+                  },
+                ],
+              ],
+            },
+          }}
+        />
       </main>
     </>
   );

@@ -1,6 +1,6 @@
 import path from 'path';
-
 import Image from 'next/image';
+
 import { MDXComponents } from 'mdx/types';
 
 /**
@@ -12,20 +12,31 @@ export const useMDXComponents = (
   postPath: string,
 ): MDXComponents => {
   return {
-    h1: ({ children }) => (
-      <>
-        <h1 className=' text-4xl border-b-[2px]  py-8 mb-4 border-gray-300 font-semibold'>
-          {children}
-        </h1>
-      </>
-    ),
+    h1: ({ children }) => {
+      return (
+        <>
+          <h1
+            className=' sticky top-[3.5rem]  text-4xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-indigo-100'
+            id={children as string}
+          >
+            {children}
+          </h1>
+        </>
+      );
+    },
     h2: ({ children }) => (
-      <h2 className='  text-3xl border-b-[1px]  py-8 mb-4 border-gray-300 font-semibold leading-7'>
+      <h2
+        className='   text-3xl border-b-[1px]   py-8 mb-4 border-gray-300 font-semibold leading-7 '
+        id={children as string}
+      >
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className='  text-xl border-b-[1px] py-4 mb-2 border-gray-300 font-semibold leading-7'>
+      <h3
+        className='   text-xl border-b-[1px]  py-4 mb-2 border-gray-300 font-semibold leading-7 '
+        id={children as string}
+      >
         {children}
       </h3>
     ),
@@ -40,7 +51,7 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='py-1 text-[18px] indent-[1px]'>{children}</p>
+      <p className='py-1 text-[16px] indent-[1px]'>{children}</p>
     ),
 
     strong: ({ children }) => <strong>{children}</strong>,

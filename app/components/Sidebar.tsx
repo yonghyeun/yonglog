@@ -14,14 +14,15 @@ const SideBar = () => {
       <h2 className='text-gray-900 font-bold text-xl mb-2'>시리즈</h2>
       <ul>
         {serieseList.map(([seriesName, count], id) => (
-          <ActiveLink
-            newParams={{ series: seriesName }}
-            classNames={sideBarClasses}
-            key={id}
-            toFirstPage
-          >
-            {`${seriesName} (${count})`}
-          </ActiveLink>
+          <li key={id}>
+            <ActiveLink
+              newParams={{ series: seriesName }}
+              classNames={sideBarClasses}
+              toFirstPage
+            >
+              {`${seriesName} (${count})`}
+            </ActiveLink>
+          </li>
         ))}
       </ul>
     </section>
