@@ -1,6 +1,6 @@
 ---
-title: 특정 컴포넌트가 배포 시 렌더링 되지 않는 문제 발생
-description: 아니 왜그러세요
+title: [BUG] Vercel 에 환경 변수 추가하기
+description: Vercel에 배포 할 때 환경 변수 추가하기 , 그나저나 왜 Vercel 은 md 파일은 인식 못할까 ?
 tag:
   - nextjs
   - error
@@ -90,7 +90,7 @@ export const PostList = ({
 };
 ```
 
-그래서 `public/posts` 폴더에 있는 `post` 들을 가져오는데 있어 문제가 있는건가 싶어 `PostList` 가 렌더링 될 떄 디버깅을 위해 로그를 찍도록 하였다.
+그래서 `public/posts` 폴더에 있는 `post` 들을 가져오는데 있어 문제가 있는건가 싶어 `PostList` 가 렌더링 될 때 디버깅을 위해 로그를 찍도록 하였다.
 
 이렇게 로깅하고 나니 문제가 두 개로 명확해졌다.
 
@@ -271,7 +271,7 @@ const isMDX = (source: Source): source is MDXSource => {
 
 모든 포스팅에 사용 할 모든 파일들을 `md` 파일이 아닌 `mdx` 파일로 변경해주었다.
 
-확장자를 `mdx` 로 모두 변경해주었기 떄문에 이제는 문제 없이 모든 포스팅들을 불러올 수 있을 것이다.
+확장자를 `mdx` 로 모두 변경해주었기 때문에 이제는 문제 없이 모든 포스팅들을 불러올 수 있을 것이다.
 
 # `vercel` 에서 `process.env` 파일을 읽어오지 못하는 문제를 해결해보자
 
@@ -300,7 +300,7 @@ export const PostList = ({
 
 즉 해당 메소드에선 `process.env` 에서` POSTS_PER_PAGES` 를 불러와 가져온 `postList` 들을 `slice` 하는데
 
-배포 할 떄 `process.env` 에 해당하는 `env.local` 파일을 `git.ignore` 한 채로 올리기 때문에 `process.env` 에 접근하지 못하는 것이였다.
+배포 할 때 `process.env` 에 해당하는 `env.local` 파일을 `git.ignore` 한 채로 올리기 때문에 `process.env` 에 접근하지 못하는 것이였다.
 
 ## 어떻게 해결할까 ?
 
