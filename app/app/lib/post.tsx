@@ -159,6 +159,5 @@ export const getPostContent = (postId: string): PostInfo => {
   const searchedPost = allPosts.find(
     (post) => post.meta.postId === Number(postId),
   );
-
   return searchedPost as PostInfo;
 };

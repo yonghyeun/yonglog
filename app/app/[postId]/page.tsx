@@ -3,6 +3,8 @@ import remarkGfm from 'remark-gfm';
 
 import PostTitle from '@/components/PostTitle';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { Suspense } from 'react';
+import { LoadingTitle, LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../lib/mdxComponents';
 import { getPostContent } from '../lib/post';
@@ -17,23 +19,25 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
         <PostTitle meta={meta} />
       </header>
       <main className='px-14'>
-        <MDXRemote
-          source={content}
-          components={components}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkGfm],
-              rehypePlugins: [
-                [
-                  rehypePrettyCode,
-                  {
-                    theme: 'material-theme-palenight',
-                  },
+        <Suspense fallback={<LoadingContnet />}>
+          <MDXRemote
+            source={content}
+            components={components}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+                rehypePlugins: [
+                  [
+                    rehypePrettyCode,
+                    {
+                      theme: 'material-theme-palenight',
+                    },
+                  ],
                 ],
-              ],
-            },
-          }}
-        />
+              },
+            }}
+          />
+        </Suspense>
       </main>
     </>
   );
