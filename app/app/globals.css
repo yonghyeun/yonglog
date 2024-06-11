@@ -27,13 +27,14 @@ body {
 }
 
 pre {
-  overflow-x: scroll;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
   font-family: var(--font-jetBrainsMono);
-  padding-top: 2rem;
+  padding-top: 1rem;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
-  margin-top: 2rem;
-  border-radius: 10px;
+  border-radius: 0px 0px 10px 10px;
   scrollbar-width: none;
 }
 
@@ -47,6 +48,7 @@ pre {
 
 pre > code {
   display: grid;
+  font-size: 80%;
 }
 
 pre span[data-line] {
@@ -59,14 +61,17 @@ code {
 }
 
 code {
-  counter-reset: line;
+  counter-reset: line; /* code가 시작 될 떄 마다 line 이란 이름으 카운터 생성 */
 }
 
 code > [data-line]::before {
+  /* [data-line] 이 등장 할 때 마다 counter 1씩 증가 */
   counter-increment: line;
-  content: counter(line);
 
-  /* Other styling */
+  /* [data-line] 이 등장 할 때 마다 counter 를 줄의 ::before에 
+  추가해주기
+  */
+  content: counter(line);
   display: inline-block;
   width: 1rem;
   margin-right: 2rem;
@@ -81,16 +86,26 @@ code[data-line-numbers-max-digits='2'] > [data-line]::before {
 code[data-line-numbers-max-digits='3'] > [data-line]::before {
   width: 3rem;
 }
+
 span[data-highlighted-line] {
   background-color: #e0e0e031;
 }
 
 span[data-highlighted-line-id='add'] {
-  background-color: rgba(153, 205, 50, 0.304);
+  background-color: rgba(195, 255, 0, 0.127);
 }
 
 span[data-highlighted-line-id='remove'] {
   background-color: rgba(255, 99, 71, 0.315);
+}
+
+figcaption[data-rehype-pretty-code-title] {
+  text-align: end;
+  background-color: #292d3e;
+  border-radius: 10px 10px 0px 0px;
+  padding-top: 0.5rem;
+  padding-right: 2rem;
+  color: #aaa;
 }
 
 @layer components {

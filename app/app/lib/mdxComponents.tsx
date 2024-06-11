@@ -16,7 +16,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className=' sticky top-[3.5rem]  text-4xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-indigo-100'
+            className=' sticky top-[3.5rem]  text-3xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-indigo-100'
             id={children as string}
           >
             {children}
@@ -26,7 +26,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className='   text-3xl border-b-[1px]   py-8 mb-4 border-gray-300 font-semibold leading-7 '
+        className='   text-2xl border-b-[1px]   py-8 mb-4 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -41,7 +41,7 @@ export const useMDXComponents = (
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className='text-xl border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7'>
+      <h4 className='text-l border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7'>
         {children}
       </h4>
     ),
