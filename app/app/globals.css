@@ -105,6 +105,7 @@ figcaption[data-rehype-pretty-code-title] {
   border-radius: 10px 10px 0px 0px;
   padding-top: 0.5rem;
   padding-right: 2rem;
+  margin-top: 1rem;
   color: #aaa;
 }
 
