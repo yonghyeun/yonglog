@@ -4,7 +4,7 @@ import { FaSearch, FiMoon, FiSun, FaGithub } from './Icons';
 
 const GlobalNav = () => {
   return (
-    <nav className='fixed z-[999] top -0 left-0 right-0  lg: py-3 bg-gray-900 text-white'>
+    <nav className='fixed z-[999] top-0 left-0 right-0  lg: py-3 bg-gray-900 text-white'>
       <ul className='flex justify-between items-center shadow-md mx-0 sm:mx-auto w-full sm:w-3/4 lg:w-1/2'>
         <li>
           <h1 className='text-2xl font-bold flex items-start '>

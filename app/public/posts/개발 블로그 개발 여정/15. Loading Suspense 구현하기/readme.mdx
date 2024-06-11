@@ -385,3 +385,13 @@ export default PostPage;
 ```
 
 이렇게 되면 `loading.tsx` 파일이 렌더링 된 이후 `page.tsx` 파일이 렌더링 되는 동안 `MDXRemote` 의 비동기처리로 전체 렌더링 패스가 `block` 되는 것이 아니라 `loading.tsx` 때 처럼 `LoadingContent` 컴포넌트가 렌더링 되게 된다.
+
+이후 `MDXRemote` 의 비동기처리가 모두 끝나면 정상적으로 `MDXRemote` 컴포넌트의 내용이 렌더링 된다.
+
+![alt text](<loadingtsx success.gif>)
+
+렌더링 과정을 보면 `loading.tsx` 가 렌더링 됨으로 인해 `title , content` 영역이 모두 `loading` 상태였다가
+
+`page.tsx` 부분이 렌더링 될 땐 `content (MDXRemote)` 영역이 `loading -> MDXRemote` 로 렌더링 되는 모습을 볼 수 있다.
+
+> 처리해야 할 것들을 먼저 처리하고 나서 나중엔 `Image` 로 인해 발생하는 `layout shifting` 을 어떻게 해결할지 생각해봐야겠다.
