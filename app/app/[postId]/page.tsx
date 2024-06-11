@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 import PostTitle from '@/components/PostTitle';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
-import { LoadingTitle, LoadingContnet } from '@/components/Loading';
+import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../lib/mdxComponents';
 import { getPostContent } from '../lib/post';
