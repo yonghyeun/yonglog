@@ -41,7 +41,7 @@ export const LoadingContnet = () => (
     </div>
     <p className='my-3 '>
       <span className='inline py-1 text-[16px] mb-2rem indent-[1px] bg-gray-300 text-gray-300'>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda
+        Loro ipsum dolor sit amet cpan nsectetur adipisicing elit. Assumenda
       </span>
     </p>
     <p className='my-3 '>

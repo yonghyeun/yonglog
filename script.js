@@ -1,5 +1,12 @@
-const sp = new URLSearchParams({ a: '1' });
+const Sidebar = () => {
+  const headersList = []; // '['h1', PostTSX 생성하기]'
 
-sp.append('a', '2');
 
-console.log(sp.toString());
+  return (
+    <ul>
+      {headersList.map(... <li><Link href = {{`#${header}`}}/ ></li>) }
+      
+    </ul>
+  )
+
+};
