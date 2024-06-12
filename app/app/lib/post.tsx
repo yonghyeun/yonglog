@@ -43,25 +43,21 @@ const translatePath = (source: Source): Source => {
 
 /**
  * 필수 전제 조건 :
- * 1. thumbnail 로 쓰고자 하는 이미지 파일이 해당 mdx 파일과 함께 존재해야함
- * 2. 시리즈 썸네일은 상위 경로에 무조건 존재해야 함
+ * 1. postThumbnail 을 사용하려면 meta 데이터에 thumb 에 대한 주소가 존재해야 함
  */
 const getValidThumbnail = (
   source: MDXSource,
   data: PostInfo['meta'],
 ): Source => {
-  // 1. postThumbnail 이 있는지 확인
-  const postThumbnail = data.thumb;
-  if (postThumbnail) {
-    if (fs.existsSync(postThumbnail)) {
-      return translatePath(postThumbnail);
-    } else {
-      // 만약 fs.exsitsSync가 false 라면 thumb 을 설정 안했거나 , 상대경로로 작성되었을 가능성이 높음
-      // TODO 해당 조건문은 작동이 안된다. 나중에 fix 하기
-      const absolutePath = path.resolve(postThumbnail);
-      if (fs.existsSync(absolutePath)) {
-        return translatePath(absolutePath);
-      }
+  /**
+   * postThumb 에 대한 정보를 확인한다.
+   * 기존엔 절대경로로 확인했으나 vercel 배포 버전에서도 인식 할 수 있도록 상대경로를 이용하여 fs.exsitSync 사용
+   * 해당 코드는 dev 모드에선 작동하지 않고 vercel 배포 버전에서는 잘 작동함
+   */
+  if (data.thumb) {
+    const postThumb = path.join(source, '..', path.basename(data.thumb));
+    if (fs.existsSync(postThumb)) {
+      return translatePath(postThumb);
     }
   }
   // 2. seriesThumbnail 이 있는지 확인
