@@ -73,18 +73,25 @@ export const useMDXComponents = (
 
       return (
         <span className='flex justify-center w-full mt-8 mb-8'>
-          <Image
-            src={imageSrc}
-            alt={alt || 'image'}
-            width={width}
-            height={height}
-            style={{
-              width: 'auto',
-              height: 'auto',
-              borderRadius: '8px',
-              display: 'block',
-            }}
-          />
+          <figure>
+            <Image
+              src={imageSrc}
+              alt={alt || 'image'}
+              width={width}
+              height={height}
+              style={{
+                width: 'auto',
+                height: 'auto',
+                borderRadius: '8px',
+                display: 'block',
+              }}
+            />
+            {alt && alt !== 'alt text' && (
+              <span className='italic block text-center text-gray-500'>
+                {alt}
+              </span>
+            )}
+          </figure>
         </span>
       );
     },
