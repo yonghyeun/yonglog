@@ -45,12 +45,14 @@ const Pagination = ({ searchParams }: { searchParams: URLSearchParams }) => {
               <ActiveLink
                 newParams={{ page: '1' }}
                 classNames={paginationClasses.leftDouble}
+                replace={false}
               ></ActiveLink>
             </li>
             <li>
               <ActiveLink
                 newParams={{ page: String(currentPage - 1) }}
                 classNames={paginationClasses.left}
+                replace={false}
               ></ActiveLink>
             </li>
           </>
@@ -60,6 +62,7 @@ const Pagination = ({ searchParams }: { searchParams: URLSearchParams }) => {
             <ActiveLink
               newParams={{ page: String(page) }}
               classNames={paginationClasses.indigator}
+              replace={false}
             >
               {page}
             </ActiveLink>
@@ -71,12 +74,14 @@ const Pagination = ({ searchParams }: { searchParams: URLSearchParams }) => {
               <ActiveLink
                 newParams={{ page: String(currentPage + 1) }}
                 classNames={paginationClasses.right}
+                replace={false}
               ></ActiveLink>
             </li>
             <li>
               <ActiveLink
                 newParams={{ page: String(totalPages) }}
                 classNames={paginationClasses.rightDouble}
+                replace={false}
               ></ActiveLink>
             </li>
           </>
