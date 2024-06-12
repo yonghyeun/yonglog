@@ -55,9 +55,10 @@ const getValidThumbnail = (
    * 해당 코드는 dev 모드에선 작동하지 않고 vercel 배포 버전에서는 잘 작동함
    */
   if (data.thumb) {
-    const postThumb = path.join(source, '..', path.basename(data.thumb));
-    console.log(postThumb);
-    console.log(fs.existsSync(postThumb));
+    const postThumb = path
+      .join(source, '..', path.basename(data.thumb))
+      .replace(/\g/, '/'); // 혹시 경로가 \ 로 작성된 경우엔 / 로 replace
+
     if (fs.existsSync(postThumb)) {
       return translatePath(postThumb);
     }
