@@ -57,7 +57,7 @@ const getValidThumbnail = (
   if (data.thumb) {
     const postThumb = path
       .join(source, '..', path.basename(data.thumb))
-      .replace(/\g/, '/'); // 혹시 경로가 \ 로 작성된 경우엔 / 로 replace
+      .replace(/\\/g, '/'); // 혹시 경로가 \ 로 작성된 경우엔 / 로 replace
 
     if (fs.existsSync(postThumb)) {
       return translatePath(postThumb);
