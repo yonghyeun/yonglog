@@ -56,6 +56,8 @@ const getValidThumbnail = (
    */
   if (data.thumb) {
     const postThumb = path.join(source, '..', path.basename(data.thumb));
+    console.log(postThumb);
+    console.log(fs.existsSync(postThumb));
     if (fs.existsSync(postThumb)) {
       return translatePath(postThumb);
     }
