@@ -6,7 +6,7 @@ const CategoryClassNames = {
   default:
     'border border-gray-300 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none font-light text-sm',
   active:
-    'bg-indigo-300  border border-gray-300 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none  text-sm',
+    'bg-indigo-300  border border-gray-300 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none  mb-2 text-sm',
 };
 
 const CategoryList = () => {
@@ -19,7 +19,7 @@ const CategoryList = () => {
             tag: tagName,
           };
           return (
-            <li key={id}>
+            <li className='mt-2' key={id}>
               <ActiveLink
                 newParams={newParams}
                 classNames={CategoryClassNames}

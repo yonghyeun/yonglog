@@ -10,25 +10,25 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
     }}
     className='my-4 px-4 pb-8 border-b-[1px] border-[#c1c8cf] flex justify-between '
   >
-    <div className='w-5/6'>
-      <p className='text-gray-500 mb-2 text-sm'>
-        <span className='mr-2'>{meta.date}</span>
-        <span className='mr-2'>{meta?.series}</span>
-      </p>
-      <h1 className='text-3xl font-bold leading-10 mb-2 break-words whitespace-normal'>
-        {meta.title}
-      </h1>
-      <p>{meta.description}</p>
+    <div className='flex justify-center items-center mr-10  '>
+      <Image
+        src={meta.validThumbnail}
+        alt='series-thumbnail'
+        width={150}
+        height={150}
+      />
     </div>
-    <div className='flex justify-center items-center'>
-      {meta.seriesThumbnail && (
-        <Image
-          src={meta.seriesThumbnail}
-          alt='series-thumbnail'
-          width={60}
-          height={60}
-        />
-      )}
+    <div className='w-5/6 flex flex-col justify-between'>
+      <section>
+        <h1 className='text-3xl font-bold leading-10 mb-2 break-words whitespace-normal'>
+          {meta.title}
+        </h1>
+        <p className='text-l'>{meta.description}</p>
+      </section>
+      <p className='flex justify-between text-gray-500 my-2 text-sm'>
+        <span className='mr-2'>{meta?.series}</span>
+        <span className='mr-2'>{meta.date}</span>
+      </p>
     </div>
   </Link>
 );

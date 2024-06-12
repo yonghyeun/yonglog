@@ -7,6 +7,7 @@ import type {
   PostInfo,
   SeriesName,
 } from '@/types/post';
+import { resolve } from 'path';
 
 const fs = require('fs');
 const path = require('path');
@@ -28,23 +29,51 @@ const isMDX = (source: Source): source is MDXSource => {
   return path.extname(fileName) === '.mdx' || path.extname(fileName) == '.md';
 };
 
-const getValidThumbnail = (source: MDXSource): ImgSource | null => {
-  const thumbnailPath = path.join(source, '../../thumbnail');
-  const paths = ['jpg', 'png', 'gif', 'svg'].map(
-    (extname) => `${thumbnailPath}.${extname}` as ImgSource,
+/**
+ * source를 public에 대한 상대 경로로 변경해주는 메소드
+ */
+const translatePath = (source: Source): Source => {
+  const relativePath = path.relative(
+    path.join(process.cwd(), 'public'),
+    source,
   );
-  const validThumbnail = paths.find((path) => fs.existsSync(path));
 
-  if (validThumbnail) {
-    const relativePath = path.relative(
-      path.join(process.cwd(), 'public'),
-      validThumbnail,
-    );
-    const publicPath = `/${relativePath.replace(/\\/g, '/')}`;
-    return publicPath as ImgSource;
+  return `/${relativePath.replace(/\\/g, '/')}`;
+};
+
+/**
+ * 필수 전제 조건 :
+ * 1. thumbnail 로 쓰고자 하는 이미지 파일이 해당 mdx 파일과 함께 존재해야함
+ * 2. 시리즈 썸네일은 상위 경로에 무조건 존재해야 함
+ */
+const getValidThumbnail = (
+  source: MDXSource,
+  data: PostInfo['meta'],
+): Source => {
+  // 1. postThumbnail 이 있는지 확인
+  const postThumbnail = data.thumb;
+  if (postThumbnail) {
+    if (fs.existsSync(postThumbnail)) {
+      return translatePath(postThumbnail);
+    } else {
+      // 만약 fs.exsitsSync가 false 라면 thumb 을 설정 안했거나 , 상대경로로 작성되었을 가능성이 높음
+      // TODO 해당 조건문은 작동이 안된다. 나중에 fix 하기
+      const absolutePath = path.resolve(postThumbnail);
+      if (fs.existsSync(absolutePath)) {
+        return translatePath(absolutePath);
+      }
+    }
   }
+  // 2. seriesThumbnail 이 있는지 확인
+  const extnames = ['jpg', 'svg', 'png', 'gif'];
+  const possibleThumbnailPath = extnames.map(
+    (extname) => `${path.join(source, '../..', 'thumbnail')}.${extname}`,
+  );
 
-  return null;
+  const seriesThumbnail = possibleThumbnailPath.find((seriesThumbPath) => {
+    return fs.existsSync(seriesThumbPath);
+  });
+  return translatePath(seriesThumbnail as ImgSource);
 };
 
 /**
@@ -95,7 +124,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
             meta: {
               ...data,
               series: getSeriesName(fileSource),
-              seriesThumbnail: getValidThumbnail(fileSource),
+              validThumbnail: getValidThumbnail(fileSource, data),
               path: relatevePath,
             },
             content: content,
@@ -109,7 +138,6 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 
   return Posts;
 };
-
 /**
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */
@@ -159,5 +187,6 @@ export const getPostContent = (postId: string): PostInfo => {
   const searchedPost = allPosts.find(
     (post) => post.meta.postId === Number(postId),
   );
+
   return searchedPost as PostInfo;
 };

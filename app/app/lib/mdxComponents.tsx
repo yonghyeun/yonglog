@@ -18,7 +18,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className=' sticky top-[3.5rem]  text-3xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-indigo-100'
+            className=' sticky top-[3.5rem]  text-3xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-slate-50'
             id={children as string}
           >
             {children}
@@ -48,14 +48,13 @@ export const useMDXComponents = (
       </h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className='text-wrap border-l-4 border-gray-300 pl-4 pr-2 mt-2 mb-2 py-2 bg-indigo-200 italic text-gray-600 leading-7 '>
+      <blockquote className='text-wrap border-l-4 border-gray-300 pl-4 pr-2 mt-2 mb-2 py-2 bg-slate-200 italic text-gray-600 leading-7 '>
         {children}
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='py-1 text-[16px] indent-[1px]'>{children}</p>
+      <p className='py-1 text-[18px] indent-[1px]'>{children}</p>
     ),
-
     strong: ({ children }) => <strong>{children}</strong>,
     // TODO 코드 포맷터 라이브러리로 추가하기
     img: ({

@@ -16,7 +16,8 @@ export type PostInfo = {
     time: number;
     tag: Array<string>;
     path: string;
-    seriesThumbnail?: ImgSource;
+    validThumbnail: Source | ImgSource;
+    thumb?: Source | ImgSource;
   };
 };
 export type SeriesName = string;
