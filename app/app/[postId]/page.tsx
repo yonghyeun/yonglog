@@ -11,7 +11,6 @@ import { getAllPosts, getPostContent } from '../lib/post';
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
-
   return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
 }
 
