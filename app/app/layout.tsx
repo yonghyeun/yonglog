@@ -15,8 +15,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookie = cookies().get('theme');
-  const theme = cookie?.value.split(' ')[0];
+  const cookieStore = cookies();
+  const theme = cookieStore.get('theme')?.value.split(' ')[0];
+  console.log(JSON.stringify(cookieStore));
+  console.log(theme);
 
   return (
     <html lang='kr' data-theme={theme}>

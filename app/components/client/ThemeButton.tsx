@@ -1,7 +1,7 @@
 'use client';
 
 import { FiMoon, FiSun } from 'react-icons/fi';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 const ThemeButton = () => {
   const [theme, setTheme] = useState(
@@ -37,7 +37,7 @@ type CookieInfo = {
 };
 function setCookie(cookieInfo: CookieInfo) {
   const { name, value } = cookieInfo;
-  document.cookie = `${name}=${value || ''} path=/`;
+  document.cookie = `${name}=${value || ''}; path=/`;
 }
 
 export default ThemeButton;
