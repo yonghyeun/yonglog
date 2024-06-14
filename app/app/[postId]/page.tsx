@@ -7,7 +7,13 @@ import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../lib/mdxComponents';
-import { getPostContent } from '../lib/post';
+import { getAllPosts, getPostContent } from '../lib/post';
+
+export function generateStaticParams(): { postId: string }[] {
+  const allPost = getAllPosts();
+
+  return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
+}
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);

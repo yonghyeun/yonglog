@@ -5,7 +5,7 @@ const PostTitle = ({ meta }: { meta: PostInfo['meta'] }) => {
   return (
     <>
       <section className='mb-4 py-4 border-b-[2px]  border-gray-300 '>
-        <h1 className=' text-5xl py-4 font-semibold'>{title}</h1>
+        <h1 className=' text-5xl py-4  leading-tight font-semibold'>{title}</h1>
         <p className='text-gray-500 flex justify-end'>{series}</p>
       </section>
       <section className='flex justify-between'>

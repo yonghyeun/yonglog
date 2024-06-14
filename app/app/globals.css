@@ -64,6 +64,15 @@ code {
   counter-reset: line; /* code가 시작 될 떄 마다 line 이란 이름으 카운터 생성 */
 }
 
+/* 문장에서 쓰인 code 태그들에만 사용 할 스타일 */
+p > code,
+strong > code {
+  background-color: #aaaaaa63;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 5px;
+}
+
 code > [data-line]::before {
   /* [data-line] 이 등장 할 때 마다 counter 1씩 증가 */
   counter-increment: line;

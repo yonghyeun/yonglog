@@ -28,7 +28,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className='   text-2xl border-b-[1px]   py-8 mb-4 border-gray-300 font-semibold leading-7 '
+        className='   text-2xl border-b-[1px]   pt-4 pb-2 mb-4 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -36,7 +36,7 @@ export const useMDXComponents = (
     ),
     h3: ({ children }) => (
       <h3
-        className='   text-xl border-b-[1px]  py-4 mb-2 border-gray-300 font-semibold leading-7 '
+        className='   text-xl border-b-[1px]  pt-2 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -53,10 +53,9 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='py-1 text-[18px] indent-[1px]'>{children}</p>
+      <p className='mb-3 leading-slug text-[18px] indent-[1px]'>{children}</p>
     ),
     strong: ({ children }) => <strong>{children}</strong>,
-    // TODO 코드 포맷터 라이브러리로 추가하기
     img: ({
       src,
       alt,
@@ -72,26 +71,27 @@ export const useMDXComponents = (
       const imageSrc = path.join(postPath, src).replace(/\\/g, '/');
 
       return (
-        <span className='flex justify-center w-full mt-8 mb-8'>
-          <figure>
-            <Image
-              src={imageSrc}
-              alt={alt || 'image'}
-              width={width}
-              height={height}
-              style={{
-                width: 'auto',
-                height: 'auto',
-                borderRadius: '8px',
-                display: 'block',
-              }}
-            />
-            {alt && alt !== 'alt text' && (
-              <span className='italic block text-center text-gray-500'>
-                {alt}
-              </span>
-            )}
-          </figure>
+        <span className='grid justify-center  mx-auto w-full my-8'>
+          <Image
+            src={imageSrc}
+            alt={alt || 'image'}
+            width={width}
+            height={height}
+            style={{
+              width: 'auto',
+              height: 'auto',
+              borderRadius: '8px',
+              display: 'block',
+            }}
+            {...props}
+          />
+          {alt && alt !== 'alt text' && (
+            <span
+              className={`italic block text-center text-gray-500 width-${width}px`}
+            >
+              {alt}
+            </span>
+          )}
         </span>
       );
     },
