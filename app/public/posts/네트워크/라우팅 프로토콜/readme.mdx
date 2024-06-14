@@ -1,6 +1,6 @@
 ---
 title: 라우팅 프로토콜
-description: null
+description: NAT 개념 회고와 DHCP , packet의 fragmentation , reassembly 과정을 간략하게 알아보자
 tag:
   - 네트워크
 postId: 274409
@@ -120,3 +120,89 @@ time: 1718161491190
 이 떄 `DHCP server` 는 `yiaddr (your ip address)` 영역에 클라이언트가 할당 받을 `IP` 주소를 적어 보낸다.
 
 3. 클라이언트는 받은 `offer` 에 대한 `request` 를 서버에게 보내고 클라이언트 `request` 에 대한 서버의 `ACK` 가 전송되면 그 후부터 클라이언트는 `yiaddr`로 받은 `IP` 주소를 받을 수 있게 된다.
+
+## 실생활 속의 NAT 를 예시로 들어 이해해보자
+
+우리는 `IPv4` 의 한게점을 해결하기 위해 `NAT` 를 적용한 네트워크 세상 속에서 살고있다.
+
+실생활 속 예시를 들어 생각해보자
+
+우리 집 내부에 있는 무선 공유기를 우리 가족 A,B,C,D 가 모두 사용하고 있다고 생각해보자
+
+이 때 우리 가족은 무선 공유기에 의해 `DHCP` 로 서브넷 내부에서 고유한 `IP` 주소를 할당 받는다.
+
+우리 가족은 공유하는 무선 공유기의 `prefix` 를 공유하기 떄문에 하나의 서브넷이라 볼 수 있다.
+
+이 때 우리 가족이 외부와 통신 할 땐 서브넷 내부의 고유 `IP` 가 아닌 게이트웨이 라우터의 `IP` 주소로 외부와 통신한다.
+
+`NAT` 는 `edge` 에 가까운 게이트웨이 라우터에게만 국한 된 것이 아니다.
+
+우리 집의 무선 공유기인 게이트웨이 라우터는 우리 동네의 게이트웨이 라우터 내부의 서브넷이 될 수도 있고 동네의 게이트웨이 라우터는 구의 게이트웨이 라우터의 서브넷의 일부일 수 있고 ... 등등 계층적 `NAT` 를 가질 수 있다.
+
+그래서 생각해보면 전자 투표 시 동일한 `IP` 주소에서 같은 표가 나왔다라는 뉴스를 보면
+
+아 ~ `NAT` 로 인해 게이트웨이 라우터의 `IP` 주소로 표가 집결되었구나 하고 생각 할 수 있다.
+
+# IP datagram format
+
+![IP datagram header format](image-7.png)
+
+네트워크는 다양한 물리적 계층들로 이뤄져있으며 , 각 계층 별 전송 해야 할 `data` 영역과 해당 영역에서 전송 할 `data` 들의 정보를 담은 `header` 영역이 존재한다.
+
+`IP` 계층에서 전송하는 `packet` 은 상위 계층에서 전송하고자 하는 데이터들을 담은 `data` 영역과 `IP` 계층에서 사용 할 `header` 영역들이 존재한다.
+
+`IP header` 에는 사용하는 `IP version , packet length, time to live , upper layer protocol , checksum , source , destination` 등에 대한 정보들이 존재한다.
+
+이 때 `IP header` 영역에서 두 번쨰 행에 해당되는 `16-bit identifier , flags , fagement offset` 에 대해 이야기 해보자
+
+![IP fagmentation , reassembly](image-8.png)
+
+`IP` 에서 전송하는 `pacekt` 은 하위 계층인 물리적 계층 (`Link`) 를 통해 전송된다. 이 때 각 `Link` 는 전송 할 수 있는 데이터들의 한계 용량이 존재한다.
+
+이런 한계 용량을 `Max Transfer Size , (MTU)` 라고 한다.
+
+`MTU` 는 사용하는 `Link` 에 따라 용량이 다른데 이는 해당 계층을 공부 할 떄 마저 알아보도록 하고 `MTU` 에 따라 `Link` 계층에선 데이터들을 분할하는 `fragmentation` 을 적용한다.
+
+예를 들어 해당 `Link` 의 `MTU` 가 `1500byte` 라면 `4000 byte` 크기의 `packet` 을 `1500byte` 의 독립적 3가지 `packet` 으로 분할 한 후 전송한다.
+
+이후 해당 `packet` 을 받는 쪽에선 분할되어 받은 `packet` 들을 하나의 `packet` 으로 조립하는 `reassembly` 과정을 거친다.
+
+`16-bit identifier , flags , fragment offset` 은 `fragment , reassembly` 과정을 위해 필요하다.
+
+![example of fragment , reassembly](image-9.png)
+
+예를 들어 `MTU` 가 `1500byte` 이고 `packet` 의 크기가 `4000byte` 인 경우를 생각해보자
+
+`packet` 의 크기가 `4000byte` 라는 것은 `IP header` 영역이 `20byte` , `IP content` 영역이 `3980byte` 임을 의미한다.
+
+> 각 `header` 의 통상적 크기는 `20byte` 이다.
+>
+> `IP content` 에는 상위 계층의 `header (20byte), content` 들도 존재한다.
+>
+> 하지만 `IP content` 에선 상위 계층의 `header , content` 들도 하나의 `header` 로 취급한다. 모든 계층이 그렇다.
+
+`MTU` 에 맞춰 `packet` 을 전송하기 위해선 `4000byte` 크기의 `packet` 을 `1500byte , 1500byte , 1000byte` 크기의 `packet` 으로 `fragmentation` 을 해야한다.
+
+이 과정에서 `packet` 의 크기인 `length (4000byte)` 를 `MTU` 로 나눠 3개의 `packet` 을 생성한다.
+
+분할 된 `packet` 은 모두 같은 `ID` 를 갖는데 , 같은 `ID` 를 가져야 `reassembly` 단계에서 하나의 `packet` 으로 인식 할 수 있다.
+
+각 분할 된 `packet` 들은 `fragflag , offset` 을 가지는데
+
+`fragflag` 는 해당 `packet` 이후에 `fragmentation` 된 `packet` 이 존재하는지를 이야기 하는 `flag` 이다.
+
+`offset` 은 `fragmentation` 이 된 `pacekt` 이 원본 `packet` 으로부터 얼만큼 뒤에 존재하는지를 표현하는 `offset` 이다.
+
+그럼 생각해보자
+
+`1500byte` 크기의 `packet` 은 `20byte` 의 `header` , `1480byte` 의 `content` 를 가진다.
+
+분할 된 `packet` 들은 모두 `20byte` 의 공통된 크기의 `header` 를 가져야 한다. (그래야 라우팅 과정에서 `source` 를 보거나 상위 계층의 `protocol` 등을 알 수 있다.)
+
+그럼 분할 되는 `packet` 의 `content` 들은 모두 `1480byte` 크기로 나뉜다.
+
+각 분할된 `packet` 의 `content` 들의 `offset` 은 첫 번재 `fragmentation` 된 `packet` 으로부터 `1480byte,  1480 * 2 byte` 만큼으 `offset` 을 갖게 되는데 `header` 에 해당 `offset` 을 입력 할 땐 `8` 로 나눈 후의 값을 표기한다.
+
+> 최대한 `header` 에 입력되는 비트의 크기를 줄이기 위함이다.
+
+이로 인해 두 번쨰 `packet` 의 `offset` 은 `1480/8 = 185` , 세 번째 `packet` 의 `offset` 은 `1480 * 2 / 8 = 370` 의 `offset` 값을 갖는다.

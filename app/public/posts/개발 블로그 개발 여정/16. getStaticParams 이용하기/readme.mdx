@@ -1,6 +1,6 @@
 ---
 title: 'generateStaticParams 이용해 SSR 에서 SSG로 넘어가자'
-description: '다이나믹 렌더링에서 Static Server Generate를 이용해 로딩 속도를 줄여보자'
+description: 'SSG를 이용하여 로딩 속도 334배 빠르게 바꾼 이야기'
 thumb: app/public/posts/개발 블로그 개발 여정/16. getStaticParams 이용하기/gpt thumbnail.png
 tag:
   - nextjs
@@ -191,11 +191,47 @@ export default PostPage;
 
 # 왜 이런 문제가 발생했을지 생각해보자 : 다이나믹 렌더링의 한계점
 
+```tsx title="요청이 있을 때 마다 무거운 작업들이 호출된다." showLineNumbers{12} {2-3 , 11}
+const PostPage = ({ params }: { params: { postId: string } }) => {
+  const { meta, content } = getPostContent(params.postId);
+  const components = useMDXComponents({}, meta.path);
+
+  return (
+    <>
+      <header className='pt-14 mb-12'>
+        <PostTitle meta={meta} />
+      </header>
+      <main className='px-14'>
+        <MDXRemote {/* 이 부분부터 렌더링이 block */}
+          source={content}
+          components={components}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+              rehypePlugins: [
+                [
+                  rehypePrettyCode,
+                  {
+                    theme: 'material-theme-palenight',
+                  },
+                ],
+              ],
+            },
+          }}
+        />
+      </main>
+    </>
+  );
+};
+
+export default PostPage;
+```
+
 이는 `[postId]/page.tsx` 의 렌더링 방식인 다이나믹 렌더링의 한계로 인해 발생한다.
 
 라우팅 경로인 `postId` 에 따라 `file system` 에서 `mdx` 데이터를 가져오는 `getPostContent` 도 무거운 작업이고
 
-가져온 `mdx` 파일을 `MDXRemote` 컴포넌트로 렌더링 하는 작업은 더욱 무거운 작업이다.
+가져온 `mdx` 파일을 `MDXRemote` 컴포넌트로 클라이언트 단에서 호출하는 작업은 더욱 무거운 작업이다.
 
 이렇게 무거운 작업을 **클라이언트가 요청 할 때 마다 수행하는 행위는 매우 비효율적인 작업 방식이다.**
 
@@ -237,7 +273,7 @@ _??? : ㅋㅋㅋ 엥 ? 아니 정적으로 경로들 미리 생성해두는게 �
 
 `generateStaticParams` 로 생성해둔 라우팅 경로의 장점은 `build time` 때 미리 생성해둔 라우팅 경로들에 대해서 `pre-render` 를 해두고 `static params` 에 대한 접근 시 `pre-render` 해둔 페이지를 반환한다는 것이다.
 
-**이렇게 `build time` 때 미리 페이지들을 생성해두는 방식을 `Static Server Generation` 이라고 한다.**
+**이렇게 `build time` 때 미리 페이지들을 생성해두는 방식을 `Static Server Generation (SSG)` 이라고 한다.**
 
 > 이전 `page routing` 방식에선 `getStaticPath , getStaticProps` 메소드 등을 이용해 `SSG` 를 구현해뒀다면
 >
@@ -297,6 +333,10 @@ export default PostPage;
 
 나는 앱 라우팅 방식이라 `generateStaticParams` 를 이용했으나 `page routing` 방식에서 사용하는 `getStaticPath , getStaticProps` 등을 이용해 `pre render` 되었다고 한다.
 
+> 로깅된 결과에선 `static HTML` 문서를 생성해뒀다고 하지만 `reqeust , response` 과정에선 `HTML` 문서로 빠르게 변환 가능한 `RSCP` 파일을 주고 받는다.
+>
+> 클라이언트 측에서 실행했어야 할 `RSCP` 번들을 서버 측에서 미리 실행해 생성해둔 `RSCP` 파일을 보내준다.
+
 아마 `app routing` 방식이 보일러 플레이트 코드가 많은 `page routing` 방식의 `sugar syntax` 버전이기에 `generateStaticParmas` 도 `getStaticPath , getStaticProps` 로 변환되어 배포되는 듯 하다.
 
 ![SSG 기능 추가 후 라우팅 시 모습](<ssg good.gif>)
@@ -316,7 +356,7 @@ export default PostPage;
 
 `MDXRemote` 에서 `mdx` 파일을 `rehype-pretty-code` 를 이용해 반환하는데 걸리는 시간이 `build time` 때 모두 수행되었기 때문에 시간이 매우 단축 된 것으로 보인다.
 
-결국 `SSG` 를 이용하면 서버에서의 렌더링 시간이 없기 때문에 단순히 네트워크가 오고 가는 시간 + $\alpha$(SSG 파일을 처리하는 시간) 만큼의 시간만 소요되고
+결국 `SSG` 를 이용하면 서버에서의 렌더링 시간이 없기 때문에 단순히 네트워크가 오고 가는 시간 + a(SSG 파일을 처리하는 시간) 만큼의 시간만 소요되고
 
 즉시 클라이언트의 인터페이스에서 렌더링 되기 떄문에 시간이 크게 단축된다.
 
