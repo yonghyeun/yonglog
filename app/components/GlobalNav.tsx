@@ -1,6 +1,6 @@
 import Link from 'next/link';
-// TODO Search , Theme , Github 컴포넌트 생성하기
-import { FaSearch, FiMoon, FiSun, FaGithub } from './Icons';
+import ThemeButton from './client/ThemeButton';
+import { FaSearch, FaGithub } from './Icons';
 
 const GlobalNav = () => {
   return (
@@ -16,7 +16,8 @@ const GlobalNav = () => {
             <FaSearch size={20} />
           </li>
           <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
-            <FiMoon size={20} />
+            {/* <FiMoon size={20} /> */}
+            <ThemeButton />
           </li>
           <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
             <FaGithub size={20} />

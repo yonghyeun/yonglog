@@ -1,7 +1,7 @@
 import path from 'path';
 import Image from 'next/image';
 
-import { Suspense } from 'react';
+import { Children, Suspense } from 'react';
 
 import { MDXComponents } from 'mdx/types';
 
@@ -18,7 +18,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className=' sticky top-[3.5rem]  text-3xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-slate-50'
+            className='text-3xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-inherit'
             id={children as string}
           >
             {children}
@@ -53,7 +53,9 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='mb-3 leading-slug text-[18px] indent-[1px]'>{children}</p>
+      <p className='whitespace-pre-wrap break-all mb-3 leading-slug text-[18px] indent-[1px]'>
+        {children}
+      </p>
     ),
     strong: ({ children }) => <strong>{children}</strong>,
     img: ({
@@ -99,6 +101,12 @@ export const useMDXComponents = (
       <a href={href} className='text-blue-500'>
         🪢 {children}
       </a>
+    ),
+    ul: ({ children }) => (
+      <ul className='list-disc pl-8 my-2 text-[18px] '>{children}</ul>
+    ),
+    li: ({ children }) => (
+      <li className='whitespace-pre-wrap break-all ml-2 mb-2'>{children}</li>
     ),
     ...components,
   };
