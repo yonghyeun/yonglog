@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   description: '프론트엔드 개발블로그예용',
 };
 
+const setThemeFromLocalStorage = `(function () {
+  const theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+})()`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,6 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='kr'>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: setThemeFromLocalStorage }}
+        ></script>
+      </head>
       <body>
         <header>
           <GlobalNav /> {/* position : fixed */}

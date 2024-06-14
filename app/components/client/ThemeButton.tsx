@@ -4,22 +4,21 @@ import { FiMoon, FiSun } from 'react-icons/fi';
 import { useLayoutEffect, useState } from 'react';
 
 const ThemeButton = () => {
-  const [theme, setTheme] = useState(() =>
-    typeof window !== 'undefined'
-      ? localStorage.getItem('theme') || 'light'
-      : 'light',
-  );
+  const [theme, setTheme] = useState('light');
 
   useLayoutEffect(() => {
     /* theme이 변경되고 나서 실행되어야 하는 LayoutEffect */
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  useLayoutEffect(() => {
+    setTheme(localStorage.getItem('theme') || 'light');
+  }, []);
+
   const handleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
     localStorage.setItem('theme', nextTheme);
-    setCookie({ name: 'theme', value: nextTheme });
   };
 
   return theme === 'light' ? (
@@ -32,14 +31,5 @@ const ThemeButton = () => {
     </button>
   );
 };
-
-type CookieInfo = {
-  name: string;
-  value: string;
-};
-function setCookie(cookieInfo: CookieInfo) {
-  const { name, value } = cookieInfo;
-  document.cookie = `${name}=${value || ''}; path=/`;
-}
 
 export default ThemeButton;
