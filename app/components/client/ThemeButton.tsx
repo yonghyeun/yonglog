@@ -4,8 +4,10 @@ import { FiMoon, FiSun } from 'react-icons/fi';
 import { useLayoutEffect, useState } from 'react';
 
 const ThemeButton = () => {
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem('theme') || 'light',
+  const [theme, setTheme] = useState(() =>
+    typeof window !== 'undefined'
+      ? localStorage.getItem('theme') || 'light'
+      : 'light',
   );
 
   useLayoutEffect(() => {
