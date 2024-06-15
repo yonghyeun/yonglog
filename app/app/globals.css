@@ -4,10 +4,12 @@
 
 @font-face {
   font-family: freesentation;
-  src: url('/fonts/Freesentation-4Regular.ttf') format('truetype');
+  src: url('/fonts/Freesentation-4Regular.ttf') format('woff2'),
+    url('/fonts/Freesentation-4Regular.ttf') format('woff'),
+    url('/fonts/Freesentation-4Regular.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
-  font-display: swap;
+  font-display: block; /* 나는 폰트가 꿈틀되는게 보기가 싫어서 그냥 block 처리 해버림 */
 }
 
 :root {
@@ -16,19 +18,27 @@
   --font-ibmPlexMono: 'IBM Plex Mono', monospace;
 }
 
-html {
-  scroll-behavior: smooth !important;
-  font-family: 'freesentation', 'sans-serif';
-}
-
 :root {
   --background-color: rgb(248 250 252); /* bg-slate-50 */
-  --color: black;
+  --color: #111;
+  --side-bar-title: rgb(49 46 129); /* bg-indigo-900 */
+  --blockquote-background: rgb(226 232 240); /* bg-stale-200 */
+  --blockquote-border-color: rgb(209 213 219); /* bg-gray-300 */
+  --blockquote-color: rgb(75 85 99); /* bg-gray-600 */
 }
 
 [data-theme='dark'] {
   --background-color: #111;
   --color: rgb(248 250 252); /* bg-slate-50 */
+  --side-bar-title: rgb(129 140 248);
+  --blockquote-background: rgb(39 39 42); /* bg-zinc-600 */
+  --blockquote-border-color: rgb(228 228 231); /* bg-zinc-200 */
+  --blockquote-color: rgb(228 228 231); /* bg-gray-400 */
+}
+
+html {
+  scroll-behavior: smooth !important;
+  font-family: 'freesentation', 'sans-serif';
 }
 
 body {
@@ -36,10 +46,22 @@ body {
   color: var(--color);
 }
 
+h2[data-sidebar-title='true'] {
+  color: var(--side-bar-title);
+}
+
+blockquote[theme-block='true'] {
+  background-color: var(--blockquote-background);
+  border-color: var(--blockquote-border-color);
+  color: var(--blockquote-color);
+}
+
+hr {
+  display: none;
+}
+
 pre {
   overflow-x: auto;
-  /* white-space: pre-wrap;
-  word-wrap: break-word; */
   font-family: var(--font-jetBrainsMono);
   padding-top: 1rem;
   padding-bottom: 2rem;
@@ -115,12 +137,12 @@ span[data-highlighted-line-id='add'] {
 }
 
 span[data-highlighted-line-id='remove'] {
-  background-color: rgba(255, 99, 71, 0.315);
+  background-color: rgba(255, 99, 71, 0.1);
 }
 
 figcaption[data-rehype-pretty-code-title] {
   text-align: end;
-  background-color: #292d3e;
+  background-color: rgb(33, 33, 33);
   border-radius: 10px 10px 0px 0px;
   padding-top: 0.5rem;
   padding-right: 2rem;

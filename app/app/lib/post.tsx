@@ -7,7 +7,6 @@ import type {
   PostInfo,
   SeriesName,
 } from '@/types/post';
-import { resolve } from 'path';
 
 const fs = require('fs');
 const path = require('path');

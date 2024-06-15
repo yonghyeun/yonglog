@@ -48,7 +48,10 @@ export const useMDXComponents = (
       </h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className='text-wrap border-l-4 border-gray-300 pl-4 pr-2 mt-2 mb-2 py-2 bg-slate-200 italic text-gray-600 leading-7 '>
+      <blockquote
+        theme-block='true'
+        className='text-wrap border-l-4  pl-4 pr-2 mt-2 mb-2 py-2 italic  leading-7 '
+      >
         {children}
       </blockquote>
     ),

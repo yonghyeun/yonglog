@@ -35,7 +35,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                   [
                     rehypePrettyCode,
                     {
-                      theme: 'material-theme-palenight',
+                      theme: 'material-theme-darker',
                     },
                   ],
                 ],

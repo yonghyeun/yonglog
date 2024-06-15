@@ -7,18 +7,17 @@ const ThemeButton = () => {
   const [theme, setTheme] = useState('light');
 
   useLayoutEffect(() => {
-    /* theme이 변경되고 나서 실행되어야 하는 LayoutEffect */
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  useLayoutEffect(() => {
     setTheme(localStorage.getItem('theme') || 'light');
   }, []);
+
+  // useLayoutEffect(() => {
+  //   document.documentElement.setAttribute('data-theme', theme);
+  // }, [theme]);
 
   const handleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
-    localStorage.setItem('theme', nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
   };
 
   return theme === 'light' ? (

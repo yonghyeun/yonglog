@@ -16,7 +16,7 @@ const PostTitle = ({ meta }: { meta: PostInfo['meta'] }) => {
             return (
               <span
                 key={id}
-                className='mr-2 border px-2 py-1 bg-gray-300 rounded-lg '
+                className='mr-3 px-2 py-1 bg-gray-400 text-white rounded-l-3xl rounded-r-3xl  '
               >
                 {pTag}
               </span>
