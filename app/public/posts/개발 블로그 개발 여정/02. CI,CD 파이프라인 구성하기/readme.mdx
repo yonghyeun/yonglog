@@ -54,7 +54,7 @@ Installing devDependencies:
 
 두구두구 드디어 시작하자
 
-# `CI/CD` 란 무엇일까 ?
+# CI/CD 란 무엇일까 ?
 
 ---
 
@@ -85,7 +85,7 @@ Installing devDependencies:
 
 이러한 과정을 배포과정이라 한다.
 
-## 지속적 통합과 지속적 배포 (`CI/CD`)
+## 지속적 통합과 지속적 배포 (CI/CD)
 
 ---
 
@@ -97,7 +97,7 @@ Installing devDependencies:
 
 그렇다면 지속적 통합과 지속적 배포를 어떤 식으로 사용 할지 계획해보자
 
-# 지속적 통합 (`Continuous Intergrate`)
+# 지속적 통합 (Continuous Intergrate)
 
 ---
 
@@ -114,7 +114,7 @@ Installing devDependencies:
 - `branch` 들을 어떤 식으로 나누고 사용 할 것인지
 - `branch` 를 통합하는 과정에서 어떤 과정을 거칠 것인지
 
-## `branch` 전략이 왜 필요할까 ?
+## branch 전략이 왜 필요할까 ?
 
 ---
 
@@ -166,7 +166,7 @@ Installing devDependencies:
 
 이에 `branch` 들을 목적에 맞게 적절히 나누는 전략이 필요하다.
 
-## `branch` 들을 어떻게 나눌까 ?
+## branch 들을 어떻게 나눌까 ?
 
 ---
 
@@ -179,7 +179,7 @@ _
 
 `Git Flow` 전략은 `Main branch` 와 `Sub branch` 로 나눔으로서 `branch` 를 크게 나누고 각 `Main , Sub branch` 들 간에도 목적에 맞게 `branch` 를 나누는 전략이다.
 
-### `Main Brach`
+### Main Brach
 
 ---
 
@@ -205,7 +205,7 @@ _
 
 즉 쉽게 말해 `main brnach` 는 항상 최종 배포된 버전들의 작업 단위만 담고 있고 `dev branch` 는 최종 배포 되기 를 기다리는 작업 단위들을 담고 있다.
 
-### `Sub branch or Feature branch`
+### Sub branch or Feature branch
 
 ---
 
@@ -217,11 +217,11 @@ _
 - `feature branch` : `dev branch` 에서 분기된 `branch` 로 특정 단위의 작업을 시행하기 위해 생성된다. 이후 완료된 작업은 `dev branch` 에 통합된다.
 - `realse branch` : `dev branch` 에서 분기된 `branch` 로 작업들을 배포하기 위해 존재하는 `branch` 이다. 작업 단위들을 테스트 하고 테스트가 통과되면 `main branch , dev branch` 에 통합된다.
 
-## `git flow brnach` 준비하기
+## git flow brnach 준비하기
 
 ---
 
-### `git flow init`
+### git flow init
 
 ---
 
@@ -258,7 +258,7 @@ $ git branch
 
 이렇게 자동으로 `branch` 가 생성되어 있고 현재 `develop branch` 에 `checkout` 되어 있는 모습을 볼 수 있다.
 
-### `feature branch` 생성하기
+### feature branch 생성하기
 
 ---
 
@@ -326,7 +326,7 @@ upstream, see 'push.autoSetupRemote' in 'git help config'.
 
 원격 저장소와 연결된 브랜치는 `main branch` 하나이기 때문에 `git push` 는 `main branch` 에서만 사용 가능하다. (설정을 통해 변경 할 수 있지만 계층 구조를 나누기 위해 다른 브랜치에선 `push` 가 안되도록 하자)
 
-### `feature branch` 통합하기
+### feature branch 통합하기
 
 ---
 
@@ -364,7 +364,7 @@ Summary of actions:
 - You are now on branch 'develop'
 ```
 
-### `release branch` 준비하기
+### release branch 준비하기
 
 ---
 
@@ -384,7 +384,7 @@ $ git flow release start first-release
 
 해당 부분에선 `main branch` 로 통합하기 전 다양한 일을 할 수 있지만 지금은 테스트만 할 것이니 바로 작업을 종료해주자
 
-### `release brnach` 통합하기
+### release brnach 통합하기
 
 ```bash
 $ git flow release finish first-release
@@ -426,7 +426,7 @@ Summary of actions:
 
 이를 통해 `develop branch` 는 `main branch` 의 가장 최근 부분과 동기화 되도록 유지한다.
 
-### 원격 저장소에 `push` 하기
+### 원격 저장소에 push 하기
 
 ---
 
@@ -449,7 +449,7 @@ $ git push
 
 다음번엔 `github action` 을 이용해 테스트 코드를 작성해주도록 해야겠다.
 
-# 지속적 배포 (`Continuous Deploy`)
+# 지속적 배포 (Continuous Deploy)
 
 ---
 

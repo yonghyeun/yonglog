@@ -2,6 +2,7 @@ import rehypePrettyCode from 'rehype-pretty-code';
 import remarkGfm from 'remark-gfm';
 
 import PostTitle from '@/components/PostTitle';
+import PostSideBar from '@/components/PostSideBar';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
@@ -46,17 +47,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
           </Suspense>
         </section>
         <section className='hidden lg:block'>
-          <nav className='sticky top-[15rem] w-[250px]  border-l-[2px] pl-3'>
-            <ul>
-              <li>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum
-              </li>
-              <li>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
-                reiciendis itaque suscipit. Architecto!
-              </li>
-            </ul>
-          </nav>
+          <PostSideBar content={content} />
         </section>
       </main>
     </>

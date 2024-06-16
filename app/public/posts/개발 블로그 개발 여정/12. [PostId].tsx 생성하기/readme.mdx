@@ -42,11 +42,9 @@ time: 1717686655160
 
 `file system` 에 직접적으로 접근 가능한 `fs` 모듈을 이용해 `PostId` 를 생성해주자
 
-### `app/lib/post.tsx`
-
 ---
 
-```tsx
+```tsx title="app/lib/post.tsx"
 const parsePosts = (source: Source): Array<PostInfo> => {
   const Posts: Array<PostInfo> = [];
 
@@ -128,13 +126,7 @@ time: 1717686655160
 
 # `PostItem` 에 라우팅 기능 추가하기
 
----
-
-### `components/postList.tsx`
-
----
-
-```tsx
+```tsx title="components/postList.tsx"
 import Link from 'next/link';
 /* 동일 코드 생략 */
 
@@ -194,11 +186,7 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
  ┗ 📜page.tsx
 ```
 
-### `app/lib/post.tsx`
-
----
-
-```tsx
+```tsx title="app/lib/post.tsx"
 /* 중복 생략 */
 export const getPostContent = (postId: string): PostInfo => {
   const allPosts = getAllPosts();
@@ -210,11 +198,7 @@ export const getPostContent = (postId: string): PostInfo => {
 };
 ```
 
-### `app/[postId]/layout.tsx`
-
----
-
-```tsx
+```tsx title="app/[postId]/layout.tsx"
 const PostLayout = ({
   params,
   children,
@@ -232,9 +216,7 @@ const PostLayout = ({
 export default PostLayout;
 ```
 
-### `app/[postId]/page.tsx`
-
-```tsx
+```tsx title="app/[postId]/page.tsx"
 import { getPostContent } from '../lib/post';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
@@ -286,13 +268,9 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 
 스타일링 할 커스텀 컴포넌트로 정의하고 `props` 로 넘겨주자 :)
 
-### `app/lib/mdxComponents.tsx`
-
----
-
 `MDXRemote` 컴포넌트는 `props` 로 `MDXRemoteProps` 를 받는다.
 
-```tsx
+```tsx title="app/lib/mdxComponents.tsx"
 export declare function MDXRemote(
   props: MDXRemoteProps,
 ): Promise<React.ReactElement<any, string | React.JSXElementConstructor<any>>>;
@@ -453,11 +431,7 @@ export const useMDXComponents = (
 
 를 호출하여 사용한다.
 
-### `app/[postId]/page.tsx`
-
----
-
-```tsx
+```tsx title="app/[postId]/page.tsx"
 import { useMDXComponents } from '../lib/mdxComponents'; // useMDXComponnets 로 커스텀 컴포넌트 호출
 
 import { getPostContent } from '../lib/post';
@@ -505,11 +479,7 @@ export default PostPage;
 
 상단에 존재할 제목 영역을 `meta` 데이터를 이용해 꾸며주자 :)
 
-### `/components/PostTitle.tsx`
-
----
-
-```tsx
+```tsx title="/components/PostTitle.tsx"
 import type { PostInfo } from '@/types/post';
 
 const PostTitle = ({ meta }: { meta: PostInfo['meta'] }) => {

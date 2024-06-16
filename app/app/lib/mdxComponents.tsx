@@ -18,7 +18,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className='text-3xl border-b-[2px]  pt-4 pb-2 mb-8 border-gray-300 font-semibold  bg-inherit'
+            className='text-3xl border-b-[2px]   pt-16 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit'
             id={children as string}
           >
             {children}
@@ -28,7 +28,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className='   text-2xl border-b-[1px]   pt-4 pb-2 mb-4 border-gray-300 font-semibold leading-7 '
+        className='   text-2xl border-b-[1px]   pt-16 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -36,7 +36,7 @@ export const useMDXComponents = (
     ),
     h3: ({ children }) => (
       <h3
-        className='   text-xl border-b-[1px]  pt-2 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className='   text-xl border-b-[1px]  pt-16 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -108,9 +108,7 @@ export const useMDXComponents = (
     ul: ({ children }) => (
       <ul className='list-disc pl-8 my-2 text-[18px] '>{children}</ul>
     ),
-    li: ({ children }) => (
-      <li className='whitespace-pre-wrap break-all ml-2 mb-2'>{children}</li>
-    ),
+    li: ({ children }) => <li className='break-all ml-2 mb-2'>{children}</li>,
     ...components,
   };
 };

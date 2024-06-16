@@ -146,7 +146,7 @@ blockquote[theme-block='true'] {
 
 해당 컴포넌트는 현재 단순한 `li,svg` 태그로 생성해뒀지만 클라이언트 컴포넌트로 생성하여 여러 로직들을 추가해주도록 하자
 
-```tsx title="/components/client/ThemeButton.tsx" {1-8 , 12-35}#add {9-11}
+```tsx title="/components/client/ThemeButton.tsx" {1-8 , 12-36}#add {9-11}
 'use client';
 
 import { FiMoon, FiSun } from 'react-icons/fi';
@@ -166,6 +166,7 @@ const ThemeButton = () => {
   const handleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
   };
 
   return theme === 'light' ? (
@@ -258,6 +259,7 @@ useLayoutEffect(() => {
 const handleTheme = () => {
   const nextTheme = theme === 'light' ? 'dark' : 'light';
   setTheme(nextTheme);
+  document.documentElement.setAttribute('data-theme', nextTheme);
 };
 ```
 
