@@ -11,8 +11,10 @@ export const parsingHeaders = (content: PostInfo['content']): Headers => {
   const headers: Headers = [];
   const splitedContent = content.split('\r\n');
 
-  console.log('parsingHeaders 가 받은 content', content);
-  console.log('parsingHeaders 가 받은 splitedContent', splitedContent);
+  console.log(
+    'parsingHeaders 가 받은 splitedContent',
+    splitedContent.slice(0, 10),
+  );
   splitedContent.forEach((paragraph) => {
     const [headerSize, ...headerText] = paragraph.split(' ');
     switch (headerSize) {
