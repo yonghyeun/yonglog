@@ -36,6 +36,8 @@ export const createList = (
   beforeHeadingSize: number = 0,
   list: React.ReactNode[] = [],
 ) => {
+  console.log(headers[index]);
+
   while (index < headers.length) {
     const [currentHeadingSize, text] = headers[index];
     if (currentHeadingSize > beforeHeadingSize) {
@@ -50,7 +52,7 @@ export const createList = (
       return { list, nextIndex: index };
     } else {
       list.push(
-        <Link href={`#${text}`}>
+        <Link href={`#${text}`} key={`Link-${index}`}>
           <li key={`li-${index++}`} className='mb-2'>
             {text}
           </li>

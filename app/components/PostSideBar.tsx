@@ -1,5 +1,3 @@
-import { ActiveProvider } from '@/app/context/ActiveContext';
-
 import { parsingHeaders, createList } from '@/app/lib/interactiveSidebar';
 
 import type { PostInfo } from '@/types/post';
