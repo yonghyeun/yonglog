@@ -250,7 +250,11 @@ const [theme, setTheme] = useState(() =>
 
 ## 테마 버튼을 클릭하면 변경되는 일들
 
-```tsx showLineNumbers{17} title="테마 버튼 클릭시 발생하는 일들"
+```tsx showLineNumbers{13} title="테마 버튼 클릭시 발생하는 일들"
+useLayoutEffect(() => {
+  document.documentElement.setAttribute('data-theme', theme);
+}, [theme]);
+
 const handleTheme = () => {
   const nextTheme = theme === 'light' ? 'dark' : 'light';
   setTheme(nextTheme);
@@ -259,10 +263,11 @@ const handleTheme = () => {
 
 해당 테마 버튼을 누르면 다음과 같은 일들이 발생한다.
 
-- `setTheme(nextTheme)`
-  해당 부분은 `ThemeButton` 이 반환하는 값에만 영향을 미치며 해당 함수의 결과 값은 다른 컴포넌트들에 영향을 미치지 않는다.
-- `localStorage.setItem('theme' , nextTheme)`
-  해당 부분은 재방문시의 동기화를 위해 `localStorage` 의 값을 변경한다.
+1. `setTheme(nextTheme)`
+   해당 부분은 `ThemeButton` 이 반환하는 값에만 영향을 미치며 해당 함수의 결과 값은 다른 컴포넌트들에 영향을 미치지 않는다.
+2. `localStorage.setItem('theme' , nextTheme)`
+   해당 부분은 재방문시의 동기화를 위해 `localStorage` 의 값을 변경한다.
+3. `setTheme(nextTheme)` 으로 `ThemeButton`의 상태가 변경되면 위에서 설정했던 `useLayoutEffect` 가 호출되어 `Actual DOM` 의 어트리뷰트를 변경한다.
 
 사실 `Actual DOM` 을 직접적으로 조작하는 행위는 리액트에서 모범적인 정답은 아니다.
 
@@ -324,7 +329,7 @@ export const metadata: Metadata = {
   description: '프론트엔드 개발블로그예용',
 };
 
-/* Client 단에서 서버 렌더링 결과가 hydration 될 때 실행되는 IIFF */
+/* Client 단에서 서버 렌더링 결과가 hydration 될 때 실행되는 IIFE */
 const setThemeFromLocalStorage = `(function () {
   const theme = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', theme);

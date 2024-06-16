@@ -23,26 +23,41 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
       <header className='pt-14 mb-12'>
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
-        <Suspense fallback={<LoadingContnet />}>
-          <MDXRemote
-            source={content}
-            components={components}
-            options={{
-              mdxOptions: {
-                remarkPlugins: [remarkGfm],
-                rehypePlugins: [
-                  [
-                    rehypePrettyCode,
-                    {
-                      theme: 'material-theme-darker',
-                    },
+      <main className='w-[100%] lg:w-[150%] flex'>
+        <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+          <Suspense fallback={<LoadingContnet />}>
+            <MDXRemote
+              source={content}
+              components={components}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [
+                    [
+                      rehypePrettyCode,
+                      {
+                        theme: 'material-theme-darker',
+                      },
+                    ],
                   ],
-                ],
-              },
-            }}
-          />
-        </Suspense>
+                },
+              }}
+            />
+          </Suspense>
+        </section>
+        <section className='hidden lg:block'>
+          <nav className='sticky top-[15rem] w-[250px]  border-l-[2px] pl-3'>
+            <ul>
+              <li>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum
+              </li>
+              <li>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
+                reiciendis itaque suscipit. Architecto!
+              </li>
+            </ul>
+          </nav>
+        </section>
       </main>
     </>
   );

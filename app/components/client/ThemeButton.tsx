@@ -10,10 +10,6 @@ const ThemeButton = () => {
     setTheme(localStorage.getItem('theme') || 'light');
   }, []);
 
-  // useLayoutEffect(() => {
-  //   document.documentElement.setAttribute('data-theme', theme);
-  // }, [theme]);
-
   const handleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
