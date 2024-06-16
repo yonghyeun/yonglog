@@ -1,24 +1,26 @@
 'use client';
 
-import { createContext, useState } from 'react';
-import type { Headers } from '../lib/interactiveSidebar';
+import { createContext, useContext, useState } from 'react';
 
 type ActiveContextType = {
-  activeList: Headers;
-  setActiveList: React.Dispatch<React.SetStateAction<Headers>>;
+  activeIndex: number;
+  setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const ActiveContext = createContext<ActiveContextType>({
-  activeList: [],
-  setActiveList: () => {},
+  activeIndex: 0,
+  setActiveIndex: () => {},
 });
 
 export const ActiveProvider = ({ children }: { children: React.ReactNode }) => {
-  const [activeList, setActiveList] = useState<Headers>([]);
-
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   return (
-    <ActiveContext.Provider value={{ activeList, setActiveList }}>
+    <ActiveContext.Provider value={{ activeIndex, setActiveIndex }}>
       {children}
     </ActiveContext.Provider>
   );
+};
+
+export const useActiveContext = () => {
+  return useContext(ActiveContext);
 };

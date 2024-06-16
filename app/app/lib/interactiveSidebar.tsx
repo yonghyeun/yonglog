@@ -1,38 +1,34 @@
 import Link from 'next/link';
+import ActiveHeader from '@/components/client/ActiveHeader';
 
 import type { PostInfo } from '@/types/post';
 
 type HeadingSize = 1 | 2 | 3;
-type HeadingText = string;
-type HeadingInfo = [HeadingSize, HeadingText];
+export type HeadingText = string;
+export type HeadingNumber = number;
+export type HeadingInfo = [HeadingSize, HeadingText, HeadingNumber];
 export type Headers = HeadingInfo[];
 
 export const parsingHeaders = (content: PostInfo['content']): Headers => {
   const headers: Headers = [];
   const splitedContent = content.split('\n');
 
-  console.log(
-    'parsingHeaders 가 받은 splitedContent',
-    splitedContent.slice(0, 10),
-  );
-  splitedContent.forEach((paragraph) => {
+  splitedContent.forEach((paragraph, index) => {
     const [headerSize, ...headerText] = paragraph.split(' ');
     switch (headerSize) {
       case '#':
-        headers.push([1, headerText.join(' ')]);
+        headers.push([1, headerText.join(' '), index]);
         break;
       case '##':
-        headers.push([2, headerText.join(' ')]);
+        headers.push([2, headerText.join(' '), index]);
         break;
       case '###':
-        headers.push([3, headerText.join(' ')]);
+        headers.push([3, headerText.join(' '), index]);
         break;
       default:
         break;
     }
   });
-
-  console.log(headers);
   return headers;
 };
 
@@ -56,10 +52,11 @@ export const createList = (
       return { list, nextIndex: index };
     } else {
       list.push(
-        <Link href={`#${text}`} key={`Link-${index}`}>
-          <li key={`li-${index++}`} className='mb-2'>
+        <Link href={`#${text}`} key={`Link-${index}`} replace>
+          {/* <li key={`li-${index++}`} className='mb-2'>
             {text}
-          </li>
+          </li> */}
+          <ActiveHeader headingNumber={index} headingText={text} />
         </Link>,
       );
       index++;
