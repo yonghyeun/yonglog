@@ -9,7 +9,7 @@ const PostSideBar = ({ content }: { content: PostInfo['content'] }) => {
   const { list: PostHeaderList } = createList(headers);
   return (
     <nav className='sticky top-[15rem] w-max-[300px] border-l-[2px] '>
-      <ActiveProvider>{PostHeaderList}</ActiveProvider>
+      {PostHeaderList}
     </nav>
   );
 };
