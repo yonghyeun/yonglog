@@ -423,6 +423,46 @@ h1
 
 현재 어느 파트를 읽고 있는지에 대해 확인 할 수 있을 것이다.
 
+## heading , li 태그의 순서를 기억 할 수 있도록 parsingHeaders 수정하기
+
+```tsx title="@/lib/interactiveSidebar.tsx" {3,16,20,24}#add {15,19,23}#remove
+type HeadingSize = 1 | 2 | 3;
+export type HeadingText = string;
+export type HeadingNumber = number;
+export type HeadingInfo = [HeadingSize, HeadingText, HeadingNumber];
+export type Headers = HeadingInfo[];
+
+export const parsingHeaders = (content: PostInfo['content']): Headers => {
+  const headers: Headers = [];
+  const splitedContent = content.split('\n');
+
+  splitedContent.forEach((paragraph, index) => {
+    const [headerSize, ...headerText] = paragraph.split(' ');
+    switch (headerSize) {
+      case '#':
+        // headers.push([1, headerText.join(' ')]);
+        headers.push([1, headerText.join(' '), index]);
+        break;
+      case '##':
+        // headers.push([1, headerText.join(' ')]);
+        headers.push([2, headerText.join(' '), index]);
+        break;
+      case '###':
+        // headers.push([1, headerText.join(' ')]);
+        headers.push([3, headerText.join(' '), index]);
+        break;
+      default:
+        break;
+    }
+  });
+  return headers;
+};
+```
+
+본문에서 `heading1 ~heading3` 까지의 글들을 파싱하여 `Headers` 배열을 생성하던 `parsingHeaders` 메소드에서 `index` 도 배열에 같이 담아주도록 수정해주었다.
+
+순서 역할을 하는 `index` 를 이용해 현재 읽고 있는 `N` 번째 `heading` 태그를 만난다면 동일하게 `N` 번쨰 `li` 태그를 활성화시켜주기 위함이다.
+
 ## ActiveContext 생성
 
 ```tsx title="@/components/client/ActiveContext.tsx" {1-27}#add
