@@ -36,8 +36,6 @@ export const createList = (
   beforeHeadingSize: number = 0,
   list: React.ReactNode[] = [],
 ) => {
-  console.log(headers[index]);
-
   while (index < headers.length) {
     const [currentHeadingSize, text] = headers[index];
     if (currentHeadingSize > beforeHeadingSize) {
