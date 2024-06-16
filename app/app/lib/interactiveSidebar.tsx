@@ -9,7 +9,7 @@ export type Headers = HeadingInfo[];
 
 export const parsingHeaders = (content: PostInfo['content']): Headers => {
   const headers: Headers = [];
-  const splitedContent = content.split('\r\n');
+  const splitedContent = content.split('\n');
 
   console.log(
     'parsingHeaders 가 받은 splitedContent',
