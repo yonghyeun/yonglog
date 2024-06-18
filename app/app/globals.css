@@ -73,6 +73,12 @@ li[data-underActive='true'] {
   transition: 0.3s ease-in-out;
 }
 
+ol[data-active='true'] {
+  color: rgb(199 210 254);
+  font-weight: 700;
+  font-size: 105%;
+}
+
 hr {
   display: none;
 }

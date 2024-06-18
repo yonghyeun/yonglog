@@ -200,3 +200,13 @@ export const getPostContent = (postId: string): PostInfo => {
 
   return searchedPost as PostInfo;
 };
+
+/**
+ * 인수로 들어온 series 의 게시글들을 가져오는 메소드
+ */
+export const getSeriesArray = (series: string) => {
+  const allPosts = getAllPosts();
+  return allPosts.filter(({ meta }) => {
+    return meta.series === series;
+  });
+};

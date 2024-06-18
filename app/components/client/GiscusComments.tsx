@@ -38,7 +38,7 @@ const Comments = () => {
 
   return (
     <section
-      className='border-t-[2px] pt-[3rem] giscus'
+      className=' border-t-[2px] mt-[2rem] pt-[3rem] giscus'
       ref={commentRef}
     ></section>
   );

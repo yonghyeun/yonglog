@@ -14,6 +14,7 @@ const ThemeButton = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
     document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
   };
 
   return theme === 'light' ? (

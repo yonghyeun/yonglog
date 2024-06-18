@@ -18,7 +18,7 @@ const ActiveHeader = ({
 
     const options = {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '-200px 0px 0px 0px',
       threshold: 1.0,
     };
 

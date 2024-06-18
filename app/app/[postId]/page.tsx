@@ -2,7 +2,9 @@ import rehypePrettyCode from 'rehype-pretty-code';
 import remarkGfm from 'remark-gfm';
 
 import PostTitle from '@/components/PostTitle';
+import SeriesAccordions from '@/components/SeriesAccordions';
 import PostSideBar from '@/components/PostSideBar';
+import PostPagination from '@/components/PostPagination';
 import Comments from '@/components/client/GiscusComments';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
@@ -10,6 +12,7 @@ import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../lib/mdxComponents';
 import { getAllPosts, getPostContent } from '../lib/post';
+import Pagination from '@/components/Pagination';
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
@@ -27,6 +30,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
       </header>
       <main className='w-[100%] lg:w-[150%] flex'>
         <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+          <SeriesAccordions meta={meta} />
           <Suspense fallback={<LoadingContnet />}>
             <MDXRemote
               source={content}
@@ -51,6 +55,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
           <PostSideBar content={content} />
         </section>
       </main>
+      <PostPagination meta={meta} />
       <Comments />
     </>
   );
