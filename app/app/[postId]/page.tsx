@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 
 import PostTitle from '@/components/PostTitle';
 import PostSideBar from '@/components/PostSideBar';
+import Comments from '@/components/client/GiscusComments';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
@@ -50,6 +51,9 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
           <PostSideBar content={content} />
         </section>
       </main>
+      <footer>
+        <Comments />
+      </footer>
     </>
   );
 };
