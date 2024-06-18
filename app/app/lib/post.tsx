@@ -110,9 +110,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
       } else {
         if (isMDX(fileSource)) {
           const fileContent = fs.readFileSync(fileSource, 'utf8');
-          let { data, content } = matter(fileContent);
-          /* 만약 h1~h3에서 백틱이 존재한다면 라우팅 기능이 되지 않으니 필터링 해주자 */
-          content = filterContent(content);
+          const { data, content } = matter(filterContent(fileContent));
 
           /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
           if (!data.postId) {
