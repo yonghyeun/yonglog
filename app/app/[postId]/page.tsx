@@ -51,9 +51,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
           <PostSideBar content={content} />
         </section>
       </main>
-      <footer>
-        <Comments />
-      </footer>
+      <Comments />
     </>
   );
 };

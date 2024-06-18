@@ -19,7 +19,7 @@ const Comments = () => {
     $script.setAttribute('data-repo', 'yonghyeun/yonglog');
     $script.setAttribute(
       'data-category',
-      'Comments',
+      'Announcements',
     ); /* 생성해둔 discussion 카테고리 */
     $script.setAttribute('data-repo-id', 'R_kgDOMBOWo');
     $script.setAttribute('data-category-id', 'DIC_kwDOMBOWoM4CgKX3');
@@ -45,7 +45,10 @@ const Comments = () => {
   }, []);
 
   return (
-    <section className='border-t-[2px] pt-[3rem] ' ref={commentRef}></section>
+    <section
+      className='border-t-[2px] pt-[3rem] giscus'
+      ref={commentRef}
+    ></section>
   );
 };
 
