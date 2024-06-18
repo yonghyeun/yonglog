@@ -93,7 +93,9 @@ const filterContent = (content: PostInfo['content']) => {
 
   return splitedContent
     .map((text) => {
-      return text.startsWith('#') ? text.replace(/`/g, '') : text;
+      return text.startsWith('#')
+        ? text.replace(/`/g, '').replace(/떄/g, '때')
+        : text.replace(/떄/g, '때');
     })
     .join('\r\n');
 };
