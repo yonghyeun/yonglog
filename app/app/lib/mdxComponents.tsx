@@ -92,7 +92,7 @@ export const useMDXComponents = (
           />
           {alt && alt !== 'alt text' && (
             <span
-              className={`italic block text-center text-gray-500 width-${width}px`}
+              className={`italic block text-center text-[90%] width-${width}px`}
             >
               {alt}
             </span>

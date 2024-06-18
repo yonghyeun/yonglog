@@ -24,7 +24,7 @@ const Comments = () => {
     script.setAttribute('data-reactions-enabled', '1');
     script.setAttribute('data-emit-metadata', '0');
     script.setAttribute('data-input-position', 'bottom');
-    script.setAttribute('data-theme', 'dark_dimmed');
+    script.setAttribute('data-theme', 'cobalt');
     script.setAttribute('data-lang', 'ko');
     commentRef.current.appendChild(script);
   }, []);
