@@ -10,8 +10,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
 
-import { useMDXComponents } from '../lib/mdxComponents';
-import { getAllPosts, getPostContent } from '../lib/post';
+import { useMDXComponents } from '../../lib/mdxComponents';
+import { getAllPosts, getPostContent } from '../../lib/post';
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
@@ -24,6 +24,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
   return (
     <>
+      <title>{meta.title}</title>
       <header className='pt-14 mb-12' id='page-header'>
         <PostTitle meta={meta} />
       </header>

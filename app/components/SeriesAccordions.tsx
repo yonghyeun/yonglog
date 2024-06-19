@@ -11,7 +11,7 @@ const SeriesAccordions = ({ meta }: { meta: PostInfo['meta'] }) => {
   return (
     <AccordionsWithState
       seriesTitle={series}
-      items={allSeries}
+      items={allSeries.toReversed()}
       currentPostId={currentPostId}
     />
   );

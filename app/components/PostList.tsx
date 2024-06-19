@@ -6,7 +6,7 @@ import type { PostInfo } from '@/types/post';
 export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
   <Link
     href={{
-      pathname: String(meta.postId),
+      pathname: `post/${String(meta.postId)}`,
     }}
     className='my-4 px-4 pb-8 border-b-[1px] border-[#c1c8cf] flex justify-between '
   >

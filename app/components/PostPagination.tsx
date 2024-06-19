@@ -5,14 +5,13 @@ import { getSeriesArray } from '@/app/lib/post';
 
 const PostPagination = ({ meta }: { meta: PostInfo['meta'] }) => {
   const { series, postId: currentPostId } = meta;
-  const allSeries = getSeriesArray(series);
+  const allSeries = getSeriesArray(series).toReversed();
   const baseIdx = allSeries.findIndex(
     ({ meta: { postId } }) => postId === currentPostId,
   );
   const [prevPost, nextPost] = [allSeries[baseIdx - 1], allSeries[baseIdx + 1]];
   const prevMeta = prevPost?.meta || null;
   const nextMeta = nextPost?.meta || null;
-
   return (
     <nav className='mt-10 text-slate-50'>
       <ul className='flex justify-between'>
