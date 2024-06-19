@@ -24,7 +24,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className='pt-14 mb-12' id='page-header'>
         <PostTitle meta={meta} />
       </header>
       <main className='w-[100%] lg:w-[150%] flex'>
@@ -54,8 +54,10 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
           <PostSideBar content={content} />
         </section>
       </main>
-      <PostPagination meta={meta} />
-      <Comments />
+      <footer id='page-footer'>
+        <PostPagination meta={meta} />
+        <Comments />
+      </footer>
     </>
   );
 };

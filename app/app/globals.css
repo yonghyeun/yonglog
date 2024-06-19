@@ -79,6 +79,10 @@ ol[data-active='true'] {
   font-size: 105%;
 }
 
+svg[data-theme] {
+  stroke: var(--color);
+}
+
 hr {
   display: none;
 }
