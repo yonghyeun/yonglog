@@ -136,9 +136,17 @@ time: 1718865531544
 
 예를 들어 디스코드에서 벨로그의 게시글을 공유하면 다음과 같이 `og: ..` 에 설정한 것과 같은 양상으로 나타나는 모습을 볼 수 있다.
 
+## 파비콘
+
+![설정된 파비콘의 예시](image-3.png)
+
+파비콘이란 인터넷 탭 옆에 존재하는 이미지 아이콘을 의미한다.
+
+적절한 이미지를 가져와 `.ico` 확장자로 변경후 `public/asset/favicon.ico` 확장자로 생성해주었다.
+
 # 루트 레이아웃 메타 태그 컴포넌트 생성하기
 
-```tsx title="@/components/Meta.tsx" {1-30}#add
+```tsx title="@/components/Meta.tsx" {1-31}#add
 const layoutMeta = {
   name: 'abonglog',
   description:
@@ -153,6 +161,9 @@ export const LayoutMeta = () => {
   return (
     <>
       <title>abonglog</title>
+      {/* 파비콘들에 대한 링크태그 */}
+      <link rel='icon' href='asset/favicon.ico' />
+      {/* 공통 메타 태그 */}
       <meta name='description' content={layoutMeta.description} />
       <meta name='author' content={layoutMeta.author} />
       <meta name='keywords' content={layoutMeta.keywords} />
@@ -161,6 +172,7 @@ export const LayoutMeta = () => {
       <meta property='og:description' content={layoutMeta.description} />
       <meta property='og:image' content={layoutMeta.image} />
       <meta property='og:type' content='article' />
+      <meta property='og:url' content='abonglog.me'></meta>
       {/* 트튀어 전용 Meta 태그*/}
       <meta name='twitter:title' content={layoutMeta.name} />
       <meta name='twitter:description' content={layoutMeta.description} />
