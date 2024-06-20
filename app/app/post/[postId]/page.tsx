@@ -26,6 +26,8 @@ export function generateMetadata({
 }): Metadata {
   const { meta } = getPostContent(params.postId);
 
+  console.log(meta.validThumbnail);
+
   return {
     title: meta.title,
     description: meta.description,
@@ -35,7 +37,7 @@ export function generateMetadata({
       url: `https://abonglog.me/post/${meta.postId}`,
       images: [
         {
-          url: meta.validThumbnail,
+          url: `https://abonglog.me/${meta.validThumbnail}`,
           alt: meta.title,
         },
       ],

@@ -41,7 +41,7 @@ const ActiveHeader = ({
     <li
       className='mb-2'
       data-active={isActive}
-      data-underActive={isUnderActive}
+      data-under-active={isUnderActive}
     >
       {headingText}
     </li>
