@@ -19,9 +19,11 @@ export function generateStaticParams(): { postId: string }[] {
   return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
 }
 
-export function generateMetadata(params: { postId: string }): Metadata {
-  console.log(params);
-  if (!getPostContent(params.postId)) return { title: '와이러노' };
+export function generateMetadata({
+  params,
+}: {
+  params: { postId: string };
+}): Metadata {
   const { meta } = getPostContent(params.postId);
 
   return {
@@ -30,15 +32,20 @@ export function generateMetadata(params: { postId: string }): Metadata {
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `abonglog.me/post/${params.postId}`,
-      images: meta.validThumbnail,
+      url: `https://abonglog.me/post/${meta.postId}`,
+      images: [
+        {
+          url: meta.validThumbnail,
+          alt: meta.title,
+        },
+      ],
       type: 'article',
       publishedTime: new Date(meta.time).toISOString(),
     },
     twitter: {
       title: meta.title,
       description: meta.description,
-      images: meta.validThumbnail,
+      images: [meta.validThumbnail],
     },
   };
 }
@@ -49,7 +56,6 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
   return (
     <>
-      <title>{meta.title}</title>
       <header className='pt-14 mb-12' id='page-header'>
         <PostTitle meta={meta} />
       </header>

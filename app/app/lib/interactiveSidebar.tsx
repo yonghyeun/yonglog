@@ -53,9 +53,6 @@ export const createList = (
     } else {
       list.push(
         <Link href={`#${text}`} key={`Link-${index}`} replace>
-          {/* <li key={`li-${index++}`} className='mb-2'>
-            {text}
-          </li> */}
           <ActiveHeader headingNumber={index} headingText={text} />
         </Link>,
       );
