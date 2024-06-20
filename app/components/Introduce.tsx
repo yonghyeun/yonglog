@@ -1,21 +1,13 @@
-/**
- * Introduce 에 들어갈 것은
- * 내 Github Profile 하고
- * 자기 소개 , 뭘 자기 소개 할까?
- * 프론트엔드를 공부하고 있는 뭐 어쩌구고
- * 내가 생각하는 모토 이런거 쓸까 .,. ? ㅋ 촌스러워
- */
-
+import Image from 'next/image';
 const Profile = () => (
   <section className='flex flex-col justify-center items-center space-y-4 ml-12'>
-    <div
-      style={{
-        backgroundImage: `url('/asset/profile.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-      className='w-32 h-32 rounded-lg bg-no-repeat bg-center'
-    ></div>
+    <Image
+      src='/asset/profile.jpg'
+      alt='profile'
+      width='150'
+      height='150'
+      style={{ borderRadius: '20px' }}
+    />
   </section>
 );
 

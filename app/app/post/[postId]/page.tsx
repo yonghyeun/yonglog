@@ -55,7 +55,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
           <PostSideBar content={content} />
         </section>
       </main>
-      <footer id='page-footer'>
+      <footer id='page-footer' className='border-t-[2px] mt-6'>
         <PostPagination meta={meta} />
         <Comments />
       </footer>

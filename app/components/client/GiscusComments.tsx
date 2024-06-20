@@ -36,12 +36,7 @@ const Comments = () => {
     iframe?.contentWindow?.postMessage('https://giscus.app');
   }, []);
 
-  return (
-    <section
-      className=' border-t-[2px] mt-[2rem] pt-[3rem] giscus'
-      ref={commentRef}
-    ></section>
-  );
+  return <section className=' giscus' ref={commentRef}></section>;
 };
 
 export default Comments;

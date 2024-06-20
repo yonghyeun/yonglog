@@ -11,7 +11,7 @@ const GlobalNav = () => {
       <ul className='flex justify-between items-center shadow-md mx-0 sm:mx-auto w-full sm:w-3/4 lg:w-1/2'>
         <li>
           <h1 className='text-2xl font-bold flex items-start '>
-            <Link href='/'>yonglog</Link>
+            <Link href='/'>abonglog</Link>
           </h1>
         </li>
         <ul className='flex gap-4 items-center'>

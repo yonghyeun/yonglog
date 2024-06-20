@@ -1,12 +1,7 @@
 import './globals.css';
+
+import { LayoutMeta } from '@/components/Meta';
 import GlobalNav from '@/components/GlobalNav';
-
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'yonglog',
-  description: '프론트엔드 개발블로그예용',
-};
 
 /* Client 단에서 서버 렌더링 결과가 hydration 될 때 실행되는 IIFF */
 const setThemeFromLocalStorage = `(function () {
@@ -22,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <head>
+        <LayoutMeta />
         <script
           dangerouslySetInnerHTML={{ __html: setThemeFromLocalStorage }}
         ></script>
