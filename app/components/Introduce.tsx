@@ -2,7 +2,7 @@ import Image from 'next/image';
 const Profile = () => (
   <section className='flex flex-col justify-center items-center space-y-4 ml-12'>
     <Image
-      src='/asset/profile.jpg'
+      src='/asset/profile.png'
       alt='profile'
       width='150'
       height='150'
