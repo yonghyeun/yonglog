@@ -97,7 +97,7 @@ time: 1718865531544
 
 이를 통해 경로에 따른 다른 레이아웃에서 `meta` 태그를 효과적으로 생성하는 것이 가능하다.
 
-# meta 태그의 종류를 알아보고 추가해주자
+# meta 태그의 종류들을 알아보자
 
 ## meta.description
 
@@ -130,3 +130,60 @@ time: 1718865531544
 ## openGraph
 
 메타 태그의 `property` 인 `openGraph` 는 웹 문서가 소셜 미디어를 통해 공유될 때 사용되는 메타 태그이다.
+
+![Velog의 openGraph 의 예시](image-1.png)
+![해당 문서의 og 태그들의 모습](image-2.png)
+
+예를 들어 디스코드에서 벨로그의 게시글을 공유하면 다음과 같이 `og: ..` 에 설정한 것과 같은 양상으로 나타나는 모습을 볼 수 있다.
+
+# 루트 레이아웃 메타 태그 컴포넌트 생성하기
+
+```tsx title="@/components/Meta.tsx" {1-30}#add
+const layoutMeta = {
+  name: 'abonglog',
+  description:
+    '프론트엔드 기술 블로그입니다. 열심히 공부한 내용을 기록하고 공유하여 함께 성장하고 싶습니다.',
+  author: 'choiyonghyeun',
+  keywords: 'front-end, react,nextjs,html,css',
+  image:
+    'https://abonglog.vercel.app/_next/image?url=%2Fasset%2Fprofile.jpg&w=256&q=75',
+};
+
+export const LayoutMeta = () => {
+  return (
+    <>
+      <title>abonglog</title>
+      <meta name='description' content={layoutMeta.description} />
+      <meta name='author' content={layoutMeta.author} />
+      <meta name='keywords' content={layoutMeta.keywords} />
+      {/* openGraph Meta 태그 */}
+      <meta property='og:title' content={layoutMeta.name}></meta>
+      <meta property='og:description' content={layoutMeta.description} />
+      <meta property='og:image' content={layoutMeta.image} />
+      <meta property='og:type' content='article' />
+      {/* 트튀어 전용 Meta 태그*/}
+      <meta name='twitter:title' content={layoutMeta.name} />
+      <meta name='twitter:description' content={layoutMeta.description} />
+      <meta name='twitter:image' content={layoutMeta.image} />
+    </>
+  );
+};
+```
+
+```tsx title="/layout.tsx" {12}#add
+...
+import { LayoutMeta } from '@/components/Meta';
+...
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang='kr'>
+      <head>
+        <LayoutMeta />
+
+```
+
+이후 해당 태그를 `/` 에서 렌더링 되는 루트 레이아웃에서 추가해주도록 하자
