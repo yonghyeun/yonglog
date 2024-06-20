@@ -12,10 +12,35 @@ import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../../lib/mdxComponents';
 import { getAllPosts, getPostContent } from '../../lib/post';
+import { Metadata } from 'next';
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
   return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
+}
+
+export function generateMetadata(params: { postId: string }): Metadata {
+  console.log(params);
+  if (!getPostContent(params.postId)) return { title: '와이러노' };
+  const { meta } = getPostContent(params.postId);
+
+  return {
+    title: meta.title,
+    description: meta.description,
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: `abonglog.me/post/${params.postId}`,
+      images: meta.validThumbnail,
+      type: 'article',
+      publishedTime: new Date(meta.time).toISOString(),
+    },
+    twitter: {
+      title: meta.title,
+      description: meta.description,
+      images: meta.validThumbnail,
+    },
+  };
 }
 
 const PostPage = ({ params }: { params: { postId: string } }) => {

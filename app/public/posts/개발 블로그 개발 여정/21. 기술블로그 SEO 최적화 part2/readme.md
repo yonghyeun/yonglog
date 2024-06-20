@@ -199,3 +199,97 @@ export default function RootLayout({
 ```
 
 이후 해당 태그를 `/` 에서 렌더링 되는 루트 레이아웃에서 추가해주도록 하자
+
+이렇게 생성된 메타 태그들은 모두 정적인 메타태그이다.
+
+어떤 경로든 상관 없이 존재하는 메타태그들이기 때문이다.
+
+# 동적 메타 데이터 생성하기
+
+이제는 블로그 포스팅 별 존재 할 동적인 메타 데이터들을 생성해보자
+
+이전 `genarateStaticParams` 로 포스팅들을 생성해뒀던 것들 처럼 `generateMetadata` 를 통해 동적인 메타 데이터들을 생성해줄 수 있다.
+
+`generateMetadata` 는 동적으로 결정되는 라우팅 경로들에 대한 `meta` 태그들을 `Metadata` 객체 형태로 생성해둔다.
+
+> `/` 경로에서도 `Metadata` 를 생성하고 `export` 하여 사용 하는 것이 가능하다.
+>
+> 가능한 두 가지 방법을 사용해 보기 위해 `Metadata` 를 사용하는 방법과 그렇지 않은 방법들을 이용해보았다.
+
+```tsx title="/post/[postId]/page.tsx" {2,3-6}#add
+/* 생략 */
+import { Metadata } from 'next';
+
+export function generateStaticParams(): { postId: string }[] {
+  const allPost = getAllPosts();
+  return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
+}
+
+export function generateMetadata(params: { postId: string }): Metadata {
+  const { meta } = getPostContent(params.postId);
+
+  return {
+    title: meta.title,
+    description: meta.description,
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: `abonglog.me/post/${params.postId}`,
+      images: meta.validThumbnail,
+      type: 'article',
+      publishedTime: new Date(meta.time).toISOString(),
+    },
+    twitter: {
+      title: meta.title,
+      description: meta.description,
+      images: meta.validThumbnail,
+    },
+  };
+}
+
+const PostPage = ({ params }: { params: { postId: string } }) => {
+  const { meta, content } = getPostContent(params.postId);
+  const components = useMDXComponents({}, meta.path);
+
+  return (
+    <>
+      <header className='pt-14 mb-12' id='page-header'>
+        <PostTitle meta={meta} />
+      </header>
+      <main className='w-[100%] lg:w-[150%] flex'>
+        <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+          <SeriesAccordions meta={meta} />
+          <Suspense fallback={<LoadingContnet />}>
+            <MDXRemote
+              source={content}
+              components={components}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [
+                    [
+                      rehypePrettyCode,
+                      {
+                        theme: 'material-theme-darker',
+                      },
+                    ],
+                  ],
+                },
+              }}
+            />
+          </Suspense>
+        </section>
+        <section className='hidden lg:block'>
+          <PostSideBar content={content} />
+        </section>
+      </main>
+      <footer id='page-footer' className='border-t-[2px] mt-6'>
+        <PostPagination meta={meta} />
+        <Comments />
+      </footer>
+    </>
+  );
+};
+
+export default PostPage;
+```
