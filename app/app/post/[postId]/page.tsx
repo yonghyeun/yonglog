@@ -26,18 +26,19 @@ export function generateMetadata({
 }): Metadata {
   const { meta } = getPostContent(params.postId);
 
-  console.log(meta.validThumbnail);
+  const baseUrl = 'https://abonglog.me';
 
   return {
     title: meta.title,
     description: meta.description,
+    metadataBase: new URL(baseUrl), // metadataBase 설정
     openGraph: {
       title: meta.title,
       description: meta.description,
-      url: `https://abonglog.me/post/${meta.postId}`,
+      url: `${baseUrl}/post/${meta.postId}`,
       images: [
         {
-          url: `https://abonglog.me/${meta.validThumbnail}`,
+          url: meta.validThumbnail,
           alt: meta.title,
         },
       ],
@@ -47,7 +48,7 @@ export function generateMetadata({
     twitter: {
       title: meta.title,
       description: meta.description,
-      images: [meta.validThumbnail],
+      images: meta.validThumbnail,
     },
   };
 }

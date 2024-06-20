@@ -1,6 +1,3 @@
-import remarkGfm from 'remark-gfm';
-import rehypePrettyCode from 'rehype-pretty-code';
-
 import nextMDX from '@next/mdx';
 /** @type {import('rehype-pretty-code').Options} */
 

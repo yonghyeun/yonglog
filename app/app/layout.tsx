@@ -10,14 +10,14 @@ const layoutMeta = {
     '프론트엔드 기술 블로그입니다. 열심히 공부한 내용을 기록하고 공유하여 함께 성장하고 싶습니다.',
   author: 'choiyonghyeun',
   keywords: 'front-end, react,nextjs,html,css',
-  image:
-    'https://abonglog.vercel.app/_next/image?url=%2Fasset%2Fprofile.jpg&w=256&q=75',
+  image: '/assets/profile.jpg',
   icon: '/asset/favicon.ico',
 };
 
 export const metadata: Metadata = {
   title: layoutMeta.title,
   description: layoutMeta.description,
+  metadataBase: new URL('https://abonglog.me'),
   authors: {
     name: layoutMeta.author,
   },
