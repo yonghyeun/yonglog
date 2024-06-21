@@ -11,6 +11,7 @@ const layoutMeta = {
   author: 'choiyonghyeun',
   keywords: 'front-end, react,nextjs,html,css',
   image: '/assets/profile.jpg',
+  ogProfile: '/assets/og_profile.jpg',
   icon: '/asset/favicon.ico',
 };
 
@@ -31,12 +32,12 @@ export const metadata: Metadata = {
     description: layoutMeta.description,
     url: 'abonsolg.me',
     type: 'article',
-    images: layoutMeta.image,
+    images: layoutMeta.ogProfile,
   },
   twitter: {
     title: layoutMeta.title,
     description: layoutMeta.description,
-    images: layoutMeta.image,
+    images: layoutMeta.ogProfile,
   },
 };
 
