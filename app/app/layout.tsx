@@ -1,5 +1,6 @@
 import './globals.css';
 
+import SearchEngineMeta from '@/components/SearchEngineMeta';
 import GlobalNav from '@/components/GlobalNav';
 
 import type { Metadata } from 'next';
@@ -59,11 +60,7 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <head>
-        {/* 구글 검색 엔진 등록 위한 메타 태그 */}
-        <meta
-          name='google-site-verification'
-          content='7O0-gfyTg8JG154_G2ceeUM5SyOAQ1R9tH4W9BHoP7U'
-        />
+        <SearchEngineMeta />
         {/* 모바일 유저의 인터페이스를 변경하기 위한 메타 태그 */}
         <meta name='theme-color' content='rgb(248,240,252)' />
         <script

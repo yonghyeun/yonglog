@@ -9,7 +9,7 @@
     url('/fonts/Freesentation-4Regular.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
-  font-display: block; /* 나는 폰트가 꿈틀되는게 보기가 싫어서 그냥 block 처리 해버림 */
+  font-display: swap;
 }
 
 :root {
@@ -125,7 +125,8 @@ code {
 
 /* 문장에서 쓰인 code 태그들에만 사용 할 스타일 */
 p > code,
-strong > code {
+strong > code,
+li > code {
   background-color: #aaaaaa63;
   padding-left: 5px;
   padding-right: 5px;
