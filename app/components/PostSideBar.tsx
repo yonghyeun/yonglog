@@ -9,7 +9,7 @@ const PostSideBar = ({ content }: { content: PostInfo['content'] }) => {
   const headers = parsingHeaders(content);
   const { list: PostHeaderList } = createList(headers);
   return (
-    <nav className='sticky top-[10rem] w-[300px] border-l-[2px] '>
+    <nav className='sticky top-[10rem] w-[300px] border-l-[2px] post-side-bar'>
       <ActiveProvider>{PostHeaderList}</ActiveProvider>
       <ul className='flex'>
         <li className='pl-2'>

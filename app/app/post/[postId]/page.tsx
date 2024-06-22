@@ -5,7 +5,7 @@ import PostTitle from '@/components/PostTitle';
 import SeriesAccordions from '@/components/SeriesAccordions';
 import PostSideBar from '@/components/PostSideBar';
 import PostPagination from '@/components/PostPagination';
-import Comments from '@/components/client/GiscusComments';
+import Comments from '@/components/Comments';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
@@ -91,7 +91,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
       </main>
       <footer id='page-footer' className='border-t-[2px] mt-6'>
         <PostPagination meta={meta} />
-        <Comments />
+        <Comments postId={params.postId} />
       </footer>
     </>
   );

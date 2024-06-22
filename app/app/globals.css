@@ -228,3 +228,13 @@ figcaption[data-rehype-pretty-code-title] {
     display: inline-block;
   }
 }
+
+.post-side-bar {
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+/* Styling the entire scrollbar */
+.post-side-bar::-webkit-scrollbar {
+  display: none;
+}
