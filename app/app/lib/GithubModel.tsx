@@ -27,7 +27,7 @@ export default class GithubAPI {
   static async GET<T>(
     endPoint: string,
     requestOptions: RequestOptions,
-  ): Promise<HTTPResponse<T>> {
+  ): Promise<T> {
     const { additionalHeader, queryParameter } = requestOptions;
     const url = this.setURL(endPoint, queryParameter || {});
     const headers = this.setHeaders(additionalHeader || {});
@@ -52,7 +52,7 @@ export default class GithubAPI {
   static async POST<T>(
     endPoint: string,
     requestOptions: RequestOptions,
-  ): Promise<HTTPResponse<T>> {
+  ): Promise<T> {
     const { additionalHeader, queryParameter, body } = requestOptions;
     const url = this.setURL(endPoint, queryParameter || {});
     const headers = this.setHeaders(additionalHeader || {});
@@ -71,9 +71,6 @@ export default class GithubAPI {
       return data;
     } catch (error) {
       console.error(error);
-      console.log('URL: ', url);
-      console.log('Headers: ', headers);
-      console.log('Body: ', JSON.stringify(body));
       throw error;
     }
   }

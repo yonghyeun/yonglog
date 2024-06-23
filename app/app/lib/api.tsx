@@ -8,11 +8,14 @@ import type { Issue } from '@/types/api';
  * @param {number} page - 전체 이슈 리스트를 30개씩 가져 올 때 가져와야 할 페이지
  * 전체 포스트의 개수에 따라 달라질 수 있다.
  */
-export const GET_issueList = async (page: number = 1) => {
+export const GET_issueList = async (
+  page: number = 1,
+  perPage: string = '30',
+) => {
   const endPoint = '/repos/yonghyeun/yonglog/issues';
 
   const queryParameter = {
-    per_page: '30',
+    per_page: perPage,
     labels: 'comment',
     page: String(page),
   };

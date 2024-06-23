@@ -8,6 +8,7 @@ tag:
 postId: 37189
 date: Sun Jun 23 2024
 time: 1719124544938
+issueNumber: 107
 ---
 
 # 깃허브 API를 이용하여 댓글을 가져와보자
@@ -351,5 +352,76 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 ```
 
 해당 부분처럼 `parsePosts` 메소드에서 조건부적으로 `/lib/api.tsx` 에 정의 된 메소드들을 호출하여 댓글 저장소를 생성하고 `meta` 데이터 영역에 저장해주도록 하자
+
+```tsx title="기능이 추가된 parsePost" {1,29-37,57}#add
+const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
+  const Posts: Array<PostInfo> = [];
+
+  const parseRecursively = async (source: Source) => {
+    const allPath = getAllPath(source);
+
+    for (const fileSource of allPath) {
+      if (isDirectory(fileSource)) {
+        parseRecursively(fileSource);
+      } else {
+        if (isMDX(fileSource)) {
+          const fileContent = fs.readFileSync(fileSource, 'utf8');
+          const { data, content } = matter(filterContent(fileContent));
+
+          /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
+          if (!data.postId) {
+            data.postId = Math.ceil(Math.random() * 9 * 100000);
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+          /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
+          if (!data.date) {
+            data.date = new Date().toDateString();
+            data.time = new Date().getTime();
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+
+          /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
+          if (!data.issueNumber) {
+            const issueResponse = await POST_issuePost(data);
+            const { number } = issueResponse;
+            data.issueNumber = number;
+
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+
+          /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
+          const directoryPath = path.join(fileSource, '..');
+          const relatevePath = directoryPath.split('public')[1];
+
+          Posts.push({
+            meta: {
+              ...data,
+              series: getSeriesName(fileSource),
+              validThumbnail: getValidThumbnail(fileSource, data),
+              path: relatevePath,
+            },
+            content: content,
+          });
+        }
+      }
+    }
+  };
+
+  await parseRecursively(source);
+
+  return Posts;
+};
+```
+
+비동기 처리인 `POST_issuePost` 를 이용하여 만약 메타 데이터에 `issueNumber` 가 존재하지 않는 경우에는 이슈를 생성하도록 만들어주었다.
+
+해당 게시글에선 적지 않겠지만 `async/await` 를 이용해주었기 때문에 `parsePosts` 를 호출하는 모든 메소드와 서버 컴포넌트들을 `async,await` 로 감싸 변경해주었다.
+
+> `issueNumber` 의 경우 `yonglog/issue` 에 생성된 이슈들의 번호이다.
+>
+> 추후 이슈에 달린 댓글들을 가져 올 때 사용된다.
 
 ## 5. 깃허브 API를 이용하여 issue에 달린 댓글 리스트 가져오기

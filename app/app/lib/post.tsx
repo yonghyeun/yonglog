@@ -130,12 +130,28 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
             const updatedContent = matter.stringify(content, data);
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
-          /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
-          // if (!data.issueNumber) {
-          //   const issueResponse = await POST_issuePost(data);
-          //   const { number } = issueResponse;
-          //   data.issueNumber = number;
 
+          /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
+          if (!data.issueNumber) {
+            /* 이슈가 중복적으로 생성되는 것을 막기 위해 이슈 리스트를 가져와 한 번 더 검증하는 과정을 거치자 */
+            const issueList = await GET_issueList(1, '100'); //TODO 블로그의 포스팅이 100개 이상이 되면 수정 할 것
+            const existedIssue = issueList.find(
+              ({ title }) => data.title === title,
+            );
+            if (existedIssue) {
+              data.issueNumber = existedIssue.number;
+            } else {
+              const newIssue = await POST_issuePost(data);
+              const { number } = newIssue;
+              data.issueNumber = number;
+            }
+
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+
+          // if (data.issueNumber) {
+          //   delete data.issueNumber;
           //   const updatedContent = matter.stringify(content, data);
           //   fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           // }
