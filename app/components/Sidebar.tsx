@@ -7,8 +7,8 @@ const sideBarClasses = {
   active: 'text-indigo-500 font-semibold',
 };
 
-const SideBar = () => {
-  const serieseList = getAllSeries();
+const SideBar = async () => {
+  const serieseList = await getAllSeries();
   return (
     <section className='sticky flex-2 top-[5rem] right-0'>
       <h2 className='font-bold text-xl mb-2' data-sidebar-title>

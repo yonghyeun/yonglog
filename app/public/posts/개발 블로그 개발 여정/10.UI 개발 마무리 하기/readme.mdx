@@ -1,8 +1,8 @@
 ---
 title: / 경로 UI 디자인 하기
 description: 차근차근 못생긴 UI들을 개선해보자
-thumb: 'app/public/posts/개발 블로그 개발 여정/10.UI 개발 마무리 하기/image-4.png'
-date: 'Mon Jun 03 2024'
+thumb: app/public/posts/개발 블로그 개발 여정/10.UI 개발 마무리 하기/image-4.png
+date: Mon Jun 03 2024
 time: 1717372800001
 tag:
   - react
@@ -11,7 +11,7 @@ tag:
 postId: 745641
 ---
 
-# `UI` 마무리 하기
+# UI 마무리 하기
 
 ---
 
@@ -40,7 +40,7 @@ postId: 745641
 
 🪢 [Freesentation 세상에 없던 파워포인트를 위한 폰트](https://freesentation.blog/)
 
-### `global.css` 에서 `custom-font` 적용하기
+### global.css 에서 custom-font 적용하기
 
 ```css
 @font-face {
@@ -72,7 +72,7 @@ body {
 
 폰트만 바꿨는데도 느낌이 확 사는 느낌이다. :)
 
-# `PostItem` 디자인 하기
+# PostItem 디자인 하기
 
 ---
 
@@ -130,7 +130,7 @@ export const PostList = ({ postList }: { postList: Array<PostInfo> }) => {
 
 지금 보며 아쉬운점은 우측이 휑해보인다는 점인데 우측에 시리즈별 썸네일을 추가해주면 어떨가 생각이 들었다.
 
-### `meta` 데이터에 썸네일 경로 추가하기
+### meta 데이터에 썸네일 경로 추가하기
 
 각 `PostItem` 에서 썸네일을 렌더링 하기 위해선 `props` 로 들어오는 `meta` 에 썸네일의 주소가 필요하다.
 
@@ -244,7 +244,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 > 그 이유는 `NextJS` 에서 정적인 파일들에 접근하기 위한 경로들의 상대경로가 기본적으로 `public` 폴더를 기준으로 하기 때문이다.
 > 모든 `static file` 들의 모든 접근 방식을 `public` 에 대한 상대 경로로 접근하는 것으로 통일시켜주었다.
 
-### `meta.seriesThumbnail` 이용하여 썸네일 렌더링 하기
+### meta.seriesThumbnail 이용하여 썸네일 렌더링 하기
 
 ---
 
@@ -287,7 +287,7 @@ export const PostList = ({ postList }: { postList: Array<PostInfo> }) => {
 
 > ### `Image` 컴포넌트의 이미지 최적화 방식
 >
-> - 동적 사이즈 조절 : `Image` 컴포넌트는 `src` 에 대한 이미지를 불러올 떄 `props` 로 전달한 `width , height` 에 맞춰 이미지 크기를 동적으로 조정하여 요청한다. 이를 통해 사용할만큼의 사이즈의 이미지로 조정 후 불러오기 떄문에 요쳥 시간이 빠르다.
+> - 동적 사이즈 조절 : `Image` 컴포넌트는 `src` 에 대한 이미지를 불러올 때 `props` 로 전달한 `width , height` 에 맞춰 이미지 크기를 동적으로 조정하여 요청한다. 이를 통해 사용할만큼의 사이즈의 이미지로 조정 후 불러오기 때문에 요쳥 시간이 빠르다.
 > - `lazy loading` : 이미지가 뷰포트에 들어왔을 때에만 로딩 되도록 하여 불필요한 요청을 줄여 `FCP` 를 빠르게 한다.
 > - `caching` : `NextJS` 는 `CDN` 들과 자동으로 통합되기 때문에 현재 위치로부터 가까운 `CDN` 으로부터 캐싱 된 이미지를 받을 수 있다.
 

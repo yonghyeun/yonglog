@@ -18,6 +18,7 @@ export type PostInfo = {
     path: string;
     validThumbnail: Source | ImgSource;
     thumb?: Source | ImgSource;
+    issueNumber: number;
   };
 };
 export type SeriesName = string;

@@ -295,4 +295,61 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
 ### 모든 포스트의 댓글 저장소를 만들어주자
 
+이전 챕터들을 읽은 사람들이라면 알고 있을 수 있지만 나는 현재 `/lib/posts.tsx` 파일에서 로컬 파일에 존재하는 `mdx` 파일들을 `parsePosts` 메소드를 호출하여 가져오며
+
+해당 메소드에선 동적으로 `mdx` 파일들에 존재하는 `meta` 데이터 영역을 조회하여 조건부적으로 값을 추가해주고 있다.
+
+```tsx title="/lib/post.tsx" showLineNumbers{103} {14-25}
+const parsePosts = (source: Source): Array<PostInfo> => {
+  const Posts: Array<PostInfo> = [];
+
+  const parseRecursively = (source: Source): void => {
+    getAllPath(source).forEach((fileSource: Source) => {
+      if (isDirectory(fileSource)) {
+        parseRecursively(fileSource);
+      } else {
+        if (isMDX(fileSource)) {
+          const fileContent = fs.readFileSync(fileSource, 'utf8');
+          const { data, content } = matter(filterContent(fileContent));
+
+          /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
+          if (!data.postId) {
+            data.postId = Math.ceil(Math.random() * 9 * 100000);
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+          /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
+          if (!data.date) {
+            data.date = new Date().toDateString();
+            data.time = new Date().getTime();
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          }
+
+          /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
+          const directoryPath = path.join(fileSource, '..');
+          const relatevePath = directoryPath.split('public')[1];
+
+          Posts.push({
+            meta: {
+              ...data,
+              series: getSeriesName(fileSource),
+              validThumbnail: getValidThumbnail(fileSource, data),
+              path: relatevePath,
+            },
+            content: content,
+          });
+        }
+      }
+    });
+  };
+
+  parseRecursively(source);
+
+  return Posts;
+};
+```
+
+해당 부분처럼 `parsePosts` 메소드에서 조건부적으로 `/lib/api.tsx` 에 정의 된 메소드들을 호출하여 댓글 저장소를 생성하고 `meta` 데이터 영역에 저장해주도록 하자
+
 ## 5. 깃허브 API를 이용하여 issue에 달린 댓글 리스트 가져오기

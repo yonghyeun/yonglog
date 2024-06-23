@@ -1,7 +1,9 @@
 ---
 title: '[BUG] Vercel 에 환경 변수 추가하기'
 description: 'Vercel에 배포 할 때 환경 변수 추가하기 , 그나저나 왜 Vercel 은 md 파일은 인식 못할까 ?'
-thumb: 'app/public/posts/개발 블로그 개발 여정/14. [Hotfix] dev 모드에선 문제가 없는데 배포 시 문제가 있다/image-5.png'
+thumb: >-
+  app/public/posts/개발 블로그 개발 여정/14. [Hotfix] dev 모드에선 문제가 없는데 배포 시 문제가
+  있다/image-5.png
 tag:
   - nextjs
   - error
@@ -55,7 +57,7 @@ export default Page;
 
 `dev` 모드에선 문제 없이 `PostList` 부분이 렌더링이 잘 됨에도 불구하고 왜그럴까 ?
 
-### `components/PostList.tsx`
+### components/PostList.tsx
 
 ---
 
@@ -95,7 +97,7 @@ export const PostList = ({
 
 이렇게 로깅하고 나니 문제가 두 개로 명확해졌다.
 
-## 1. `public/posts` 에서 `.mdx` 파일 확장자만 가지고 오고 있더라
+## 1. public/posts 에서 .mdx 파일 확장자만 가지고 오고 있더라
 
 해당 부분은 로깅을 하다 보니 알게 된 사실이였는데 이게 더 심각한 문제였다.
 
@@ -107,7 +109,7 @@ export const PostList = ({
 
 알고 보니 현재 `mdx` 확장자들만 가지고 오고 있었다.
 
-## 2. `process.env` 파일이 인식이 되지 않아 가져온 `postList` 들을 0개의 배열로 `slice` 하고 있었다.
+## 2. process.env 파일이 인식이 되지 않아 가져온 postList 들을 0개의 배열로 slice 하고 있었다.
 
 ![alt text](image-2.png)
 
@@ -132,7 +134,7 @@ slicedPostList.forEach((post) => console.log(post.meta.title));
 
 문제를 하나씩 해결해나가보자
 
-# `getAllPosts` 에서 `mdx` 파일만 가져오는 문제를 해결해보자
+# getAllPosts 에서 mdx 파일만 가져오는 문제를 해결해보자
 
 ---
 
@@ -140,7 +142,7 @@ slicedPostList.forEach((post) => console.log(post.meta.title));
 
 문제가 되었던 `selectPosts` 메소드 내부를 살펴보면 여러 메소드들의 조합으로 이뤄져있다.
 
-### `selectPosts`
+### selectPosts
 
 ```tsx
 /**
@@ -166,7 +168,7 @@ export const selectPosts = (searchParams: URLSearchParams): Array<PostInfo> => {
 
 결국엔 `getAllPosts` 메소드를 호출 한 후 필터링 하는 것이다. 그렇다면 `getAllPosts` 를 살펴보자
 
-### `getAllPosts`
+### getAllPosts
 
 ```tsx
 export const getAllPosts = (): Array<PostInfo> => {
@@ -184,7 +186,7 @@ export const getAllPosts = (): Array<PostInfo> => {
 
 `getAllPosts` 는 포스트들이 존재하는 경로를 이용해 `parsePosts` 로 포스팅 된 게시글들을 가져온다.
 
-### `parsePosts`
+### parsePosts
 
 ```tsx
 const parsePosts = (source: Source): Array<PostInfo> => {
@@ -239,7 +241,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 
 `parsePosts` 매소드는 제귀적으로 `file system` 에 접근하여 `isMDX` 조건을 만족하는 파일들을 가져온다.
 
-### `isMDX`
+### isMDX
 
 ```tsx
 /**
@@ -256,7 +258,7 @@ const isMDX = (source: Source): source is MDXSource => {
 
 그럼 발생 할 수 있는 몇 가지 가능성을 생각해보도록 하자
 
-## 혹시 배포 시 `.md` 파일들은 배포가 안되었나 ?
+## 혹시 배포 시 .md 파일들은 배포가 안되었나 ?
 
 ![alt text](image-3.png)
 
@@ -274,7 +276,7 @@ const isMDX = (source: Source): source is MDXSource => {
 
 확장자를 `mdx` 로 모두 변경해주었기 때문에 이제는 문제 없이 모든 포스팅들을 불러올 수 있을 것이다.
 
-# `vercel` 에서 `process.env` 파일을 읽어오지 못하는 문제를 해결해보자
+# vercel 에서 process.env 파일을 읽어오지 못하는 문제를 해결해보자
 
 ```tsx
 export const PostList = ({
@@ -297,7 +299,7 @@ export const PostList = ({
 
 위에서 말했듯 `/` 경로에서 `PostList` 들이 렌더링 되지 않는 문제에 대해서 원인을 찾았었다.
 
-## 원인 파악 : `process.env` 파일이 배포된 `vercel` 에선 존재하지 않았다.
+## 원인 파악 : process.env 파일이 배포된 vercel 에선 존재하지 않았다.
 
 즉 해당 메소드에선 `process.env` 에서` POSTS_PER_PAGES` 를 불러와 가져온 `postList` 들을 `slice` 하는데
 

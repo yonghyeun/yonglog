@@ -1,6 +1,6 @@
 ---
-title: 'generateStaticParams 이용해 SSR 에서 SSG로 넘어가자'
-description: 'SSG를 이용하여 로딩 속도 334배 빠르게 바꾼 이야기'
+title: generateStaticParams 이용해 SSR 에서 SSG로 넘어가자
+description: SSG를 이용하여 로딩 속도 334배 빠르게 바꾼 이야기
 thumb: app/public/posts/개발 블로그 개발 여정/16. getStaticParams 이용하기/gpt thumbnail.png
 tag:
   - nextjs
@@ -358,6 +358,6 @@ export default PostPage;
 
 결국 `SSG` 를 이용하면 서버에서의 렌더링 시간이 없기 때문에 단순히 네트워크가 오고 가는 시간 + a(SSG 파일을 처리하는 시간) 만큼의 시간만 소요되고
 
-즉시 클라이언트의 인터페이스에서 렌더링 되기 떄문에 시간이 크게 단축된다.
+즉시 클라이언트의 인터페이스에서 렌더링 되기 때문에 시간이 크게 단축된다.
 
 **전체 소요시간은 다이나믹 렌더링 시 `4300ms` 에서 `SSG` 에서 `12.57ms` 로 342배나 빨라졌다.**

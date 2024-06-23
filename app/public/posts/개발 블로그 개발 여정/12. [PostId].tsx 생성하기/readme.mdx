@@ -1,5 +1,5 @@
 ---
-title: 'Post/page.tsx 생성하기'
+title: Post/page.tsx 생성하기
 description: 블로그 게시글로 라우팅 시키고 마크다운 파일을 컴포넌트로 렌더링 해보자
 thumb: 'app/public/posts/개발 블로그 개발 여정/12. [PostId].tsx 생성하기/image-5.png'
 tag:
@@ -18,7 +18,7 @@ time: 1717686655160
 
 이제 `/` 경로에서 `PostItem` 을 클릭하면 해당 `Post` 들을 렌더링 해주기 위한 `routing` 로직과 렌더링 로직을 생성해주자
 
-# `Dynamic Routing` 과 `Dynamic rendering` 의 개념
+# Dynamic Routing 과 Dynamic rendering 의 개념
 
 ---
 
@@ -34,7 +34,7 @@ time: 1717686655160
 
 [NextJS - Dynamic Routing]('https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes')
 
-# 라우팅을 위한 랜덤한 `PostId` 생성하기
+# 라우팅을 위한 랜덤한 PostId 생성하기
 
 ---
 
@@ -124,7 +124,7 @@ time: 1717686655160
 > 추가로 하는 김에 `date , time` 도 매번 입력하기 귀찮아서 관련 로직을 추가해주었다.
 > `build time` 시 생성되는 `new Date().getTime()` 으로 인해 포스트 들을 최신 순으로 정렬하기도 편해졌다. :)
 
-# `PostItem` 에 라우팅 기능 추가하기
+# PostItem 에 라우팅 기능 추가하기
 
 ```tsx title="components/postList.tsx"
 import Link from 'next/link';
@@ -167,7 +167,7 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
 
 이를 통해 특정 포스트를 클릭하면 해당 `PostId` 에 대한 경로로 라우팅 되도록 만들었다.
 
-# `Dynamic rendering` 을 위한 컴포넌트 생성
+# Dynamic rendering 을 위한 컴포넌트 생성
 
 ---
 
@@ -251,7 +251,7 @@ export default PostPage;
 
 이제 하나씩 문제점을 손대면서 완성해보자 :)
 
-# `mdx, mdx` 파일을 이쁘게 꾸미기 위해 커스텀 컴포넌트 만들기
+# mdx, mdx 파일을 이쁘게 꾸미기 위해 커스텀 컴포넌트 만들기
 
 ---
 
@@ -288,7 +288,7 @@ export type MDXRemoteProps = {
 };
 ```
 
-이 떄 `MDXRemoteProps` 의 `components` 를 보면 `MDXProvider['components']` 즉 , `MDXComponents` 를 `props`로 받는다.
+이 때 `MDXRemoteProps` 의 `components` 를 보면 `MDXProvider['components']` 즉 , `MDXComponents` 를 `props`로 받는다.
 
 ```tsx
 export type MDXComponents = NestedMDXComponents & {
@@ -323,7 +323,7 @@ import { MDXComponents } from 'mdx/types';
 
 /**
  * @param {MDXComponents}   [components = []] - 서드파티 라이브러리 등에서 제공하는 컴포넌트를 인수로 받을 수 있음
- * @param {string} [postPath] - post 들이 존재하는 Directory 의 경로이다. 파싱되는 img 태그의 주소를 생성 할 떄 사용된다.
+ * @param {string} [postPath] - post 들이 존재하는 Directory 의 경로이다. 파싱되는 img 태그의 주소를 생성 할 때 사용된다.
  */
 export const useMDXComponents = (
   components: MDXComponents = {},

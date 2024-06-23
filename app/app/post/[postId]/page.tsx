@@ -17,17 +17,17 @@ import { Metadata } from 'next';
 // TODO 테스트 이후 위치 변경하기
 import { POST_issuePost } from '@/app/lib/api';
 
-export function generateStaticParams(): { postId: string }[] {
-  const allPost = getAllPosts();
+export async function generateStaticParams(): Promise<{ postId: string }[]> {
+  const allPost = await getAllPosts();
   return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { postId: string };
 }): Metadata {
-  const { meta } = getPostContent(params.postId);
+  const { meta } = await getPostContent(params.postId);
 
   const baseUrl = 'https://abonglog.me';
 
@@ -56,8 +56,8 @@ export function generateMetadata({
   };
 }
 
-const PostPage = ({ params }: { params: { postId: string } }) => {
-  const { meta, content } = getPostContent(params.postId);
+const PostPage = async ({ params }: { params: { postId: string } }) => {
+  const { meta, content } = await getPostContent(params.postId);
   const components = useMDXComponents({}, meta.path);
 
   // TODO 테스트 이후 지우기

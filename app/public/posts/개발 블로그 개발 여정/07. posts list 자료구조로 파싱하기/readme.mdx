@@ -1,8 +1,8 @@
 ---
 title: Post들이 저장된 FileSystem 파싱하기
 description: 로컬 파일 시스템에 존재하는 readme 파일들을 API 요청 없이 가져와보자
-date: 'Sat Jun 01 2024'
-thumb: 'app/public/posts/개발 블로그 개발 여정/07. posts list 자료구조로 파싱하기/code.png'
+date: Sat Jun 01 2024
+thumb: app/public/posts/개발 블로그 개발 여정/07. posts list 자료구조로 파싱하기/code.png
 time: 1717200000000
 tag:
   - react
@@ -37,7 +37,7 @@ postId: 804032
 
 자료구조를 만들어 `posts` 들의 게시글들을 이용해 게시글 리스트나 라우팅 경로에 따라 게시글을 렌더링 하기 위함이다.
 
-# `@/posts` 폴더 파싱하여 자료구조 만들기
+# @/posts 폴더 파싱하여 자료구조 만들기
 
 ---
 
@@ -100,7 +100,7 @@ export type SeriesName = string;
 
 이를 통해 타입 안정성을 보장하고 오류를 방지 할 수 있다.
 
-## `app/lib/post.tsx`
+## app/lib/post.tsx
 
 ---
 
@@ -128,7 +128,7 @@ date: '2024-05-31'
 tag: ['react', 'nextjs', 'mdx']
 ---
 // -- 이하의 내용은 data 로 파싱된다.
-# `MDX` 를 사용하기 위한 라이브러리 설치하기
+# MDX 를 사용하기 위한 라이브러리 설치하기
 
 ```
 
@@ -209,7 +209,7 @@ const getPostId = (source: MDXSource): number => {
 
 매번 `MDX` 파일에 메타 데이터들을 적어주기 귀찮았기 때문에 해당 메소드를 생성해주었다.
 
-### `posts` 폴더 파싱하여 자료구조 만들기
+### posts 폴더 파싱하여 자료구조 만들기
 
 ---
 
@@ -281,7 +281,7 @@ export { getAllPosts };
 
 정렬 기준은 최신순으로 정렬하는데, 만약 날짜가 같다면 `postId` 를 통해 정렬하도록 하였다.
 
-# `getAllPosts` 가 잘 작동하는지 확인해보자
+# getAllPosts 가 잘 작동하는지 확인해보자
 
 ---
 

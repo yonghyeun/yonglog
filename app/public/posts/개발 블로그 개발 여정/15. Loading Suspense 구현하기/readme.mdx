@@ -1,7 +1,7 @@
 ---
 title: Loading Suspense 구현하기
 description: 게시글에 접근 전 로딩 상태를 넣어줘 UX를 높혀보자
-thumb: 'app/public/posts/개발 블로그 개발 여정/15. Loading Suspense 구현하기/loadingtsx success.gif'
+thumb: app/public/posts/개발 블로그 개발 여정/15. Loading Suspense 구현하기/loadingtsx success.gif
 tag:
   - react
   - nextjs
@@ -152,7 +152,7 @@ export default PostPage;
 
 즉 , `page.tsx` 에 대한 서버단의 렌더링이 종료 후 `RSCP` 를 클라이언트 단에게 보냈을 때
 
-서버의 `RSCP` 를 클라이언트 단에서 `hydrate` 시키는 과정에서 `MDXRemote` 컴포넌트가 모든 렌더링 단계를 `block` 하기 떄문에 많은 시간의 지연이 발생한다.
+서버의 `RSCP` 를 클라이언트 단에서 `hydrate` 시키는 과정에서 `MDXRemote` 컴포넌트가 모든 렌더링 단계를 `block` 하기 때문에 많은 시간의 지연이 발생한다.
 
 **결국 `MDXRemote` 로 인해 `block` 되는 시간이 길어질 수록 전체 지연 시간이 길어진다는 것이다.**
 
@@ -290,7 +290,7 @@ export const LoadingContnet = () => (
 
 ### 해당 문제가 발생한 이유
 
-이는 `MDXRemote` 컴포넌트 자체가 비동기적으로 처리 되며 `rehype-pretty-code` 의 플러그인들이 코드블록을 포맷팅 하는 동안 모든 렌더링 단계가 `block` 되기 떄문이다.
+이는 `MDXRemote` 컴포넌트 자체가 비동기적으로 처리 되며 `rehype-pretty-code` 의 플러그인들이 코드블록을 포맷팅 하는 동안 모든 렌더링 단계가 `block` 되기 때문이다.
 
 ```tsx title="app/[postId]/page.tsx" {1-10} {11}#remove showLineNumbers{12}
 const PostPage = ({ params }: { params: { postId: string } }) => {

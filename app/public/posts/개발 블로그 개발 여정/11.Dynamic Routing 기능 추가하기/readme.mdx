@@ -1,8 +1,8 @@
 ---
 title: 서버 컴포넌트에 Dynamic Routing 추가하기
 description: 라우팅 기능을 추가하여 숨을 불어넣어보자
-thumb: 'app/public/posts/개발 블로그 개발 여정/11.Dynamic Routing 기능 추가하기/routing result.gif'
-date: 'Thu Jun 06 2024'
+thumb: app/public/posts/개발 블로그 개발 여정/11.Dynamic Routing 기능 추가하기/routing result.gif
+date: Thu Jun 06 2024
 time: 1717632000000
 tag:
   - react
@@ -26,7 +26,7 @@ postId: 582634
 
 이제 블로그의 기능을 위해 라우팅 기능을 추가해주기로 하자
 
-## `Dynamic Routing ?`
+## Dynamic Routing ?
 
 ---
 
@@ -42,7 +42,7 @@ postId: 582634
 
 이렇게 `runtime` 에 라우팅 될 경로가 결정되는 경우 , **동적으로 결정 될 라우팅 경로를 이용하는 행위를 `dynamic routing` 이라고 한다.**
 
-## 어떻게 `Dynamic Routing` 을 할까 ?
+## 어떻게 Dynamic Routing 을 할까 ?
 
 ---
 
@@ -54,7 +54,7 @@ postId: 582634
 
 천천히 하나씩 `docs` 를 읽어가며 준비해보자
 
-### `Dynamic Routing` 될 경로에 맞는 파일 라우팅 시스템 준비하기
+### Dynamic Routing 될 경로에 맞는 파일 라우팅 시스템 준비하기
 
 ---
 
@@ -66,7 +66,7 @@ postId: 582634
 
 반대로 `runtime` 에 결정되는 세그먼트를 `Dynamic segment` 라고 한다. 이렇게 `Dynamic segment` 에 대한 폴더명은 폴더 이름에 `[]` 를 감싸 정의한다.
 
-### `Dynamic Segment` 될 경로에 맞는 `page.tsx` 준비하기
+### Dynamic Segment 될 경로에 맞는 page.tsx 준비하기
 
 ---
 
@@ -88,15 +88,15 @@ export default function Page({
 
 서버 컴포넌트에선 단순히 `props` 로 들어오는 `Dynamic segment` 들을 이용해 렌더링 로직을 작성해주면 된다.
 
-## `Dynamic Routing`이 무엇이 있을지 생각해보기
+## Dynamic Routing이 무엇이 있을지 생각해보기
 
 ---
 
-### `params`
+### params
 
 ---
 
-#### `PostItem` 컴포넌트
+#### PostItem 컴포넌트
 
 ![alt text](image-4.png)
 
@@ -104,19 +104,19 @@ export default function Page({
 
 이후 라우팅 된 경로에서 해당 `Post` 의 `mdx` 파일을 렌더링 하여 보여주면 된다.
 
-### `searchParams`
+### searchParams
 
 ---
 
-#### `Category` 컴포넌트
+#### Category 컴포넌트
 
 ![alt text](image-1.png)
 
-#### `Sidebar` 컴포넌트
+#### Sidebar 컴포넌트
 
 ![alt text](image-2.png)
 
-#### `Pagination` 컴포넌트
+#### Pagination 컴포넌트
 
 ![alt text](image-3.png)
 
@@ -128,7 +128,7 @@ export default function Page({
 
 `searchParams` 로 정의해줌으로 인해 세 `searchParams` 가 같이 존재 할 수도 , 부분적으로 존재 할 수도 , 아예 존재하지 않게도 할 수 있다.
 
-# `searchParams` 라우팅 로직 구현하기
+# searchParams 라우팅 로직 구현하기
 
 ---
 
@@ -136,7 +136,7 @@ export default function Page({
 
 `searchParams` 값에 따라 `PostList` 들을 다르게 렌더링 하는 로직을 먼져 구현해주자
 
-### `types/global.tsx`
+### types/global.tsx
 
 ---
 
@@ -150,9 +150,9 @@ export type SearchParams = {
 };
 ```
 
-`global.d.ts` 에 사용할 타입을 선언해준다. `SearchParams` 태그는 `searchParams` 를 조작 할 떄 사용할 객체들을 선언한 타입이다.
+`global.d.ts` 에 사용할 타입을 선언해준다. `SearchParams` 태그는 `searchParams` 를 조작 할 때 사용할 객체들을 선언한 타입이다.
 
-### `app/lib/route.tsx`
+### app/lib/route.tsx
 
 ```tsx
 import type { SearchParams } from '@/types/global';
@@ -241,7 +241,7 @@ export const getNewSearchParms = (
 
 이를 통해 `routing` 에 `on,off` 기능과 같이 구현해주었다.
 
-### `components/client/ActiveLink.tsx`
+### components/client/ActiveLink.tsx
 
 ```tsx
 'use client';
@@ -302,7 +302,7 @@ export default ActiveLink;
 
 `Link` 컴포넌트의 기본 `props` 인 `scroll , replace` 등을 활용해 라우팅 시 페이지의 상단으로 이동 시킬지, 혹은 `window.history` 스택에 주소들을 추가 할 것인지 아닌지를 조절한다.
 
-### `app/page.tsx`
+### app/page.tsx
 
 ---
 
@@ -353,7 +353,7 @@ export default Page;
 
 컴포넌트 내부를 살펴보면서 어떤 말인지를 생각해보자
 
-### `components/CategoryList.tsx`
+### components/CategoryList.tsx
 
 ---
 
@@ -408,7 +408,7 @@ export default CategoryList;
 >
 > 공식 문서에 나와있듯이 최대한 `client boundary` 를 적게 하여 `server component` 들의 수를 늘리는 것이 개발 시 얼마나 용이한지 알 수 있었다.
 
-### `components/postList.tsx`
+### components/postList.tsx
 
 ---
 
@@ -468,7 +468,7 @@ export const PostList = ({
 
 나는 `POSTS_PER_PAES` 를 5개로 설정했기 때문에 한 페이지 당 최대 5개씩의 `PostItem` 들이 렌더링 된다.
 
-#### `app/lib/posts.tsx`
+#### app/lib/posts.tsx
 
 ```tsx
 const isPostHasTag = (
@@ -505,7 +505,7 @@ export const selectPosts = (searchParams: URLSearchParams): Array<PostInfo> => {
 
 **결국 라우팅이란 어떤 주소로 라우팅 시킬 것인지, 경로에 따라 어떤 데이터를 사용 할 것인지가 제일 중요하다.**
 
-#### `components/Pagination.tsx , SideBar.tsx`
+#### components/Pagination.tsx , SideBar.tsx
 
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: PageNavigation UI 만들기
 description: PageNavigation UI를 만들어보자
-thumb: 'app/public/posts/개발 블로그 개발 여정/08.pageNavigation 만들기/image-5.png'
-date: 'Sun Jun 02 2024'
+thumb: app/public/posts/개발 블로그 개발 여정/08.pageNavigation 만들기/image-5.png
+date: Sun Jun 02 2024
 time: 1717286400000
 tag:
   - react
@@ -31,7 +31,7 @@ postId: 690282
 
 다만 `next page , last page` 같은 경우엔 현재 머무르고 있는 `page` 에 따라 다르게 렌더링 되어야 하겠지만 말이다.
 
-### `globalCSS` , `tailwind.config.ts`설정하기
+### globalCSS , tailwind.config.ts설정하기
 
 ---
 
@@ -124,7 +124,7 @@ export default config;
 <a className='bg-left-double-arrow mr-2'></a>
 ```
 
-### `getPageList`
+### getPageList
 
 ---
 
@@ -200,7 +200,7 @@ export const getPageList = (
 
 이 때 만약 대칭적으로 리스트를 만들 수 없을 때 (`currentPage` 가 `3` 보다 작거나 `totalPosts - 2` 보다 클 경우)를 대비하여 넉넉하게 `prevPages , nextPages` 들을 가져 온 후 `MAX_NAV_PAGES` 만큼 찰 때 까지 `pages` 를 채워주도록 하였다.
 
-### `Pagination` 컴포넌트 생성하기
+### Pagination 컴포넌트 생성하기
 
 ```tsx
 // componets/Pagination.tsx

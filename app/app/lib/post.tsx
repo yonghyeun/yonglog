@@ -9,6 +9,7 @@ import type {
 } from '@/types/post';
 
 import { GET_issueList, POST_issuePost } from './api';
+import { Issue } from '@/types/api';
 
 const fs = require('fs');
 const path = require('path');
@@ -102,11 +103,13 @@ const filterContent = (content: PostInfo['content']) => {
     .join('\r\n');
 };
 
-const parsePosts = (source: Source): Array<PostInfo> => {
+const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
 
-  const parseRecursively = (source: Source): void => {
-    getAllPath(source).forEach((fileSource: Source) => {
+  const parseRecursively = async (source: Source) => {
+    const allPath = getAllPath(source);
+
+    for (const fileSource of allPath) {
       if (isDirectory(fileSource)) {
         parseRecursively(fileSource);
       } else {
@@ -127,6 +130,15 @@ const parsePosts = (source: Source): Array<PostInfo> => {
             const updatedContent = matter.stringify(content, data);
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
+          /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
+          // if (!data.issueNumber) {
+          //   const issueResponse = await POST_issuePost(data);
+          //   const { number } = issueResponse;
+          //   data.issueNumber = number;
+
+          //   const updatedContent = matter.stringify(content, data);
+          //   fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          // }
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
           const directoryPath = path.join(fileSource, '..');
@@ -143,19 +155,19 @@ const parsePosts = (source: Source): Array<PostInfo> => {
           });
         }
       }
-    });
+    }
   };
 
-  parseRecursively(source);
+  await parseRecursively(source);
 
   return Posts;
 };
 /**
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */
-export const getAllPosts = (): Array<PostInfo> => {
+export const getAllPosts = async (): Promise<Array<PostInfo>> => {
   const POST_PATH = path.join(process.cwd(), 'public/posts');
-  const posts = parsePosts(POST_PATH);
+  const posts = await parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {
     const prevTime = prev.meta.time;
@@ -177,8 +189,10 @@ const isPostHasTag = (
 /**
  * SearchParms 에 맞게 적절한 PostList 를 반환하는 메소드
  */
-export const selectPosts = (searchParams: URLSearchParams): Array<PostInfo> => {
-  const allPosts = getAllPosts();
+export const selectPosts = async (
+  searchParams: URLSearchParams,
+): Promise<Array<PostInfo>> => {
+  const allPosts = await getAllPosts();
   const tag = searchParams.get('tag');
   const series = searchParams.get('series');
 
@@ -194,8 +208,8 @@ export const selectPosts = (searchParams: URLSearchParams): Array<PostInfo> => {
   });
 };
 
-export const getPostContent = (postId: string): PostInfo => {
-  const allPosts = getAllPosts();
+export const getPostContent = async (postId: string): Promise<PostInfo> => {
+  const allPosts = await getAllPosts();
   const searchedPost = allPosts.find(
     (post) => post.meta.postId === Number(postId),
   );
@@ -206,9 +220,9 @@ export const getPostContent = (postId: string): PostInfo => {
 /**
  * 인수로 들어온 series 의 게시글들을 가져오는 메소드
  */
-export const getSeriesArray = (series: string) => {
-  const allPosts = getAllPosts();
-  return allPosts.filter(({ meta }) => {
+export const getSeriesArray = async (series: string) => {
+  const allPosts = await getAllPosts();
+  return allPosts.toReversed().filter(({ meta }) => {
     return meta.series === series;
   });
 };

@@ -4,9 +4,9 @@ import { getSeriesArray } from '@/app/lib/post';
 
 import type { PostInfo } from '@/types/post';
 
-const SeriesAccordions = ({ meta }: { meta: PostInfo['meta'] }) => {
+const SeriesAccordions = async ({ meta }: { meta: PostInfo['meta'] }) => {
   const { series, postId: currentPostId } = meta;
-  const allSeries = getSeriesArray(series);
+  const allSeries = await getSeriesArray(series);
 
   return (
     <AccordionsWithState

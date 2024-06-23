@@ -1,8 +1,8 @@
 ---
 title: '/ 경로 레이아웃 , 페이지 디자인 생성하기'
 description: tailwind 최고야 너무 편해 ~!!
-date: 'Wed May 29 2024'
-thumb: 'app/public/posts/개발 블로그 개발 여정/04. 메인 페이지 레이아웃 디자인 생성하기/layout design.gif'
+date: Wed May 29 2024
+thumb: app/public/posts/개발 블로그 개발 여정/04. 메인 페이지 레이아웃 디자인 생성하기/layout design.gif
 time: 1716940800001
 tag:
   - react
@@ -37,7 +37,7 @@ postId: 806131
 
 우선 `/` 경로에 따른 `layout` 과 `Page`만 먼저 작성해주었다.
 
-### `globalCSS` 설정
+### globalCSS 설정
 
 ---
 
@@ -56,7 +56,7 @@ body {
 
 `app` 폴더에 존재하는 `layout , page` 컴포넌트를 조금 손대주었다.
 
-### `app/layout.tsx`
+### app/layout.tsx
 
 ---
 
@@ -91,7 +91,7 @@ export default function RootLayout({
 
 이후 `children` 에는 `/` 경로에 있는 `page.tsx` 컴포넌트가 렌더링 된다.
 
-### `app/page.tsx`
+### app/page.tsx
 
 ```tsx
 iimport Introduce from '@/components/Introduce';
@@ -137,9 +137,9 @@ export default Page;
 
 그리고 그 컴포넌트를 클릭하면 해당 블로그 포스팅으로 라우팅 시킬 예정이다.
 
-하단에 있는 내용들은 모두 `/` 경로를 렌더링 할 떄 사용한 컴포넌트들이다.
+하단에 있는 내용들은 모두 `/` 경로를 렌더링 할 때 사용한 컴포넌트들이다.
 
-### `components/GlobalNav.tsx`
+### components/GlobalNav.tsx
 
 ---
 
@@ -171,7 +171,7 @@ const GlobalNav = () => {
 export default GlobalNav;
 ```
 
-### `@/components/Introduce.tsx`
+### @/components/Introduce.tsx
 
 ---
 
@@ -222,7 +222,7 @@ const Introduce = () => {
 export default Introduce;
 ```
 
-### `@components/Cateogory.tsx`
+### @components/Cateogory.tsx
 
 ---
 
@@ -279,7 +279,7 @@ const CategoryList = () => {
 export default CategoryList;
 ```
 
-### `@components/SideBar.tsx`
+### @components/SideBar.tsx
 
 ---
 
