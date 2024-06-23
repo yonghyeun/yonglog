@@ -155,6 +155,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
           //   const updatedContent = matter.stringify(content, data);
           //   fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           // }
+          // 답답하네 증말!
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
           const directoryPath = path.join(fileSource, '..');
