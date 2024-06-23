@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// /OAuth?code=임시토큰state=postId
+
 export const middleware = async (req: NextRequest) => {
   const { searchParams } = req.nextUrl;
   const code = searchParams.get('code') as string;
   const callbackPostId = searchParams.get('state')?.split('_')[1] as string;
 
   const ENDPOINT = process.env.GITHUB_ACCESSTOKEN_ENDPOINT as string;
-  const BASE_URI =
+  const BASE_URI: string =
     process.env.NODE_ENV === 'development'
       ? (process.env.DEV_BASE_URI as string)
       : (process.env.PUB_BASE_URI as string);
@@ -39,7 +41,9 @@ export const middleware = async (req: NextRequest) => {
 
     const { access_token } = data;
 
-    const res = NextResponse.redirect(`${BASE_URI}/post/${callbackPostId}`);
+    const res = NextResponse.redirect(
+      `${BASE_URI}/post/${callbackPostId}#comment`,
+    );
     res.cookies.set('token', access_token, {
       // ! httpOnly 가 false여서 탈취 위험이 존재함
       // ! 하지만 쿠키 값을 클라이언트 단에서 localStorage에 저장하기 위해 false

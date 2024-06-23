@@ -8,6 +8,8 @@ import type {
   SeriesName,
 } from '@/types/post';
 
+import { GET_issueList, POST_issuePost } from './api';
+
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');

@@ -20,3 +20,8 @@ export type GetNewSearchParams = (
   newParams: SearchParams,
   isActive: boolean,
 ) => string;
+
+export type Cookie = {
+  name: string;
+  value: string;
+};

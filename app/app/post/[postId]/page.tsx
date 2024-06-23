@@ -5,7 +5,7 @@ import PostTitle from '@/components/PostTitle';
 import SeriesAccordions from '@/components/SeriesAccordions';
 import PostSideBar from '@/components/PostSideBar';
 import PostPagination from '@/components/PostPagination';
-import Comments from '@/components/Comments';
+import Comments from '@/components/client/Comments';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
@@ -13,6 +13,9 @@ import { LoadingContnet } from '@/components/Loading';
 import { useMDXComponents } from '../../lib/mdxComponents';
 import { getAllPosts, getPostContent } from '../../lib/post';
 import { Metadata } from 'next';
+
+// TODO 테스트 이후 위치 변경하기
+import { POST_issuePost } from '@/app/lib/api';
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
@@ -56,6 +59,11 @@ export function generateMetadata({
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
   const components = useMDXComponents({}, meta.path);
+
+  // TODO 테스트 이후 지우기
+  (async function () {
+    // await POST_issuePost(meta);
+  })();
 
   return (
     <>
