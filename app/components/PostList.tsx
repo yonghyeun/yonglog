@@ -39,7 +39,7 @@ export const PostList = async ({
   searchParams: URLSearchParams;
 }) => {
   const page = searchParams.get('page') || '1';
-  const postList = await selectPosts(searchParams); // 내 로컬 파일에 접근해서 => 데이터를 가져와라
+  const postList = await selectPosts(searchParams);
 
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);

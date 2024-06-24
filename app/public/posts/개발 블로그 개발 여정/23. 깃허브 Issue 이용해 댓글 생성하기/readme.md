@@ -353,7 +353,7 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 
 해당 부분처럼 `parsePosts` 메소드에서 조건부적으로 `/lib/api.tsx` 에 정의 된 메소드들을 호출하여 댓글 저장소를 생성하고 `meta` 데이터 영역에 저장해주도록 하자
 
-```tsx title="기능이 추가된 parsePost" {1,29-37,57}#add
+```tsx title="기능이 추가된 parsePost" {1,29-49,69}#add showLineNumbers{106}
 const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
 
@@ -384,9 +384,21 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
           /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
           if (!data.issueNumber) {
-            const issueResponse = await POST_issuePost(data);
-            const { number } = issueResponse;
-            data.issueNumber = number;
+            /* 이슈가 중복적으로 생성되는 것을 막기 위해 이슈 리스트를 가져와 한 번 더 검증하는 과정을 거치자 */
+            const issueList = await Promise.all([
+              GET_issueList(1, '100'),
+              GET_issueList(2, '100'),
+            ]).then((res) => res.flat());
+            const existedIssue = issueList.find(
+              ({ title }) => data.title === title,
+            );
+            if (existedIssue) {
+              data.issueNumber = existedIssue.number;
+            } else {
+              const newIssue = await POST_issuePost(data);
+              const { number } = newIssue;
+              data.issueNumber = number;
+            }
 
             const updatedContent = matter.stringify(content, data);
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
@@ -423,5 +435,13 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 > `issueNumber` 의 경우 `yonglog/issue` 에 생성된 이슈들의 번호이다.
 >
 > 추후 이슈에 달린 댓글들을 가져 올 때 사용된다.
+
+> 사실 초기 개발 과정에서 `GET_IssueList` 를 이용하여 검증하는 과정을 거치지 않았더니 이슈들이 중복적으로 생성되어 한 포스트 당 2~3개의 중복적인 이슈들이 생성되었다.
+>
+> 물론 결국 사용햐는 `issueNumber` 는 `mdx` 파일에 적힌 `issueNumber` 이기 때문에 큰 상관이 없지만 `issue` 들의 개수가 포스트의 개수와 맞지 않게 되었다. (포스트는 30개정도인데 이슈는 현재 99개)
+>
+> 개수를 맞춰주기 위해 하나씩 지워주다가 그냥 지쳐서 이미 만들어진 이슈는 놔두기로 하고 `GET_IssueList` 를 이용해 더 이상 중복적인 이슈들이 생성되는 현상을 방지해주었다.
+>
+> > 아마도 중복적으로 생성되는 이유는 `mdx` 파일이 업데이트 되기 전 `Stric mode` 로 인해 한 번 더 호출되면서 이런 문제가 발생했나 ? 하고 의심하고 있다.
 
 ## 5. 깃허브 API를 이용하여 issue에 달린 댓글 리스트 가져오기

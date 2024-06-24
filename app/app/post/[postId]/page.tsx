@@ -26,7 +26,7 @@ export async function generateMetadata({
   params,
 }: {
   params: { postId: string };
-}): Metadata {
+}): Promise<Metadata> {
   const { meta } = await getPostContent(params.postId);
 
   const baseUrl = 'https://abonglog.me';

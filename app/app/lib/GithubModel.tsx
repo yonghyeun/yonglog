@@ -5,6 +5,8 @@ import type {
   HTTPResponse,
 } from '@/types/api';
 
+let number = 1;
+
 export default class GithubAPI {
   private static BASE_URL = 'https://api.github.com';
   private static baseHeader: Header = {
@@ -58,17 +60,20 @@ export default class GithubAPI {
     const headers = this.setHeaders(additionalHeader || {});
 
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      });
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
-      }
+      // const response = await fetch(url, {
+      //   method: 'POST',
+      //   headers,
+      //   body: JSON.stringify(body),
+      // });
+      // if (!response.ok) {
+      //   throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      // }
 
-      const data = await response.json();
-      return data;
+      // const data = await response.json();
+      // return data;
+
+      console.log('POST 요청 실행');
+      return { number: number++ } as T;
     } catch (error) {
       console.error(error);
       throw error;

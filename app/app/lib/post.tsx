@@ -10,6 +10,7 @@ import type {
 
 import { GET_issueList, POST_issuePost } from './api';
 import { Issue } from '@/types/api';
+import { FaSleigh } from 'react-icons/fa';
 
 const fs = require('fs');
 const path = require('path');
@@ -103,6 +104,8 @@ const filterContent = (content: PostInfo['content']) => {
     .join('\r\n');
 };
 
+let number = 1;
+
 const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
 
@@ -111,7 +114,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
     for (const fileSource of allPath) {
       if (isDirectory(fileSource)) {
-        parseRecursively(fileSource);
+        await parseRecursively(fileSource);
       } else {
         if (isMDX(fileSource)) {
           const fileContent = fs.readFileSync(fileSource, 'utf8');
@@ -120,6 +123,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
           /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
           if (!data.postId) {
             data.postId = Math.ceil(Math.random() * 9 * 100000);
+
             const updatedContent = matter.stringify(content, data);
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
@@ -131,31 +135,26 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
 
-          /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
-          if (!data.issueNumber) {
-            /* 이슈가 중복적으로 생성되는 것을 막기 위해 이슈 리스트를 가져와 한 번 더 검증하는 과정을 거치자 */
-            const issueList = await GET_issueList(1, '100'); //TODO 블로그의 포스팅이 100개 이상이 되면 수정 할 것
-            const existedIssue = issueList.find(
-              ({ title }) => data.title === title,
-            );
-            if (existedIssue) {
-              data.issueNumber = existedIssue.number;
-            } else {
+          if (
+            data.title ===
+            '라우팅 프로토콜 알고리즘 : 다익스트라 알고리즘을 활용한 Link state'
+          ) {
+            console.log(`현재의 이슈 넘버 ${data.issueNumber}`);
+            if (!data.issueNumber) {
+              console.log(`분기문에 들어온 이슈 넘버 ${data.issueNumber}`);
               const newIssue = await POST_issuePost(data);
-              const { number } = newIssue;
+              const { number } = await newIssue;
+              console.log(`POST_issuePost 로 받아온 number : ${number}`);
               data.issueNumber = number;
+              const updatedContent = await matter.stringify(content, data);
+              fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+
+              const { data: temp } = matter(filterContent(fileContent));
+              console.log(
+                `write 작업이 완료된 후의 이슈 넘버 ${temp.issueNumber}`,
+              );
             }
-
-            const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
-
-          // if (data.issueNumber) {
-          //   delete data.issueNumber;
-          //   const updatedContent = matter.stringify(content, data);
-          //   fs.writeFileSync(fileSource, updatedContent, 'utf-8');
-          // }
-          // 답답하네 증말!
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
           const directoryPath = path.join(fileSource, '..');
@@ -179,6 +178,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
   return Posts;
 };
+
 /**
  * Posts 에서 Date 를 기준으로 정렬 후 전송
  */

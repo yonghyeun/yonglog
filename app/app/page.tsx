@@ -7,18 +7,12 @@ import { PostList } from '@/components/PostList';
 import type { SearchParams } from '@/types/global.d.ts';
 
 // TODO 추후 위치 바꾸기
-import { GET_issueList } from './lib/api';
 
 const Page = ({ searchParams }: { searchParams: SearchParams }) => {
   /* 서버 컴포넌트의 props.searchParams 는 Object 객체이다.
   컴포넌트나 메소드 내에서 URLSearchParams 를 이용하기 때문에 복사본 생성
   */
   const _searchParams = new URLSearchParams(searchParams);
-
-  // TODO 테스트 이후 지우기
-  (async function () {
-    // await GET_issueList();
-  })();
 
   return (
     <section className='mx-0 sm:mx-auto w-full lg:w-1/2'>

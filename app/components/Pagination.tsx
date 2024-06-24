@@ -30,10 +30,14 @@ const paginationClasses = {
   },
 };
 
-const Pagination = ({ searchParams }: { searchParams: URLSearchParams }) => {
+const Pagination = async ({
+  searchParams,
+}: {
+  searchParams: URLSearchParams;
+}) => {
   const currentPage = Number(searchParams.get('page') || '1');
 
-  const totalPosts = selectPosts(searchParams);
+  const totalPosts = await selectPosts(searchParams);
   const { avaliablePage, totalPages } = getPageList(currentPage, totalPosts);
 
   return (

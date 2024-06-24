@@ -45,11 +45,7 @@ export const metadata: Metadata = {
 /* Client 단에서 서버 렌더링 결과가 hydration 될 때 실행되는 IIFF */
 const setThemeFromLocalStorage = `(function () {
   const theme = localStorage.getItem('theme') || 'light';
-  const contentColor = theme === 'light' ? 'rgb(248, 240, 252)' : '#111';
-
   document.documentElement.setAttribute('data-theme', theme);
-  const metaTheme = document.querySelector('meta[name="theme-color"]');
-  }
 })()`;
 
 export default function RootLayout({
