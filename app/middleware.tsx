@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// /OAuth?code=임시토큰state=postId
-
 export const middleware = async (req: NextRequest) => {
   const { searchParams } = req.nextUrl;
   const code = searchParams.get('code') as string;

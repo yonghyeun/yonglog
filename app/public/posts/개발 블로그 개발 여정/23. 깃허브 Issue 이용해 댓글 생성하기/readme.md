@@ -8,7 +8,8 @@ tag:
 postId: 37189
 date: Sun Jun 23 2024
 time: 1719124544938
-issueNumber: 107
+issueFlag: true
+issueNumber: 276
 ---
 
 # 깃허브 API를 이용하여 댓글을 가져와보자
@@ -294,7 +295,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
 
 ![API를 이용해 자동으로 만들어진 이슈 포스트의 모습](image-1.png)
 
-### 모든 포스트의 댓글 저장소를 만들어주자
+### 모든 포스트의 댓글을 저장 할 이슈 포스트들을 만들어주자
 
 이전 챕터들을 읽은 사람들이라면 알고 있을 수 있지만 나는 현재 `/lib/posts.tsx` 파일에서 로컬 파일에 존재하는 `mdx` 파일들을 `parsePosts` 메소드를 호출하여 가져오며
 
@@ -351,9 +352,13 @@ const parsePosts = (source: Source): Array<PostInfo> => {
 };
 ```
 
-해당 부분처럼 `parsePosts` 메소드에서 조건부적으로 `/lib/api.tsx` 에 정의 된 메소드들을 호출하여 댓글 저장소를 생성하고 `meta` 데이터 영역에 저장해주도록 하자
+예를 들어 해당 부분처럼 메타 영역에서 `postId , date` 등을 조회하여 존재하지 않는 경우 에는 직접적으로 `mdx` 를 수정하여 추가해주거나 시리즈 이름이나 썸네일 , 주소 등을 자바스크립트 객체에 추가해주고 있다.
 
-```tsx title="기능이 추가된 parsePost" {1,29-49,69}#add showLineNumbers{106}
+이 방법처럼 `mdx` 파일의 메타데이터에서 `issueNumber` 가 존재하지 않는 경우 깃허브 API를 이용해 해당 포스트의 제목과 같은 이슈를 생성하고 생성된 이슈의 넘버를 받아와 `mdx` 파일에 `issueNumber` 를 추가해주도록 하자
+
+**이 때 비동기 처리를 사용하기 때문에 해당 함수 뿐 아니라 함수를 호출하는 다른 함수와 컴포넌트들 모두 `async/await` 처리 해주도록 하자**
+
+```tsx title="기능이 추가된 parsePost" {1,30-51,65}#add showLineNumbers{103}
 const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
 
@@ -362,7 +367,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
     for (const fileSource of allPath) {
       if (isDirectory(fileSource)) {
-        parseRecursively(fileSource);
+        await parseRecursively(fileSource);
       } else {
         if (isMDX(fileSource)) {
           const fileContent = fs.readFileSync(fileSource, 'utf8');
@@ -371,6 +376,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
           /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
           if (!data.postId) {
             data.postId = Math.ceil(Math.random() * 9 * 100000);
+
             const updatedContent = matter.stringify(content, data);
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
@@ -382,26 +388,27 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
 
-          /* data.issueNumber가 존재하지 않으면 yonghyeun/yonglog/issue에 issue 생성*/
-          if (!data.issueNumber) {
-            /* 이슈가 중복적으로 생성되는 것을 막기 위해 이슈 리스트를 가져와 한 번 더 검증하는 과정을 거치자 */
-            const issueList = await Promise.all([
-              GET_issueList(1, '100'),
-              GET_issueList(2, '100'),
-            ]).then((res) => res.flat());
-            const existedIssue = issueList.find(
-              ({ title }) => data.title === title,
-            );
-            if (existedIssue) {
-              data.issueNumber = existedIssue.number;
-            } else {
+          /* data.issueNumber 가 존재하지 않을 경우 깃허브 API를 이용해 이슈 생성
+          및 이슈 넘버 메타데이터에 저장 */
+          if (!data.issueNumber && !data.issueFlag) {
+            // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
+            data.issueFlag = true;
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+
+            // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
+            try {
               const newIssue = await POST_issuePost(data);
               const { number } = newIssue;
               data.issueNumber = number;
+            } catch (e) {
+              console.error(`${data.title}의 이슈를 생성하지 못했습니다.`);
+              data.issueFlag = false;
+              data.issueNumber = undefined;
+            } finally {
+              const updatedContent = matter.stringify(content, data);
+              fs.writeFileSync(fileSource, updatedContent, 'utf-8');
             }
-
-            const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
@@ -430,18 +437,33 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
 비동기 처리인 `POST_issuePost` 를 이용하여 만약 메타 데이터에 `issueNumber` 가 존재하지 않는 경우에는 이슈를 생성하도록 만들어주었다.
 
-해당 게시글에선 적지 않겠지만 `async/await` 를 이용해주었기 때문에 `parsePosts` 를 호출하는 모든 메소드와 서버 컴포넌트들을 `async,await` 로 감싸 변경해주었다.
-
 > `issueNumber` 의 경우 `yonglog/issue` 에 생성된 이슈들의 번호이다.
 >
 > 추후 이슈에 달린 댓글들을 가져 올 때 사용된다.
 
-> 사실 초기 개발 과정에서 `GET_IssueList` 를 이용하여 검증하는 과정을 거치지 않았더니 이슈들이 중복적으로 생성되어 한 포스트 당 2~3개의 중복적인 이슈들이 생성되었다.
+> 해당 함수를 수정하며 겪었던 트러블 슈팅 과정은
 >
-> 물론 결국 사용햐는 `issueNumber` 는 `mdx` 파일에 적힌 `issueNumber` 이기 때문에 큰 상관이 없지만 `issue` 들의 개수가 포스트의 개수와 맞지 않게 되었다. (포스트는 30개정도인데 이슈는 현재 99개)
+> [API요청과 async/await를 잘못 생각하면 겪을 수 있는 트러블 슈팅 경험]('https://abonglog.me/post/710088') 에서 볼 수 있다.
 >
-> 개수를 맞춰주기 위해 하나씩 지워주다가 그냥 지쳐서 이미 만들어진 이슈는 놔두기로 하고 `GET_IssueList` 를 이용해 더 이상 중복적인 이슈들이 생성되는 현상을 방지해주었다.
->
-> > 아마도 중복적으로 생성되는 이유는 `mdx` 파일이 업데이트 되기 전 `Stric mode` 로 인해 한 번 더 호출되면서 이런 문제가 발생했나 ? 하고 의심하고 있다.
+> 사실 이 문제를 해결하면서 `async/await` 에 대해서 더 깊게 알 수 있었다. 해당 글을 재밌게 읽고 있다면 해당 포스트도 읽어 보는 것을 추천한다.
+
+해당 메소드를 통해 `issueNumber` 가 존재하지 않는 새로운 `mdx` 파일이 존재할 경우 해당 파일과 연동되는 `issueNumber` 를 갖는 이슈를 생성하게 된다.
+
+![생성되는 issue들, 닫힌 99개의 issue들은 버그를 겪으며 잘못 생성된 이슈들이다 .. ](image-3.png)
+
+```dotnetcli title="mdx 파일에 추가되는 issueNumber와 issueFlag의 모습"
+---
+...
+issueFlag: true
+issueNumber: 276
+---
+```
 
 ## 5. 깃허브 API를 이용하여 issue에 달린 댓글 리스트 가져오기
+
+````
+
+```
+
+```
+````

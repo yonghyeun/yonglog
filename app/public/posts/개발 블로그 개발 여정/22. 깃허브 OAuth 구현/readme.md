@@ -8,7 +8,8 @@ tag:
 postId: 468963
 date: Sat Jun 22 2024
 time: 1719042678919
-issueNumber: 90
+issueFlag: true
+issueNumber: 275
 ---
 
 # 현재는 giscus 라이브러리를 이용하여 댓글을 사용하고 있다.

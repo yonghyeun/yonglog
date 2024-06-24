@@ -104,8 +104,6 @@ const filterContent = (content: PostInfo['content']) => {
     .join('\r\n');
 };
 
-let number = 1;
-
 const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
 
@@ -135,24 +133,26 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
             fs.writeFileSync(fileSource, updatedContent, 'utf-8');
           }
 
-          if (
-            data.title ===
-            '라우팅 프로토콜 알고리즘 : 다익스트라 알고리즘을 활용한 Link state'
-          ) {
-            console.log(`현재의 이슈 넘버 ${data.issueNumber}`);
-            if (!data.issueNumber) {
-              console.log(`분기문에 들어온 이슈 넘버 ${data.issueNumber}`);
-              const newIssue = await POST_issuePost(data);
-              const { number } = await newIssue;
-              console.log(`POST_issuePost 로 받아온 number : ${number}`);
-              data.issueNumber = number;
-              const updatedContent = await matter.stringify(content, data);
-              fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+          /* data.issueNumber 가 존재하지 않을 경우 깃허브 API를 이용해 이슈 생성
+          및 이슈 넘버 메타데이터에 저장 */
+          if (!data.issueNumber && !data.issueFlag) {
+            // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
+            data.issueFlag = true;
+            const updatedContent = matter.stringify(content, data);
+            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
 
-              const { data: temp } = matter(filterContent(fileContent));
-              console.log(
-                `write 작업이 완료된 후의 이슈 넘버 ${temp.issueNumber}`,
-              );
+            // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
+            try {
+              const newIssue = await POST_issuePost(data);
+              const { number } = newIssue;
+              data.issueNumber = number;
+            } catch (e) {
+              console.error(`${data.title}의 이슈를 생성하지 못했습니다.`);
+              data.issueFlag = false;
+              data.issueNumber = undefined;
+            } finally {
+              const updatedContent = matter.stringify(content, data);
+              fs.writeFileSync(fileSource, updatedContent, 'utf-8');
             }
           }
 
