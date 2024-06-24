@@ -13,10 +13,13 @@ issueNumber: 281
 
 # 문제를 겪었던 상황
 
-```tsx title="기술 블로그에서 API요청을 재귀적으로 보내는 상황" {20-28}
+```tsx title="기술 블로그에서 data를 확인하고 API요청을 보낸 후 수정하는 상황" {23-31}
 const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
+  const Posts: Array<PostInfo> = [];
 
+  const parseRecursively = async (source: Source) => {
+    const allPath = getAllPath(source);
     for (const fileSource of allPath) {
       if (isDirectory(fileSource)) {
         await parseRecursively(fileSource);
@@ -45,6 +48,9 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
           const directoryPath = path.join(fileSource, '..');
           const relatevePath = directoryPath.split('public')[1];
+    }
+
+    await parseRecursively();
 
   return Posts;
 };
@@ -72,7 +78,7 @@ time: 1719235023850
 
 `parsePost` 메소드는 다른 여러 메소드에서 반복적으로 호출되기 때문에 모든 서버 컴포넌트가 렌더링 되는 동안 총 4번이 호출된다.
 
-호출 횟수는 크게 상관이 없을 것이라 생각했다. 왜냐면 `issueNumber` 가 존재하지 않던 `mdx` 파일의 `data` 는 첫 번째 호출 이후에는 `mdx` 파일 내에 `issueNumber` 가 존재 할 것이라 생각했기 때문이다. (첫 번째 호출 때 `POST_issuePost` 가 호출되기 때문이다.)
+호출 횟수는 크게 상관이 없을 것이라 생각했다. 왜냐면 `issueNumber` 가 존재하지 않던 `mdx` 파일의 `data` 는 첫 번째 호출 이후에는 `mdx` 파일 내에 `issueNumber` 가 존재 할 것이라 생각했기 때문이다. (첫 번째 호출 때 `POST_issuePost` 가 호출되기 때문이다.
 
 그러나 이게 웬걸
 
