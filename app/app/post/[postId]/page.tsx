@@ -60,11 +60,6 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
   const { meta, content } = await getPostContent(params.postId);
   const components = useMDXComponents({}, meta.path);
 
-  // TODO 테스트 이후 지우기
-  (async function () {
-    // await POST_issuePost(meta);
-  })();
-
   return (
     <>
       <header className='pt-14 mb-12' id='page-header'>
@@ -99,7 +94,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
       </main>
       <footer id='page-footer' className='border-t-[2px] mt-6'>
         <PostPagination meta={meta} />
-        <Comments postId={params.postId} />
+        <Comments issueNumber={meta.issueNumber} />
       </footer>
     </>
   );

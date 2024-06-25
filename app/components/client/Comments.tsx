@@ -1,51 +1,30 @@
 'use client';
 
-import { GITHUB_LOGIN_ENDPOINT } from '@/app/constant/comments';
+import useGetComments from '@/app/hooks/useGetComments';
+import type { PostMeta } from '@/types/post';
 
-import useToken from '@/app/hooks/useToken';
+// import { GITHUB_LOGIN_ENDPOINT } from '@/app/constant/comments';
 
-export const Login = ({ postId }: { postId: string }) => {
-  const CLIENT_ID = 'Ov23liRzfTkgNGuuHNdQ';
-  const REDIRECT_URI = 'http://localhost:3000/OAuth';
-  const SCOPES = 'public_repo read:discussion write:discussion';
-  const randomState = Math.floor(Math.random() * 10000);
+// import useToken from '@/app/hooks/useToken';
 
-  const authorizationUrl = `${GITHUB_LOGIN_ENDPOINT}?client_id=${CLIENT_ID}&state=${randomState}_${postId}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}`;
-  return <a href={authorizationUrl}>Login With Github</a>;
-};
+// export const Login = ({ postId }: { postId: string }) => {
+//   const CLIENT_ID = 'Ov23liRzfTkgNGuuHNdQ';
+//   const REDIRECT_URI = 'http://localhost:3000/OAuth';
+//   const SCOPES = 'public_repo read:discussion write:discussion';
+//   const randomState = Math.floor(Math.random() * 10000);
 
-const Comments = ({ postId }: { postId: string }) => {
-  const { token, setToken } = useToken();
+//   const authorizationUrl = `${GITHUB_LOGIN_ENDPOINT}?client_id=${CLIENT_ID}&state=${randomState}_${postId}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}`;
+//   return <a href={authorizationUrl}>Login With Github</a>;
+// };
 
-  return (
-    <section id='comment'>
-      <section>
-        <p className='border'>댓글 1</p>
-        <p className='border'>댓글 2</p>
-      </section>
-      <form action=''>
-        <textarea className='w-full' />
-        <div className='flex justify-end'>
-          <button type='submit'>등록하기</button>
-        </div>
-      </form>
-      <div>
-        {token ? (
-          <button
-            onClick={() => {
-              window.cookieStore.delete('token');
-              window.localStorage.removeItem('token');
-              setToken('');
-            }}
-          >
-            logout
-          </button>
-        ) : (
-          <Login postId={postId} />
-        )}
-      </div>
-    </section>
-  );
+const Comments = ({
+  issueNumber,
+}: {
+  issueNumber: PostMeta['issueNumber'];
+}) => {
+  const { comments } = useGetComments(issueNumber);
+
+  return <h1> {comments.message}</h1>;
 };
 
 export default Comments;
