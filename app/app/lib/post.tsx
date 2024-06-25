@@ -9,8 +9,6 @@ import type {
 } from '@/types/post';
 
 import { GET_issueList, POST_issuePost } from './api';
-import { Issue } from '@/types/api';
-import { FaSleigh } from 'react-icons/fa';
 
 const fs = require('fs');
 const path = require('path');
