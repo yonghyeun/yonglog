@@ -8,8 +8,6 @@ tag:
 postId: 37189
 date: Sun Jun 23 2024
 time: 1719124544938
-issueFlag: true
-issueNumber: 283
 ---
 
 # 깃허브 API를 이용하여 댓글을 가져와보자

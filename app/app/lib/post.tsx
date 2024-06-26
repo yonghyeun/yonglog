@@ -130,7 +130,7 @@ const updateMetaData = async (
 
     // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
     try {
-      const newIssue = await POST_createIssue(data);
+      const newIssue = await POST_createIssue(updateData);
       const { number } = newIssue;
       updateData.issueNumber = number;
     } catch (e) {
