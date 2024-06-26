@@ -125,7 +125,6 @@ const updateMetaData = async (
   if (!data.issueNumber && !data.issueFlag) {
     // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
     updateData.issueFlag = true;
-
     const updatedContent = matter.stringify(content, updateData);
     fs.writeFileSync(fileSource, updatedContent, 'utf-8');
 
