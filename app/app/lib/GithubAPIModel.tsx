@@ -1,9 +1,6 @@
 import { Header, RequestInfo } from '@/types/api';
+import { RequestHandler } from 'next/dist/server/next';
 
-/**
- * 인스턴스로 생성 하여 사용 가능한 생성자 클래스
- * !TODO : GithubModel과 migration 하기
- */
 export default class GithubAPIModel {
   token: string;
   headers: Header;
@@ -19,6 +16,9 @@ export default class GithubAPIModel {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `token ${this.token}`,
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
     };
   }
 
@@ -44,10 +44,13 @@ export default class GithubAPIModel {
     return data;
   }
 
-  async GET<T>(endPoint: string, requestOptions: Omit<RequestInfo, 'method'>) {
+  async GET<T>(
+    endPoint: string,
+    additionalHeaders?: RequestInfo['additionalHeaders'],
+  ) {
     return await this.fetching<T>(endPoint, {
       method: 'GET',
-      ...requestOptions,
+      ...additionalHeaders,
     });
   }
 

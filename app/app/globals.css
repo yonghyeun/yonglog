@@ -83,6 +83,10 @@ svg[data-theme] {
   stroke: var(--color);
 }
 
+section[data-comment] {
+  background-color: var(--blockquote-background);
+}
+
 hr {
   display: none;
 }

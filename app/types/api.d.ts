@@ -1,3 +1,8 @@
+export type Error = {
+  message: string;
+  status: number;
+};
+
 export type QueryParameter = Record<string, string>;
 export type Header = Record<string, string>;
 export type RequestOptions = {
@@ -25,4 +30,11 @@ export type Issue = {
   body: string;
   comments: number;
   reactions: Record<string, number>;
+};
+
+export type Comment = {
+  userName: string;
+  avatarUrl: string;
+  createAt: string;
+  body: string;
 };

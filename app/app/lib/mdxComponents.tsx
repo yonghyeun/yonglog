@@ -1,8 +1,6 @@
 import path from 'path';
 import Image from 'next/image';
 
-import { Children, Suspense } from 'react';
-
 import { MDXComponents } from 'mdx/types';
 
 /**

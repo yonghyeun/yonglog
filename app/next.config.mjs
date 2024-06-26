@@ -14,6 +14,14 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: true }, // dev 모드 시 type 오류 없다면 빌드 시 타입 오류 제거
   images: {
     domains: ['abonglog.vercel.app', 'abonglog.me'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        port: '',
+        pathname: '**',
+      },
+    ],
   },
 };
 

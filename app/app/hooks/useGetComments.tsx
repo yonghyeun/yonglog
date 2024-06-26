@@ -1,16 +1,20 @@
 import { PostMeta } from '@/types/post';
 import { useEffect, useState } from 'react';
 
+import type { Comment } from '@/types/api';
+
 const useGetComments = (issueNumber: PostMeta['issueNumber']) => {
-  //! TODO issueResponse 로 타입 설정 하기
-  const [comments, setComments] = useState<any>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
     (async function () {
       try {
-        const response = await fetch(`/posts/api/${issueNumber}`);
+        /* 해당 요청은 abonglog api 엔드포인트를 향해 간다. */
+        const response = await fetch(`/api/comments/${issueNumber}`, {
+          method: 'GET',
+        });
         const data = await response.json();
         setComments(data);
       } catch (e) {

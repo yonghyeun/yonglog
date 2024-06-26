@@ -1,21 +1,49 @@
 'use client';
 
+import Image from 'next/image';
 import useGetComments from '@/app/hooks/useGetComments';
+
 import type { PostMeta } from '@/types/post';
+import type { Comment } from '@/types/api';
 
-// import { GITHUB_LOGIN_ENDPOINT } from '@/app/constant/comments';
+const UserProfile = ({ comment }: { comment: Comment }) => (
+  <div className='flex justify-between'>
+    <div className='flex'>
+      <Image
+        src={comment.avatarUrl}
+        width={30}
+        height={30}
+        alt={`${comment.userName}의 프로필 사진`}
+        style={{
+          borderRadius: '20px',
+          marginRight: '10px',
+        }}
+      />
+      <span className='font-semibold'>@{comment.userName}</span>
+    </div>
+    <span className='text-[80%]'>
+      <i>{new Date(comment.createAt).toDateString()}</i>
+    </span>
+  </div>
+);
 
-// import useToken from '@/app/hooks/useToken';
+// TODO MDX 기능 추가하기
+const CommentBody = ({ body }: { body: Comment['body'] }) => {
+  return (
+    <section className='px-10 py-2'>
+      <p>{body}</p>
+    </section>
+  );
+};
 
-// export const Login = ({ postId }: { postId: string }) => {
-//   const CLIENT_ID = 'Ov23liRzfTkgNGuuHNdQ';
-//   const REDIRECT_URI = 'http://localhost:3000/OAuth';
-//   const SCOPES = 'public_repo read:discussion write:discussion';
-//   const randomState = Math.floor(Math.random() * 10000);
-
-//   const authorizationUrl = `${GITHUB_LOGIN_ENDPOINT}?client_id=${CLIENT_ID}&state=${randomState}_${postId}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES}`;
-//   return <a href={authorizationUrl}>Login With Github</a>;
-// };
+const Comment = ({ comment }: { comment: Comment }) => {
+  return (
+    <section className='px-4 py-4 mt-4 rounded-lg' data-comment>
+      <UserProfile comment={comment} />
+      <CommentBody body={comment.body} />
+    </section>
+  );
+};
 
 const Comments = ({
   issueNumber,
@@ -24,7 +52,13 @@ const Comments = ({
 }) => {
   const { comments } = useGetComments(issueNumber);
 
-  return <h1> {comments.message}</h1>;
+  return (
+    <section>
+      {comments.map((comment, idx) => (
+        <Comment comment={comment} key={idx} />
+      ))}
+    </section>
+  );
 };
 
 export default Comments;

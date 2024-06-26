@@ -9,7 +9,7 @@ import type {
   PostMeta,
 } from '@/types/post';
 
-import { GET_issueList, POST_issuePost, POST_createIssue } from './api';
+import { POST_createIssue } from './api';
 
 const fs = require('fs');
 const path = require('path');
@@ -103,17 +103,24 @@ const filterContent = (content: PostInfo['content']) => {
     .join('\r\n');
 };
 
+/**
+ * 해당 메소드는 MDXXSource에 대해 mdx 파일을 {data , content} 영역으로 나눠 파싱해오고
+ * 메타 데이터에 해당하는 data를 살펴보며 postId,data,time,issueNumber 등을 추가하고
+ * 동기적으로 fileSource 위치에 수정된 mdx 파일을 write
+ *
+ * 각 조건문마다 동기적으로 fs.writeFileSync 를 호출하여 메인스레드를 막아버리는 비효율성이 존재하지만
+ * 해당 메소드를 호출하는 parsePost 메소드가 렌더링 시 여러번 호출되어 race condition을 막기 위한 어쩔 수 없는 선택
+ * ! 해당 방법은 Best Practice 가 아니며 추후 리팩토링이 필요함
+ */
 const getMDXData = async (fileSource: MDXSource) => {
   const fileContent = fs.readFileSync(fileSource, 'utf8');
   const { data, content } = matter(filterContent(fileContent));
 
-  /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
   if (!data.postId) {
     data.postId = Math.ceil(Math.random() * 9 * 100000);
     const updatedContent = matter.stringify(content, data);
     fs.writeFileSync(fileSource, updatedContent, 'utf-8');
   }
-  /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
   if (!data.date) {
     data.date = new Date().toDateString();
     data.time = new Date().getTime();
@@ -121,10 +128,7 @@ const getMDXData = async (fileSource: MDXSource) => {
     fs.writeFileSync(fileSource, updatedContent, 'utf-8');
   }
 
-  /* data.issueNumber 가 존재하지 않을 경우 깃허브 API를 이용해 이슈 생성
-    및 이슈 넘버 메타데이터에 저장 */
   if (!data.issueNumber && !data.issueFlag) {
-    // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
     data.issueFlag = true;
     const updatedContent = matter.stringify(content, data);
     fs.writeFileSync(fileSource, updatedContent, 'utf-8');
@@ -132,8 +136,8 @@ const getMDXData = async (fileSource: MDXSource) => {
     // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
     try {
       const newIssue = await POST_createIssue(data);
-      const { number } = newIssue;
-      data.issueNumber = number;
+      const { number: issueNumber } = newIssue;
+      data.issueNumber = issueNumber;
     } catch (e) {
       console.error(`${data.title}의 이슈를 생성하지 못했습니다.`);
       data.issueFlag = false;

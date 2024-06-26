@@ -14,9 +14,6 @@ import { useMDXComponents } from '../../lib/mdxComponents';
 import { getAllPosts, getPostContent } from '../../lib/post';
 import { Metadata } from 'next';
 
-// TODO 테스트 이후 위치 변경하기
-import { POST_issuePost } from '@/app/lib/api';
-
 export async function generateStaticParams(): Promise<{ postId: string }[]> {
   const allPost = await getAllPosts();
   return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
