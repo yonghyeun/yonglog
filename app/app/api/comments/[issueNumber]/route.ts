@@ -24,13 +24,12 @@ export async function GET(
   const originalResponse = await ServerAPIModel.GET<Response[]>(endPoint);
 
   const commentList: Comment[] = originalResponse.map(
-    ({ user, created_at, body }) => ({
+    ({ user, created_at, body_html }) => ({
       userName: user.login,
       avatarUrl: user.avatar_url,
       createAt: created_at,
-      body: body,
+      bodyHtml: body_html,
     }),
   );
-
   return NextResponse.json(commentList, { status: 200 });
 }

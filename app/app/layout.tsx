@@ -62,6 +62,10 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{ __html: setThemeFromLocalStorage }}
         ></script>
+        <link
+          rel='stylesheet'
+          href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/github.min.css'
+        ></link>
       </head>
       <body>
         <header>

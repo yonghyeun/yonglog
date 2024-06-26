@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import useGetComments from '@/app/hooks/useGetComments';
+import Spinner from '@/components/Spinner';
 
 import type { PostMeta } from '@/types/post';
 import type { Comment } from '@/types/api';
@@ -11,15 +12,17 @@ const UserProfile = ({ comment }: { comment: Comment }) => (
     <div className='flex'>
       <Image
         src={comment.avatarUrl}
-        width={30}
-        height={30}
+        width={50}
+        height={50}
         alt={`${comment.userName}의 프로필 사진`}
         style={{
           borderRadius: '20px',
           marginRight: '10px',
         }}
       />
-      <span className='font-semibold'>@{comment.userName}</span>
+      <span className='flex items-center font-semibold'>
+        @{comment.userName}
+      </span>
     </div>
     <span className='text-[80%]'>
       <i>{new Date(comment.createAt).toDateString()}</i>
@@ -27,30 +30,58 @@ const UserProfile = ({ comment }: { comment: Comment }) => (
   </div>
 );
 
-// TODO MDX 기능 추가하기
-const CommentBody = ({ body }: { body: Comment['body'] }) => {
+const CommentBody = ({ bodyHtml }: { bodyHtml: Comment['bodyHtml'] }) => {
   return (
     <section className='px-10 py-2'>
-      <p>{body}</p>
+      <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
     </section>
   );
 };
 
 const Comment = ({ comment }: { comment: Comment }) => {
   return (
-    <section className='px-4 py-4 mt-4 rounded-lg' data-comment>
+    <section className='px-4 py-4 mt-4 rounded-2xl' data-comment>
       <UserProfile comment={comment} />
-      <CommentBody body={comment.body} />
+      <CommentBody bodyHtml={comment.bodyHtml} />
     </section>
+  );
+};
+
+const YonghyeunComment = ({ date }: { date: PostMeta['date'] }) => {
+  return (
+    <Comment
+      comment={{
+        userName: 'yonghyeun',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123540354?v=',
+        createAt: date,
+        bodyHtml:
+          '<p>아직 댓글이 존재하지 않습니다. 댓글이 달릴 시 해당 댓글은 사라집니다 :).</p>',
+      }}
+    />
   );
 };
 
 const Comments = ({
   issueNumber,
+  date,
 }: {
   issueNumber: PostMeta['issueNumber'];
+  date: PostMeta['date'];
 }) => {
-  const { comments } = useGetComments(issueNumber);
+  const { comments, isLoading } = useGetComments(issueNumber);
+
+  if (isLoading) {
+    return (
+      <div className='flex flex-col items-center'>
+        <Spinner />
+        <p>댓글을 가져오고 있어요</p>
+      </div>
+    );
+  }
+
+  if (comments.length === 0) {
+    return <YonghyeunComment date={date} />;
+  }
 
   return (
     <section>

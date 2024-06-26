@@ -14,7 +14,7 @@ export default class GithubAPIModel {
   init(): Header {
     return {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      Accept: 'application/vnd.github.html+json',
       Authorization: `token ${this.token}`,
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       Pragma: 'no-cache',
@@ -33,7 +33,12 @@ export default class GithubAPIModel {
     const { method, additionalHeaders, body } = requestOptions;
     const URL = GithubAPIModel.setURL(endPoint);
     const headers = { ...this.headers, ...additionalHeaders };
-    const response = await fetch(URL, { method, headers, body });
+    const response = await fetch(URL, {
+      method,
+      headers,
+      body,
+      cache: 'no-store',
+    });
 
     if (!response.ok) {
       throw new Error(`${response.status} - ${response.text}`);
@@ -50,7 +55,7 @@ export default class GithubAPIModel {
   ) {
     return await this.fetching<T>(endPoint, {
       method: 'GET',
-      ...additionalHeaders,
+      additionalHeaders,
     });
   }
 

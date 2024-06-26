@@ -36,5 +36,5 @@ export type Comment = {
   userName: string;
   avatarUrl: string;
   createAt: string;
-  body: string;
+  bodyHtml: string;
 };
