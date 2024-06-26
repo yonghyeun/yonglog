@@ -6,9 +6,10 @@ import type {
   ImgSource,
   PostInfo,
   SeriesName,
+  PostMeta,
 } from '@/types/post';
 
-import { GET_issueList, POST_issuePost } from './api';
+import { GET_issueList, POST_issuePost, POST_createIssue } from './api';
 
 const fs = require('fs');
 const path = require('path');
@@ -102,6 +103,50 @@ const filterContent = (content: PostInfo['content']) => {
     .join('\r\n');
 };
 
+const updateMetaData = async (
+  fileSource: MDXSource,
+  data: PostInfo['meta'],
+  content: PostInfo['content'],
+) => {
+  const updateData: PostInfo['meta'] = Object.assign(data);
+
+  /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
+  if (!data.postId) {
+    updateData.postId = Math.ceil(Math.random() * 9 * 100000);
+  }
+  /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
+  if (!data.date) {
+    updateData.date = new Date().toDateString();
+    updateData.time = new Date().getTime();
+  }
+
+  /* data.issueNumber 가 존재하지 않을 경우 깃허브 API를 이용해 이슈 생성
+    및 이슈 넘버 메타데이터에 저장 */
+  if (!data.issueNumber && !data.issueFlag) {
+    // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
+    updateData.issueFlag = true;
+
+    const updatedContent = matter.stringify(content, updateData);
+    fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+
+    // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
+    try {
+      const newIssue = await POST_createIssue(data);
+      const { number } = newIssue;
+      updateData.issueNumber = number;
+    } catch (e) {
+      console.error(`${data.title}의 이슈를 생성하지 못했습니다.`);
+      updateData.issueFlag = false;
+      updateData.issueNumber = undefined;
+    }
+  }
+
+  const updatedContent = matter.stringify(content, updateData);
+  fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+
+  return updateData;
+};
+
 const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
   const Posts: Array<PostInfo> = [];
 
@@ -116,43 +161,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
           const fileContent = fs.readFileSync(fileSource, 'utf8');
           const { data, content } = matter(filterContent(fileContent));
 
-          /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
-          if (!data.postId) {
-            data.postId = Math.ceil(Math.random() * 9 * 100000);
-
-            const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
-          }
-          /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
-          if (!data.date) {
-            data.date = new Date().toDateString();
-            data.time = new Date().getTime();
-            const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
-          }
-
-          /* data.issueNumber 가 존재하지 않을 경우 깃허브 API를 이용해 이슈 생성
-          및 이슈 넘버 메타데이터에 저장 */
-          if (!data.issueNumber && !data.issueFlag) {
-            // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
-            data.issueFlag = true;
-            const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
-
-            // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
-            try {
-              const newIssue = await POST_issuePost(data);
-              const { number } = newIssue;
-              data.issueNumber = number;
-            } catch (e) {
-              console.error(`${data.title}의 이슈를 생성하지 못했습니다.`);
-              data.issueFlag = false;
-              data.issueNumber = undefined;
-            } finally {
-              const updatedContent = matter.stringify(content, data);
-              fs.writeFileSync(fileSource, updatedContent, 'utf-8');
-            }
-          }
+          const updateData = await updateMetaData(fileSource, data, content);
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
           const directoryPath = path.join(fileSource, '..');
@@ -160,7 +169,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 
           Posts.push({
             meta: {
-              ...data,
+              ...updateData,
               series: getSeriesName(fileSource),
               validThumbnail: getValidThumbnail(fileSource, data),
               path: relatevePath,

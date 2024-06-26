@@ -16,7 +16,7 @@ export type PostMeta = {
   path: string;
   validThumbnail: Source | ImgSource;
   thumb?: Source | ImgSource;
-  issueNumber: number;
+  issueNumber?: number;
   issueFlag: boolean;
 };
 export type PostInfo = {

@@ -5,6 +5,14 @@ export type RequestOptions = {
   queryParameter?: QueryParameter;
   body?: any;
 };
+
+export type RequestInfo = {
+  method: 'GET' | 'POST' | 'DELETE' | 'PATCH';
+  additionalHeaders?: Header;
+  // TODO 추후 body 타입 지정하기
+  body?: T;
+};
+
 export type HTTPResponse<T> = {
   status: number;
   data: T;

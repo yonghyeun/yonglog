@@ -1,19 +1,16 @@
-import type {
-  QueryParameter,
-  Header,
-  RequestOptions,
-  HTTPResponse,
-} from '@/types/api';
+import type { QueryParameter, Header, RequestOptions } from '@/types/api';
 
+/**
+ * 생성자를 사용하지 않고 사용 가능한 static class
+ */
 export default class GithubAPI {
-  private static BASE_URL = 'https://api.github.com';
-  private static baseHeader: Header = {
-    Authorization: `token ${process.env.PERSONAL_ACCESS_TOKEN}`,
+  static BASE_URL: string = 'https://api.github.com';
+  static baseHeader: Header = {
     'Content-Type': 'application/json',
   };
 
-  private static setHeaders(headers: Header) {
-    return { ...this.baseHeader, ...headers };
+  static setHeaders(headers: Header) {
+    return { ...GithubAPI.baseHeader, ...headers };
   }
 
   private static setURL(endPoint: string, queryParameter: QueryParameter) {

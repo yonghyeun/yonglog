@@ -6,6 +6,10 @@ export async function GET(
 ) {
   const { issueNumber } = params;
 
+  try {
+    const response = await 
+  } catch (e) {}
+
   return NextResponse.json(
     {
       issueNumber,
