@@ -23,7 +23,7 @@ export default class GithubAPIModel {
     }
     return {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      Accept: 'application/vnd.github.html+json',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       Pragma: 'no-cache',
       Expires: '0',

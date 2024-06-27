@@ -1,13 +1,15 @@
 'use client';
 
+import { useState } from 'react';
+
 import Image from 'next/image';
 import useGetComments from '@/app/hooks/useGetComments';
 import Spinner from '@/components/Spinner';
-import OAuth from './OAuth';
+import { Login, Logout } from './OAuth';
 
 import type { PostMeta } from '@/types/post';
 import type { Comment } from '@/types/api';
-import useLogin from '@/app/hooks/useLogin';
+import { getCookie } from '@/app/lib/cookie';
 
 const UserProfile = ({ comment }: { comment: Comment }) => (
   <div className='flex justify-between'>
@@ -91,7 +93,9 @@ const Comments = ({
   postId: PostMeta['postId'];
 }) => {
   const { comments, isLoading } = useGetComments(issueNumber);
-  const [{ token, setToken }, { isLogin, setIsLogin }] = useLogin();
+  const [token, setToken] = useState(() => {
+    return getCookie('token');
+  });
 
   if (isLoading) {
     return (
@@ -105,7 +109,7 @@ const Comments = ({
   return (
     <section>
       <CommentList comments={comments} date={date} />
-      <OAuth isLogin={isLogin} setIsLogin={setIsLogin} postId={postId} />
+      {token ? <Logout setToken={setToken} /> : <Login postId={postId} />}
     </section>
   );
 };
