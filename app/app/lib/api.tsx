@@ -2,6 +2,9 @@ import type { PostInfo } from '@/types/post';
 import type { Issue } from '@/types/api';
 import GithubAPIModel from './GithubAPIModel';
 
+/**
+ * 나의 Personal Access Token을 이용해 /yonghyeun/yonglog 에 이슈를 생성하는 POST 요청
+ */
 export const POST_createIssue = async (meta: PostInfo['meta']) => {
   const PERSONAL_TOKEN = process.env.PERSONAL_ACCESS_TOKEN as string;
   const ServerAPIModel = new GithubAPIModel(PERSONAL_TOKEN);

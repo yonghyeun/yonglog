@@ -1,5 +1,4 @@
 import { Header, RequestInfo } from '@/types/api';
-import { RequestHandler } from 'next/dist/server/next';
 
 export default class GithubAPIModel {
   token: string;
@@ -12,10 +11,19 @@ export default class GithubAPIModel {
   }
 
   init(): Header {
+    if (this.token) {
+      return {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `token ${this.token}`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+      };
+    }
     return {
       'Content-Type': 'application/json',
-      Accept: 'application/vnd.github.html+json',
-      Authorization: `token ${this.token}`,
+      Accept: 'application/json',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       Pragma: 'no-cache',
       Expires: '0',
@@ -33,6 +41,7 @@ export default class GithubAPIModel {
     const { method, additionalHeaders, body } = requestOptions;
     const URL = GithubAPIModel.setURL(endPoint);
     const headers = { ...this.headers, ...additionalHeaders };
+
     const response = await fetch(URL, {
       method,
       headers,

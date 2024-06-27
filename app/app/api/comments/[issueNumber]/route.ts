@@ -1,8 +1,7 @@
 import GithubAPIModel from '@/app/lib/GithubAPIModel';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { useMDXComponents } from '@/app/lib/mdxComponents';
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import type { Comment } from '@/types/api';
 
 type Response = { [key in string]: any };
@@ -21,7 +20,10 @@ export async function GET(
 
   const { issueNumber } = params;
   const endPoint = `/repos/yonghyeun/yonglog/issues/${issueNumber}/comments`;
-  const originalResponse = await ServerAPIModel.GET<Response[]>(endPoint);
+  /* 요청을 보낼 때 받을 response의 미디어 타입을 html+json으로 변경하자 */
+  const originalResponse = await ServerAPIModel.GET<Response[]>(endPoint, {
+    Accept: 'application/vnd.github.html+json',
+  });
 
   const commentList: Comment[] = originalResponse.map(
     ({ user, created_at, body_html }) => ({

@@ -91,7 +91,11 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
       </main>
       <footer id='page-footer' className='border-t-[2px] mt-6'>
         <PostPagination meta={meta} />
-        <Comments issueNumber={meta.issueNumber} date={meta.date} />
+        <Comments
+          issueNumber={meta.issueNumber}
+          date={meta.date}
+          postId={meta.postId}
+        />
       </footer>
     </>
   );

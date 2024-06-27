@@ -253,6 +253,7 @@ figcaption[data-rehype-pretty-code-title] {
   line-height: 1.45;
   background-color: #eee;
   border-radius: 3px;
+  color: #111;
 }
 
 .highlight {

@@ -3,9 +3,11 @@
 import Image from 'next/image';
 import useGetComments from '@/app/hooks/useGetComments';
 import Spinner from '@/components/Spinner';
+import OAuth from './OAuth';
 
 import type { PostMeta } from '@/types/post';
 import type { Comment } from '@/types/api';
+import useLogin from '@/app/hooks/useLogin';
 
 const UserProfile = ({ comment }: { comment: Comment }) => (
   <div className='flex justify-between'>
@@ -47,6 +49,24 @@ const Comment = ({ comment }: { comment: Comment }) => {
   );
 };
 
+const CommentList = ({
+  comments,
+  date,
+}: {
+  comments: Comment[];
+  date: PostMeta['date'];
+}) => {
+  return (
+    <section>
+      {comments.length === 0 ? (
+        <YonghyeunComment date={date} />
+      ) : (
+        comments.map((comment, idx) => <Comment comment={comment} key={idx} />)
+      )}
+    </section>
+  );
+};
+
 const YonghyeunComment = ({ date }: { date: PostMeta['date'] }) => {
   return (
     <Comment
@@ -64,11 +84,14 @@ const YonghyeunComment = ({ date }: { date: PostMeta['date'] }) => {
 const Comments = ({
   issueNumber,
   date,
+  postId,
 }: {
   issueNumber: PostMeta['issueNumber'];
   date: PostMeta['date'];
+  postId: PostMeta['postId'];
 }) => {
   const { comments, isLoading } = useGetComments(issueNumber);
+  const [{ token, setToken }, { isLogin, setIsLogin }] = useLogin();
 
   if (isLoading) {
     return (
@@ -79,15 +102,10 @@ const Comments = ({
     );
   }
 
-  if (comments.length === 0) {
-    return <YonghyeunComment date={date} />;
-  }
-
   return (
     <section>
-      {comments.map((comment, idx) => (
-        <Comment comment={comment} key={idx} />
-      ))}
+      <CommentList comments={comments} date={date} />
+      <OAuth isLogin={isLogin} setIsLogin={setIsLogin} postId={postId} />
     </section>
   );
 };
