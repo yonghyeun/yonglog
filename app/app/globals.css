@@ -87,6 +87,27 @@ section[data-comment] {
   background-color: var(--blockquote-background);
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table,
+th,
+td {
+  border: 1px solid var(--color);
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: var(--blockquote-background);
+}
+
 hr {
   display: none;
 }
