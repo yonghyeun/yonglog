@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import Image from 'next/image';
 import useGetComments from '@/app/hooks/useGetComments';
@@ -10,6 +10,7 @@ import { Login, Logout } from './OAuth';
 import type { PostMeta } from '@/types/post';
 import type { Comment } from '@/types/api';
 import { getCookie } from '@/app/lib/cookie';
+import { cookies } from 'next/headers';
 
 const UserProfile = ({ comment }: { comment: Comment }) => (
   <div className='flex justify-between'>
@@ -83,6 +84,81 @@ const YonghyeunComment = ({ date }: { date: PostMeta['date'] }) => {
   );
 };
 
+const CommentForm = ({
+  token,
+  setToken,
+  setComments,
+  postId,
+  issueNumber,
+}: {
+  token: string | null;
+  setToken: Dispatch<SetStateAction<typeof token>>;
+  setComments: Dispatch<SetStateAction<Comment[]>>;
+  postId: PostMeta['postId'];
+  issueNumber: PostMeta['issueNumber'];
+}) => {
+  const placeholder = token
+    ? '마크다운 문법을 이용해 댓글 작성이 가능합니다 \n\n 궁금하신 점이나 틀린 부분이 있다면 부담없이 말씀해주세요 :)'
+    : ` 로그인 후 사용해주세요 ! \n\n 로그인은 yonghyuen/abonglog에 대한 깃허브 액세스 토큰을 발급 받아 작동합니다. \r\n 액세스 토큰에 대한 범위는 abonglog 레파지토리에 대해서만 유효하니 걱정마세요 :)`;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    try {
+      const response = await fetch(`/api/comments/${issueNumber}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({
+          body: formData.get('comment'),
+        }),
+      });
+
+      const data = await response.json();
+
+      setComments((prevComment) => [...prevComment, data]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <section className='mt-4 rounded-2xl overflow-hidden' data-comment-theme>
+      <div className='px-4 py-4'>
+        {token ? <Logout setToken={setToken} /> : <Login postId={postId} />}
+      </div>
+      <form
+        className={` ${!token ? 'pointer-events-none' : ''}`}
+        onSubmit={handleSubmit}
+      >
+        <div className='px-4 pt-4 '>
+          <label htmlFor='comment' className='sr-only'>
+            your comment
+          </label>
+          <textarea
+            name='comment'
+            id='comment'
+            className='w-full px-4 py-4 bg-gray-300 text-[#111] rounded-lg h-[150px] border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm resize-none'
+            placeholder={placeholder}
+            data-theme
+          />
+        </div>
+        <div className='flex justify-end pr-4 py-2'>
+          <button
+            type='submit'
+            className='px-2 py-1 bg-indigo-800 hover:bg-indigo-700 text-white rounded-xl'
+            disabled={!token}
+          >
+            submit
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+};
+
 const Comments = ({
   issueNumber,
   date,
@@ -92,7 +168,7 @@ const Comments = ({
   date: PostMeta['date'];
   postId: PostMeta['postId'];
 }) => {
-  const { comments, isLoading } = useGetComments(issueNumber);
+  const { comments, setComments, isLoading } = useGetComments(issueNumber);
   const [token, setToken] = useState(() => {
     return getCookie('token');
   });
@@ -109,7 +185,13 @@ const Comments = ({
   return (
     <section>
       <CommentList comments={comments} date={date} />
-      {token ? <Logout setToken={setToken} /> : <Login postId={postId} />}
+      <CommentForm
+        token={token}
+        setToken={setToken}
+        setComments={setComments}
+        postId={postId}
+        issueNumber={issueNumber}
+      />
     </section>
   );
 };

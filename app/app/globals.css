@@ -41,7 +41,7 @@
 }
 
 html {
-  scroll-behavior: smooth !important;
+  /* scroll-behavior: smooth !important; */
   font-family: 'freesentation', 'sans-serif';
 }
 
@@ -84,6 +84,10 @@ svg[data-theme] {
 }
 
 section[data-comment] {
+  background-color: var(--blockquote-background);
+}
+
+section[data-comment-theme] {
   background-color: var(--blockquote-background);
 }
 

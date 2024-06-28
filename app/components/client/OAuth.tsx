@@ -22,7 +22,7 @@ export const Login = ({ postId }: { postId: number }) => {
   return (
     <Link
       href={authorizationUrl}
-      className='px-2 py-2 bg-indigo-950 text-white rounded-xl'
+      className='px-2 py-2 bg-indigo-800 text-white rounded-xl hover:bg-indigo-500'
     >
       Login With Github
     </Link>
@@ -42,7 +42,7 @@ export const Logout = ({
   return (
     <button
       onClick={handleLogout}
-      className='px-2 py-1 bg-indigo-950 text-white rounded-xl'
+      className='px-2 py-1 bg-indigo-800 text-white rounded-xl hover:bg-indigo-500'
     >
       Logout
     </button>
