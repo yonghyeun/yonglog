@@ -91,6 +91,12 @@ const getSeriesName = (source: MDXSource): SeriesName => {
   return path.basename(seriesPath);
 };
 
+const getSeriesHeader = (source: MDXSource): string | null => {
+  const fileHeaderSource = path.join(source, '../../header.txt');
+  const isHeaderExist = fs.existsSync(fileHeaderSource);
+  return isHeaderExist ? fs.readFileSync(fileHeaderSource, 'utf-8') : null;
+};
+
 const filterContent = (content: PostInfo['content']) => {
   const splitedContent = content.split('\r\n');
 
@@ -114,13 +120,22 @@ const filterContent = (content: PostInfo['content']) => {
  */
 const getMDXData = async (fileSource: MDXSource) => {
   const fileContent = fs.readFileSync(fileSource, 'utf8');
+  const seriesHeader = getSeriesHeader(fileSource);
+
   const { data, content } = matter(filterContent(fileContent));
+
+  if (!data.seriesHeader && seriesHeader) {
+    data.seriesHeader = seriesHeader;
+    const updatedContent = matter.stringify(content, data);
+    fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+  }
 
   if (!data.postId) {
     data.postId = Math.ceil(Math.random() * 9 * 100000);
     const updatedContent = matter.stringify(content, data);
     fs.writeFileSync(fileSource, updatedContent, 'utf-8');
   }
+
   if (!data.date) {
     data.date = new Date().toDateString();
     data.time = new Date().getTime();

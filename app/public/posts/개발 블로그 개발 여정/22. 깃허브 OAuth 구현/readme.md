@@ -10,6 +10,7 @@ date: Sat Jun 22 2024
 time: 1719042678919
 issueFlag: true
 issueNumber: 275
+seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 만들며 작성한 포스트입니다.\r\n\r\n기술 블로그의 전체 코드는 [yonglog github](https://github.com/yonghyeun/yonglog) 에서 확인 하실 수 있습니다."
 ---
 
 # 현재는 giscus 라이브러리를 이용하여 댓글을 사용하고 있다.

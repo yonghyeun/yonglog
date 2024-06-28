@@ -18,6 +18,7 @@ export type PostMeta = {
   thumb?: Source | ImgSource;
   issueNumber?: number;
   issueFlag: boolean;
+  seriesHeader?: string;
 };
 export type PostInfo = {
   content: string;

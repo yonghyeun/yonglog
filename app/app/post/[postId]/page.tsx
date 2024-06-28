@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 
 import PostTitle from '@/components/PostTitle';
 import SeriesAccordions from '@/components/SeriesAccordions';
+import SeriesHeader from '@/components/SeriesHeader';
 import PostSideBar from '@/components/PostSideBar';
 import PostPagination from '@/components/PostPagination';
 import Comments from '@/components/client/Comments';

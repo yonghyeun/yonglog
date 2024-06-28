@@ -7,11 +7,9 @@ import Link from 'next/link';
 import type { PostInfo } from '@/types/post';
 
 const AccordionsWithState = ({
-  seriesTitle,
   items,
   currentPostId,
 }: {
-  seriesTitle: string;
   items: PostInfo[];
   currentPostId: number;
 }) => {
@@ -21,10 +19,7 @@ const AccordionsWithState = ({
   };
 
   return (
-    <section className='rounded-xl bg-indigo-950 text-slate-50 px-4 py-4 mb-12 '>
-      <p className='text-2xl'>
-        이 글은 <b className='font-semibold'>{seriesTitle}</b>의 게시글이예요
-      </p>
+    <>
       <button onClick={handleOpen} className='mr-2 mt-2'>
         시리즈 게시글 목록 {isOpen ? '▲' : '▼'}
       </button>
@@ -41,7 +36,7 @@ const AccordionsWithState = ({
           })}
         </ul>
       </section>
-    </section>
+    </>
   );
 };
 

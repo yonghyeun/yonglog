@@ -10,6 +10,7 @@ date: Sun Jun 23 2024
 time: 1719124544938
 issueFlag: true
 issueNumber: 286
+seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 만들며 작성한 포스트입니다.\r\n\r\n기술 블로그의 전체 코드는 [yonglog github](https://github.com/yonghyeun/yonglog) 에서 확인 하실 수 있습니다."
 ---
 
 # 깃허브 API를 이용하여 댓글을 가져와보자

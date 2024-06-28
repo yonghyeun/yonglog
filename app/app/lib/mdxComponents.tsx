@@ -9,7 +9,7 @@ import { MDXComponents } from 'mdx/types';
  */
 export const useMDXComponents = (
   components: MDXComponents = {},
-  postPath: string,
+  postPath?: string,
 ): MDXComponents => {
   return {
     h1: ({ children }) => {
@@ -71,7 +71,9 @@ export const useMDXComponents = (
       width?: number;
       height?: number;
     }) => {
-      const imageSrc = path.join(postPath, src).replace(/\\/g, '/');
+      const imageSrc = postPath
+        ? path.join(postPath, src).replace(/\\/g, '/')
+        : '';
 
       return (
         <span className='grid justify-center  mx-auto w-full my-8'>
