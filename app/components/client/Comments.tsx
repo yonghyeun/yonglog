@@ -10,7 +10,6 @@ import { Login, Logout } from './OAuth';
 import type { PostMeta } from '@/types/post';
 import type { Comment } from '@/types/api';
 import { getCookie } from '@/app/lib/cookie';
-import { cookies } from 'next/headers';
 
 const UserProfile = ({ comment }: { comment: Comment }) => (
   <div className='flex justify-between'>
@@ -37,7 +36,7 @@ const UserProfile = ({ comment }: { comment: Comment }) => (
 
 const CommentBody = ({ bodyHtml }: { bodyHtml: Comment['bodyHtml'] }) => {
   return (
-    <section className='px-10 py-2'>
+    <section className='px-16 py-2'>
       <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
     </section>
   );
@@ -78,25 +77,25 @@ const YonghyeunComment = ({ date }: { date: PostMeta['date'] }) => {
         avatarUrl: 'https://avatars.githubusercontent.com/u/123540354?v=',
         createAt: date,
         bodyHtml:
-          '<p>아직 댓글이 존재하지 않습니다. 댓글이 달릴 시 해당 댓글은 사라집니다 :).</p>',
+          '<p>아직 댓글이 존재하지 않습니다. 댓글이 달릴 시 해당 댓글은 사라집니다 :)</p>',
       }}
     />
   );
 };
 
 const CommentForm = ({
-  token,
-  setToken,
   setComments,
   postId,
   issueNumber,
 }: {
-  token: string | null;
-  setToken: Dispatch<SetStateAction<typeof token>>;
   setComments: Dispatch<SetStateAction<Comment[]>>;
   postId: PostMeta['postId'];
   issueNumber: PostMeta['issueNumber'];
 }) => {
+  const [token, setToken] = useState(() => {
+    return getCookie('token');
+  });
+
   const placeholder = token
     ? '마크다운 문법을 이용해 댓글 작성이 가능합니다 \n\n 궁금하신 점이나 틀린 부분이 있다면 부담없이 말씀해주세요 :)'
     : ` 로그인 후 사용해주세요 ! \n\n 로그인은 yonghyuen/abonglog에 대한 깃허브 액세스 토큰을 발급 받아 작동합니다. \r\n 액세스 토큰에 대한 범위는 abonglog 레파지토리에 대해서만 유효하니 걱정마세요 :)`;
@@ -120,7 +119,7 @@ const CommentForm = ({
 
       setComments((prevComment) => [...prevComment, data]);
     } catch (error) {
-      console.error(error);
+      alert(error);
     }
   };
 
@@ -151,11 +150,30 @@ const CommentForm = ({
             className='px-2 py-1 bg-indigo-800 hover:bg-indigo-700 text-white rounded-xl'
             disabled={!token}
           >
-            submit
+            댓글 등록하기
           </button>
         </div>
       </form>
     </section>
+  );
+};
+
+const CommentFooter = ({
+  issueNumber,
+}: {
+  issueNumber: PostMeta['issueNumber'];
+}) => {
+  return (
+    <p className='flex justify-end italic pt-1'>
+      해당 댓글 리스트들은
+      <a
+        href={`https://github.com/yonghyeun/yonglog/issues/${issueNumber}`}
+        className='underline px-[4px]'
+      >
+        해당 이슈
+      </a>
+      에서 확인 및 수정 가능합니다.
+    </p>
   );
 };
 
@@ -169,9 +187,6 @@ const Comments = ({
   postId: PostMeta['postId'];
 }) => {
   const { comments, setComments, isLoading } = useGetComments(issueNumber);
-  const [token, setToken] = useState(() => {
-    return getCookie('token');
-  });
 
   if (isLoading) {
     return (
@@ -186,12 +201,11 @@ const Comments = ({
     <section>
       <CommentList comments={comments} date={date} />
       <CommentForm
-        token={token}
-        setToken={setToken}
         setComments={setComments}
         postId={postId}
         issueNumber={issueNumber}
       />
+      <CommentFooter issueNumber={issueNumber} />
     </section>
   );
 };

@@ -199,10 +199,11 @@ span[data-highlighted-line-id='remove'] {
 
 figcaption[data-rehype-pretty-code-title] {
   /* text-align: end; */
-  background-color: rgb(33, 33, 33);
+  background-color: rgb(30 27 75);
   border-radius: 10px 10px 0px 0px;
   padding-left: 2rem;
   padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   margin-top: 1rem;
   font-size: 18px;
   color: #fefefe;

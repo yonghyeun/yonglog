@@ -62,8 +62,8 @@ export const useMDXComponents = (
     img: ({
       src,
       alt,
-      width = 600,
-      height = 400,
+      width = 800,
+      height = 600,
       ...props
     }: {
       src: string;
@@ -107,6 +107,9 @@ export const useMDXComponents = (
     ),
     ul: ({ children }) => (
       <ul className='list-disc pl-8 my-2 text-[18px] '>{children}</ul>
+    ),
+    ol: ({ children }) => (
+      <ol className='list-decimal pl-8 my-2 text-[18px] '>{children}</ol>
     ),
     li: ({ children }) => <li className='break-all ml-2 mb-2'>{children}</li>,
     ...components,

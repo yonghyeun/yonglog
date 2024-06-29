@@ -1,0 +1,302 @@
+---
+title: 바닐라 자바스크립트로 깃허브 OAuth 를 구현해보자
+description: 라이브러리 없이 깃허브 API 만을 이용해 깃허브 OAuth 를 구현해보자
+thumb: public/posts/개발 블로그 개발 여정/21. 기술블로그 SEO 최적화 part2/image-1.png
+tag:
+  - react
+  - nextjs
+postId: 468963
+date: Sat Jun 22 2024
+time: 1719042678919
+issueFlag: true
+issueNumber: 275
+seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 만들며 작성한 포스트입니다.\r\n\r\n기술 블로그의 전체 코드는 [yonglog github](https://github.com/yonghyeun/yonglog) 에서 확인 하실 수 있습니다."
+---
+
+# 현재는 giscus 라이브러리를 이용하여 댓글을 사용하고 있다.
+
+![현재는 giscus를 이용하고 있다.](image.png)
+
+현재는 `giscus` 를 이용하여 깃허브 `OAuth` 및 댓글을 사용하고 있다.
+
+`giscus` 는 깃허브 API 를 활용하여 디스커션에 댓글을 달고, 해당 디스커션에 존재하는 댓글 리스트를 `OAuth` 과정에서 얻은 액세스 토큰을 이용해 가져오는 라이브러리이다.
+
+라이브러리를 이용하면 한 시간도 안돼서 빠르게 댓글 기능을 구현 할 수 있었으나 공부를 위해 기술 블로그를 만들면서 라이브러리를 사용하는 것은 아닌 것 같아서 바닐라 자바스크립트로 직접 구현하려고 한다.
+
+`OAuth` 에 대한 내용은 [이전 글](https://www.abonglog.me/post/437527)을 참고하도록 하자 :)
+
+# 전체적인 Github OAuth의 다이어그램
+
+![Github API를 이용한 OAuth의 다이어그램](image-1.png)
+
+전체적인 다이어그램은 다음과 같다.
+
+OAuth 를 이용해 로그인을 하게 되면 다음과 같을 일들이 벌어진다. 화살표를 기준으로 좌측은 요청 주소 , 우측은 응답 주소이다.
+
+1. 사용자가 로그인 버튼을 누른다.
+2. 사용자는 깃허브 로그인 페이지로 리다이렉트 된다. (웹페이지 -> 깃허브 인증 엔드포인트)
+3. 사용자는 로그인을 시도하여 인증을 시도하고 인증에 성공할 경우 임시 코드를 발급 받으며 임시 코드와 함께 abonglog 엔드 포인트로 리다이렉트 된다. (깃허브 인증 서버 -> abonglog 엔드 포인트)
+4. 임시 코드를 이용해 깃허브 인가 서버에게 액세스 토큰을 요청한다. (abonglog 엔드포인트 -> 깃허브 인가 엔드포인트)
+5. 발급 받은 액세스 토큰을 사용자에게 쿠키에 담아 보낸다. (abonglog 엔드포인트 -> 웹페이지)
+
+# 인증 서버로부터 client_id , client_secret 발급 받기
+
+![settings / developer settings/OAuth app 에서 발급 가능하다.](image-2.png)
+
+우선 깃허브 인증 서버로부터 OAuth 를 사용 할 application-name 을 등록 하고 `client_id , client_secret` 을 발급 받는다.
+
+`client_id , client_secret` 모두 리소스 오너에게 액세스 토큰을 발급 받게 할 때 필요하기 때문에 환경 변수에 저장해주도록 하자
+
+![Authorization callback URL](image-3.png)
+
+이후 하단에 `callback URL` 을 설정해주도록 하자 :)
+
+도메인은 현재 개발 중이기 때문에 `localhost` 로 해뒀지만 배포 시에 사용 하려면 나의 도메인을 사용 하면 된다.
+
+중요한 점은 `/api/OAuth` 경로인 것인데 해당 `callback URL` 은 사용자가 인증 서버에서 인증을 마친 후 `redirect` 될 `URL` 을 의미한다.
+
+해당 내용은 추후 코드와 함께 자세히 설명하도록 하겠다.
+
+# Login 컴포넌트 생성하기
+
+```tsx title="@/components/client/OAuth.tsx"
+'use client';
+import Link from 'next/link';
+import type { Dispatch, SetStateAction } from 'react';
+
+/*
+Client 사이드에서 실행 될 곳에서는 process.env가 사용 불가능하기 때문에 전역 변수로 생성
+해당 변수들은 유출되어도 문제가 없는 변수들이다.
+*/
+const CLIENT_ID = 'Ov23liRzfTkgNGuuHNdQ';
+const GITHUB_LOGIN_ENDPOINT = 'https://github.com/login/oauth/authorize';
+const REDIRECT_URI =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000/api/OAuth'
+    : 'https://abonglog.me/api/OAuth';
+const scopes = 'public_repo read:discussion write:discussion';
+
+export const Login = ({ postId }: { postId: number }) => {
+  const randomState = Math.floor(Math.random() * 10000);
+  const authorizationUrl = `${GITHUB_LOGIN_ENDPOINT}?client_id=${CLIENT_ID}&state=${randomState}_${postId}&redirect_uri=${REDIRECT_URI}&scope=${scopes}`;
+
+  return (
+    <Link
+      href={authorizationUrl}
+      className='px-2 py-2 bg-indigo-800 text-white rounded-xl hover:bg-indigo-500'
+    >
+      Github로 로그인하기
+    </Link>
+  );
+};
+```
+
+해당 컴포넌트는 별게 없다. 그저 단순히 깃허브 로그인 페이지로 리다이렉트 시키는 `a` 태그 (현재 컴포넌트에선 `Link` 컴포넌트가 사용 되었다.)만 존재한다.
+
+이 때 쿼리 파라미터로 `client_id , state , redirect_uri , scope` 등을 담아 보내주었다.
+
+> 쿼리 파라미터에 대한 정보는 [Github Docs - Authorizing OAuth apps#1. Request a user's GitHub identity](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#step-1-app-requests-the-device-and-user-verification-codes-from-github) 에서 자세히 살펴볼 수 있다.
+
+필수적으로 존재해야 하는 쿼리 파라미터는 `client_id` 이다. `client_id` 는 깃허브 인증 서버로부터 해당 `OAuth` 서비스를 이용하는 도메인이 누구인지 자격 증명 하는데 사용된다.
+
+나머지 쿼리 파라미터들은 다음과 같다.
+
+- `state` : `cross-site request forgery attacks` 를 막기 위한 랜덤한 문자열 등을 담아 사용한다. 특징적인 것으론 인증 이후 리다이렉트 될 때 임시 코드와 함께 쿼리파라미터에 담겨 온다.
+
+나는 사용자를 로그인을 시도한 게시글로 리다이렉트 시키기 위해 `state` 에 난수 값과 함께 현재 머물고 있는 주소의 정보도 같이 담아주었다.
+
+- `redirect_uri` : 인증 서비스 이후 리다이렉트 시킬 `uri` 주소를 의미한다. 깃허브 인증서버는 `OAuth app` 을 생성 할 때 등록한 `redirect_uri` 와 같지 않다면 오류를 발생 시키며 쿼리파라미터에 담아 작성하지 않을 경우 `OAuth app` 을 생성 할 때 등록한 주소로 리다이렉트 시킨다.
+- `scope` : 사용자가 발급 받아 인가에 사용 할 `access token` 의 범위를 의미한다. 나의 경우엔 내 레파지토리 `public_repo` 와 디스커션들에 대해 쓰고 읽을 수 있도록 해주었다.
+
+![로그인 컴포넌트](image-5.png)
+
+해당 컴포넌트를 클릭하면 사용자는 하단의 사진과 같은 깃허브 로그인 사이트로 이동 되며 해당 사이트에서 로그인을 시도하게 된다.
+
+![리다이렉트 된 깃허브 로그인 페이지](image-4.png)
+
+> 이게 `OAuth` 의 가장 큰 장점이다. 나같이 게으른 개발자 입장에선 로그인을 위한 데이터베이스를 만들지 않아도 되고 사용자 입장에선 이미 있는 계정으로 로그인 하면 되니 얼마나 간편한가 ! 심지어 내 계정에 대한 정보를 직접적으로 깃허브에게만 제공하면 되니 안심이 된다.
+
+# api/OAuth 엔드포인트 라우터 핸들러 생성하기
+
+사용자가 만약 깃허브 로그인 페이지에서 로그인을 시도하고 `Authorize` 버튼을 클릭해 토큰을 발급 받기를 동의하였다면
+
+깃허브 로그인 페이지는 `redirect_uri` 쿼리 파라미터로 제공한 주소로 액세스 토큰을 발급 받을 수 있는 임시 코드 값과 입력했던 state 값을 `request url` 에 담아 리다이렉트 한다.
+
+나는 `/api/OAuth` 로 리다이렉트 시키기로 했기 때문에 `/api/OAuth` 엔드포인트에 대한 라우트 핸들러를 생성해주도록 하자
+
+```tsx title="/api/OAuth.tsx"
+import { NextRequest, NextResponse } from 'next/server';
+
+const GithubAuthorization = 'https://github.com/login/oauth/access_token';
+const BASE_URI =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://abonglog.me';
+
+export const GET = async (req: NextRequest) => {
+  const { searchParams } = req.nextUrl;
+  const code = searchParams.get('code') as string;
+  const callbackPostId = searchParams.get('state')?.split('_')[1] as string;
+
+  try {
+    /* abonglog backend -> Github Autorization server */
+    const response = await fetch(GithubAuthorization, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      },
+      body: new URLSearchParams({
+        client_id: process.env.CLIENT_ID as string,
+        client_secret: process.env.CLIENT_SECRET as string,
+        code: code,
+      }).toString(),
+    });
+
+    const data = await response.json();
+    if (!data.access_token) {
+      throw new Error('토큰이 발급되지 않았습니다.');
+    }
+
+    const { access_token } = data;
+
+    /* abonglog backend -> abonglog frontend */
+    const res = NextResponse.redirect(
+      `${BASE_URI}/post/${callbackPostId}#page-footer`,
+    );
+    res.cookies.set('token', access_token, {
+      // ! Access token을 프론트엔드에서 localStorage에 저장하기 위해 httpOnly false
+      httpOnly: false,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+      path: '/post',
+    });
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    return NextResponse.redirect(`${BASE_URI}/post/${callbackPostId}`, {
+      status: 302,
+    });
+  }
+};
+```
+
+`/api/OAuth` 엔드포인트에 대한 `GET` 요청 라우트 핸들러를 생성해줬다.
+
+해당 코드에선 깃허브 로그인 페이지에서 보낸 `request`에 접근해 `code , state` 값을 추출하여 저장하고 발급 받은 `code` 값을 이용해 `https://github.com/login/oauth/access_toke` 경로로 임시 코드 값과 `client_id , secret` 값을 담아 `POST` 요청을 보낸다.
+
+> 포스트 요청 시 사용 할 POST 요청에 대한 자세한 정보는 [Github Docs - Authorizing OAuth apps#2. Users are redirected back to your site by Github](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#2-users-are-redirected-back-to-your-site-by-github) 를 참고하도록 하자 :)
+
+`POST` 요청 이후엔 다음과 같은 응답 값을 받을 수 있다.
+
+```dotnetcli title="응답값으로 오는 액세스 토큰 Response의 예시"
+Accept: application/json
+{
+  "access_token":"gho_16C7e42F292c6912E7710c838347Ae178B4a",
+  "scope":"repo,gist",
+  "token_type":"bearer"
+}
+```
+
+응답 값에서 `access_token` 값만 쏙 빼내어 클라이언트에게 보낼 `response` 쿠키에 담은 후 사용자를 다시 리다이렉트 시켜주었다.
+
+결국 사용자는 로그인 페이지에서 로그인을 성공 하기만 하면 `access token` 을 쿠키에 담은 채로 본래 보던 페이지로 리다이렉션 되게 된다. :)
+
+> 본래 보던 페이지로 리다이렉션 시키기 위해서 `state` 쿼리 파라미터에 저장해두었던 `postId` 를 이용해주었다.
+
+# 클라이언트에서 access token 관리하기
+
+그럼 앞으로 사용자가 access token 이 필요한 요청을 수행 할 때 마다 쿠키에 access token 을 담아 전송하기 때문에 리소스를 사용하는데 있어 필요한 인가와 인증 문제는 처리가 되었다.
+
+그럼 이제 쿠키에 저장 된 access token을 상태 값으로 저장해둬 access token 유무에 따라 로그인 , 로그아웃 상태를 정의해주도록 하자
+
+## 쿠키를 관리하는 메소드 정의
+
+```tsx title="/lib/cookie.tsx"
+export const getCookie = (cookieName: string): string | null => {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  const cookies = document.cookie.split(';').map((cookie) => cookie.trim());
+  const cookie = cookies.find((cookie) => cookie.startsWith(`${cookieName}=`));
+
+  return cookie ? cookie.split('=')[1] : null;
+};
+
+export const deleteCookie = (cookieName: string) => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+};
+```
+
+쿠키들을 다루는 `getCookie , deleteCookie` 메소드를 정의해주었다.
+
+기존엔 `cookieStore` 를 이용해줬었는데 `fireFox,safari` 에선 쿠키 스토어가 사용 불가능 하단 사실을 알고 단순히 `document.cookie` 를 이용해주었다.
+
+쿠키를 제거하는 `deleteCookie` 메소드의 경우엔 쿠키를 삭제 하는 방법으로 쿠키의 만료 기간을 과거의 시간으로 설정해 쿠키를 제거해주도록 하였다.
+
+## 쿠키에 접근하여 상태 값으로 정의하기
+
+나는 로그인 , 로그아웃 서비스를 댓글 기능에서 정의 할 것이기 때문에 댓글과 관련된 컴포넌트에 상태 값으로 정의해주었다.
+
+```tsx title="@/components/client/Comments.tsx"  {10-12 , 19} showLineNumbers{86}
+const CommentForm = ({
+  setComments,
+  postId,
+  issueNumber,
+}: {
+  setComments: Dispatch<SetStateAction<Comment[]>>;
+  postId: PostMeta['postId'];
+  issueNumber: PostMeta['issueNumber'];
+}) => {
+  const [token, setToken] = useState(() => {
+    return getCookie('token');
+  });
+
+  /* 댓글 달기와 관련된 비즈니스 로직 생략 */
+
+  return (
+    <section className='mt-4 rounded-2xl overflow-hidden' data-comment-theme>
+      <div className='px-4 py-4'>
+        {token ? <Logout setToken={setToken} /> : <Login postId={postId} />}
+      </div>
+      {/* 댓글 달기와 관련된 비즈니스 로직 생략 */}
+    </section>
+  );
+};
+```
+
+![CommentForm 컴포넌트의 모습](image-6.png)
+
+초기 `token`의 상태 값을 `getCookie` 메소드로 쿠키에서 꺼내와 정의해주고 토큰 유무에 따라 로그인, 로그아웃 기능이 있는 `Login , Logout` 컴포넌트를 조건부적으로 렌더링해주었다.
+
+```tsx title="@/components/client/OAuth.tsx" showLineNumbers{32}
+export const Logout = ({
+  setToken,
+}: {
+  setToken: Dispatch<SetStateAction<string | null>>;
+}) => {
+  const handleLogout = () => {
+    deleteCookie('token');
+    setToken(null);
+  };
+
+  return (
+    <button
+      onClick={handleLogout}
+      className='px-2 py-1 bg-indigo-800 text-white rounded-xl hover:bg-indigo-500'
+    >
+      로그아웃 하기
+    </button>
+  );
+};
+```
+
+로그아웃 컴포넌트도 단순히 쿠키 값을 제거하고 `token` 값을 `null` 로 변경해주었다.
+
+> 이번 포스팅은 `OAuth` 와 관련된 내용에만 집중하기 위해서 전체적인 컴포넌트 구조에 대한 설명은 하지 않았다.
+> 만약 전체 코드가 궁금하다면 깃허브에 업로드 해둔 [@/component/client/Comment.tsx](https://github.com/yonghyeun/yonglog/blob/main/app/components/client/Comments.tsx) 파일을 살펴보면 좋을 것 같다.

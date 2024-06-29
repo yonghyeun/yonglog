@@ -35,7 +35,7 @@ export const GET = async (req: NextRequest) => {
 
     /* abonglog backend -> abonglog frontend */
     const res = NextResponse.redirect(
-      `${BASE_URI}/post/${callbackPostId}#comment`,
+      `${BASE_URI}/post/${callbackPostId}#page-footer`,
     );
     res.cookies.set('token', access_token, {
       // ! Access token을 프론트엔드에서 localStorage에 저장하기 위해 httpOnly false

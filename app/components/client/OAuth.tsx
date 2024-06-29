@@ -1,5 +1,5 @@
 'use client';
-import { deleteCookie, getCookie } from '@/app/lib/cookie';
+import { deleteCookie } from '@/app/lib/cookie';
 import Link from 'next/link';
 import type { Dispatch, SetStateAction } from 'react';
 
@@ -24,7 +24,7 @@ export const Login = ({ postId }: { postId: number }) => {
       href={authorizationUrl}
       className='px-2 py-2 bg-indigo-800 text-white rounded-xl hover:bg-indigo-500'
     >
-      Login With Github
+      Github로 로그인하기
     </Link>
   );
 };
@@ -44,7 +44,7 @@ export const Logout = ({
       onClick={handleLogout}
       className='px-2 py-1 bg-indigo-800 text-white rounded-xl hover:bg-indigo-500'
     >
-      Logout
+      로그아웃 하기
     </button>
   );
 };
