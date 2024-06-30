@@ -1,5 +1,5 @@
 import type { Source, Directory, MDXSource, PostInfo } from '@/types/post';
-import type { CountObject, CountArray } from '@/types/global';
+import type { CountObject } from '@/types/global';
 
 const fs = require('fs');
 const path = require('path');

@@ -1,5 +1,3 @@
-const path = require('path');
-
 import { PostInfo } from '@/types/post';
 import postParser, { PostParser } from './postParserModel';
 import PostUtilsModel from './postUtilsModel';
