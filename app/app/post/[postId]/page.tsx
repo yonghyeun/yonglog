@@ -1,19 +1,19 @@
 import rehypePrettyCode from 'rehype-pretty-code';
 import remarkGfm from 'remark-gfm';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { Suspense } from 'react';
+import { Metadata } from 'next';
 
 import PostTitle from '@/components/PostTitle';
 import SeriesAccordions from '@/components/SeriesAccordions';
-import SeriesHeader from '@/components/SeriesHeader';
 import PostSideBar from '@/components/PostSideBar';
+
 import PostPagination from '@/components/PostPagination';
 import Comments from '@/components/client/Comments';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { Suspense } from 'react';
 import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../../lib/mdxComponents';
 import { getAllPosts, getPostContent } from '../../lib/post';
-import { Metadata } from 'next';
 
 export async function generateStaticParams(): Promise<{ postId: string }[]> {
   const allPost = await getAllPosts();

@@ -6,7 +6,6 @@ import type {
   ImgSource,
   PostInfo,
   SeriesName,
-  PostMeta,
 } from '@/types/post';
 
 import { POST_createIssue } from './api';
@@ -144,12 +143,13 @@ const getMDXData = async (fileSource: MDXSource) => {
   }
 
   if (!data.issueNumber && !data.issueFlag) {
-    data.issueFlag = true;
-    const updatedContent = matter.stringify(content, data);
-    fs.writeFileSync(fileSource, updatedContent, 'utf-8');
-
     // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
     try {
+      /* 비동기처리들의 race condition 을 막기 위한 동기적 플래그 설정*/
+      data.issueFlag = true;
+      const updatedContent = matter.stringify(content, data);
+      fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+
       const newIssue = await POST_createIssue(data);
       const { number: issueNumber } = newIssue;
       data.issueNumber = issueNumber;
@@ -157,6 +157,9 @@ const getMDXData = async (fileSource: MDXSource) => {
       console.error(`${data.title}의 이슈를 생성하지 못했습니다.`);
       data.issueFlag = false;
       data.issueNumber = undefined;
+    } finally {
+      const updatedContent = matter.stringify(content, data);
+      fs.writeFileSync(fileSource, updatedContent, 'utf-8');
     }
   }
 
