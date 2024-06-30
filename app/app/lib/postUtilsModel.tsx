@@ -36,6 +36,30 @@ class PostUtilsModel {
       collection[key] += 1;
     }
   }
+
+  deepStringtify(obj: Object) {
+    const stringtifyRecursively = (value: any): string => {
+      if (value === null) {
+        return 'null';
+      }
+
+      if (Array.isArray(value)) {
+        return `[${value.map(stringtifyRecursively).join(',')}]`;
+      }
+
+      if (typeof value === 'object') {
+        const sortedKeys = Object.keys(value).sort();
+        const keyValuePairs = sortedKeys.map(
+          (key) => `"${key}":${stringtifyRecursively(value[key])}`,
+        );
+        return '{' + keyValuePairs.join(',') + '}';
+      }
+
+      return JSON.stringify(value);
+    };
+
+    return stringtifyRecursively(obj);
+  }
 }
 
 export default PostUtilsModel;

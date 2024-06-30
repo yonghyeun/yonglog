@@ -16,12 +16,7 @@ class PostProvder extends PostUtilsModel {
 
   async getAllPosts(): Promise<PostInfo[]> {
     const allPosts = await this.posts;
-    return allPosts.toSorted((prev, cur) => {
-      const prevTime = prev.meta.time;
-      const curTime = cur.meta.time;
-
-      return curTime - prevTime;
-    });
+    return allPosts;
   }
 
   async selectPost(searchParams: URLSearchParams): Promise<PostInfo[]> {

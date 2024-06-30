@@ -109,18 +109,11 @@ export class PostParser extends PostUtilsModel {
   }
 
   isNeedWrite(data: PostMeta, updatedData: PostMeta): boolean {
-    const beforeUpdated = JSON.parse(
-      JSON.stringify(data, (key, value) =>
-        typeof value === 'object' ? value : String(value),
-      ),
-    );
-    const afterUpdated = JSON.parse(
-      JSON.stringify(updatedData, (key, value) =>
-        typeof value === 'object' ? value : String(value),
-      ),
-    );
+    const isDevMode = process.env.NODE_ENV === 'development';
 
-    return beforeUpdated !== afterUpdated;
+    const beforeUpdate = this.deepStringtify(data);
+    const afterUpdate = this.deepStringtify(updatedData);
+    return isDevMode && beforeUpdate !== afterUpdate;
   }
 
   filterContent(content: PostInfo['content']) {
@@ -178,7 +171,14 @@ export class PostParser extends PostUtilsModel {
     };
 
     await parseRecursively(this.source);
-    this.resolvePosts(Posts);
+
+    const sortedPosts = Posts.toSorted((prev, cur) => {
+      const prevTime = prev.meta.time;
+      const curTime = cur.meta.time;
+      return curTime - prevTime;
+    });
+
+    this.resolvePosts(sortedPosts);
   }
 }
 

@@ -6,11 +6,10 @@ tag:
   - react
   - nextjs
 seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 만들며 작성한 포스트입니다.\r\n\r\n기술 블로그의 전체 코드는 [yonglog github](https://github.com/yonghyeun/yonglog) 에서 확인 하실 수 있습니다."
-postId: 666671
 date: Sun Jun 30 2024
 time: 1719733987094
-issueFlag: true
-issueNumber: 291
+postId: 874584
+issueNumber: 292
 ---
 
 # 현재 상황은 어떨까 ?
@@ -247,3 +246,7 @@ Method D executed with { value: 'A is resolved' }
 ```
 
 해당 패턴은 내가 원하는 그대로를 모두 지원한다. 하나씩 리팩토링 해보자
+
+> 사실 리팩토링이라기 보단 거의 대대적인 재개발이라고 볼 수 있다.
+>
+> 모두 뜯어 고칠 것이기 때문이다.
