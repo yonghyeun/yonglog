@@ -1,12 +1,12 @@
+import postProvider from '@/app/lib/postProvider';
 import AccordionsWithState from './client/AccordionsWithState';
 import SeriesHeader from './SeriesHeader';
-import { getSeriesArray } from '@/app/lib/post';
 
 import type { PostInfo } from '@/types/post';
 
 const SeriesAccordions = async ({ meta }: { meta: PostInfo['meta'] }) => {
   const { series, postId: currentPostId, seriesHeader } = meta;
-  const allSeries = await getSeriesArray(series);
+  const allSeries = await postProvider.getSeriesArray(series);
 
   return (
     <section className='rounded-xl bg-indigo-950 text-slate-50 px-4 py-4 mb-12 '>

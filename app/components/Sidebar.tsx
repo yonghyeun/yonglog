@@ -1,6 +1,5 @@
+import postProvider from '@/app/lib/postProvider';
 import ActiveLink from './client/ActiveLink';
-
-import { getAllSeries } from '@/app/lib/identifer';
 
 const sideBarClasses = {
   default: 'font-normal',
@@ -8,7 +7,7 @@ const sideBarClasses = {
 };
 
 const SideBar = async () => {
-  const serieseList = await getAllSeries();
+  const serieseList = await postProvider.getAllSeresList();
   return (
     <section className='sticky flex-2 top-[5rem] right-0'>
       <h2 className='font-bold text-xl mb-2' data-sidebar-title>

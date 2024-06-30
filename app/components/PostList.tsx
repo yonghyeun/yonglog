@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { selectPosts } from '@/app/lib/post';
+import postProvider from '@/app/lib/postProvider';
 import type { PostInfo } from '@/types/post';
 
 export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
@@ -39,7 +39,7 @@ export const PostList = async ({
   searchParams: URLSearchParams;
 }) => {
   const page = searchParams.get('page') || '1';
-  const postList = await selectPosts(searchParams);
+  const postList = await postProvider.selectPost(searchParams);
 
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
   const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);

@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
 import type { PostInfo } from '@/types/post';
-import { getSeriesArray } from '@/app/lib/post';
+import postProvider from '@/app/lib/postProvider';
 
 const PostPagination = async ({ meta }: { meta: PostInfo['meta'] }) => {
   const { series, postId: currentPostId } = meta;
-  const allSeries = await getSeriesArray(series);
+  const allSeries = await postProvider.getSeriesArray(series);
 
   const baseIdx = allSeries.findIndex(
     ({ meta: { postId } }) => postId === currentPostId,

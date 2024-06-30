@@ -13,10 +13,10 @@ import Comments from '@/components/client/Comments';
 import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../../lib/mdxComponents';
-import { getAllPosts, getPostContent } from '../../lib/post';
+import postProvider from '@/app/lib/postProvider';
 
 export async function generateStaticParams(): Promise<{ postId: string }[]> {
-  const allPost = await getAllPosts();
+  const allPost = await postProvider.getAllPosts();
   return allPost.map(({ meta }) => ({ postId: String(meta.postId) }));
 }
 
@@ -25,7 +25,7 @@ export async function generateMetadata({
 }: {
   params: { postId: string };
 }): Promise<Metadata> {
-  const { meta } = await getPostContent(params.postId);
+  const { meta } = await postProvider.getPostcontent(params.postId);
 
   const baseUrl = 'https://abonglog.me';
 
@@ -55,7 +55,8 @@ export async function generateMetadata({
 }
 
 const PostPage = async ({ params }: { params: { postId: string } }) => {
-  const { meta, content } = await getPostContent(params.postId);
+  const { meta, content } = await postProvider.getPostcontent(params.postId);
+
   const components = useMDXComponents({}, meta.path);
 
   return (
