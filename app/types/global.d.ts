@@ -8,7 +8,6 @@ export type SearchParams = {
   tag?: string;
   page?: string;
   series?: string;
-  searchText?: string;
 };
 
 export type CheckIsActive = (

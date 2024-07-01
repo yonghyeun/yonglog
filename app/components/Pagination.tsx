@@ -2,6 +2,7 @@ import ActiveLink from './client/ActiveLink';
 
 import { getPageList } from '@/app/lib/pagination';
 import postProvider from '@/app/lib/postProvider';
+import { PostInfo } from '@/types/post';
 
 const paginationClasses = {
   indigator: {
@@ -31,14 +32,14 @@ const paginationClasses = {
 };
 
 const Pagination = async ({
-  searchParams,
+  posts,
+  page,
 }: {
-  searchParams: URLSearchParams;
+  posts: PostInfo[];
+  page?: string;
 }) => {
-  const currentPage = Number(searchParams.get('page') || '1');
-
-  const totalPosts = await postProvider.selectPost(searchParams);
-  const { avaliablePage, totalPages } = getPageList(currentPage, totalPosts);
+  const currentPage = Number(page || '1');
+  const { avaliablePage, totalPages } = getPageList(currentPage, posts);
 
   return (
     <nav className='flex justify-center' aria-label='page navigation'>

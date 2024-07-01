@@ -34,17 +34,16 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
 );
 
 export const PostList = async ({
-  searchParams,
+  posts,
+  page,
 }: {
-  searchParams: URLSearchParams;
+  posts: PostInfo[];
+  page?: string;
 }) => {
-  const page = searchParams.get('page') || '1';
-  const postList = await postProvider.selectPost(searchParams);
-
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);
-  const offSet = Math.max(0, (Number(page) - 1) * POSTS_PER_PAGES);
+  const offSet = Math.max(0, (Number(page || '1') - 1) * POSTS_PER_PAGES);
 
-  const slicedPostList = postList.slice(offSet, offSet + POSTS_PER_PAGES);
+  const slicedPostList = posts.slice(offSet, offSet + POSTS_PER_PAGES);
 
   return slicedPostList.map(({ meta }, id) => (
     <PostItem meta={meta} key={id} />
