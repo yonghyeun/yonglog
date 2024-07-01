@@ -2,7 +2,7 @@ import { PostInfo } from '@/types/post';
 import postParser, { PostParser } from './postParserModel';
 import PostUtilsModel from './postUtilsModel';
 
-import type { CountObject, CountArray } from '@/types/global';
+import type { CountObject, CountArray, SearchParams } from '@/types/global';
 
 class PostProvder extends PostUtilsModel {
   posts: Promise<PostInfo[]>;
@@ -17,8 +17,10 @@ class PostProvder extends PostUtilsModel {
     return allPosts;
   }
 
+  /* 다른 메소드로 교체 될 예정인 메소드 */
   async selectPost(searchParams: URLSearchParams): Promise<PostInfo[]> {
     const allPosts = await this.posts;
+
     const tag = searchParams.get('tag');
     const series = searchParams.get('series');
 
@@ -32,6 +34,19 @@ class PostProvder extends PostUtilsModel {
         (!series || meta.series === series)
       );
     });
+  }
+
+  /* /post 경로에서 searchParams에 따라 동적으로 적절한 포스트 리스트를 가져오는 메소드 */
+  async searchPosts({
+    searchParams,
+  }: {
+    searchParams: SearchParams;
+  }): Promise<PostInfo[]> {
+    const allPosts = await this.posts;
+
+    const { tag, series, page, searchText } = searchParams;
+
+    return allPosts;
   }
 
   async getPostcontent(postId: string): Promise<PostInfo> {
