@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import postProvider from '@/app/lib/postProvider';
 import type { PostInfo } from '@/types/post';
 
 export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (

@@ -8,9 +8,6 @@ import type { SearchParams } from '@/types/global.d.ts';
 import postProvider from './lib/postProvider';
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
-  /* 서버 컴포넌트의 props.searchParams 는 Object 객체이다.
-  컴포넌트나 메소드 내에서 URLSearchParams 를 이용하기 때문에 복사본 생성
-  */
   const { tag, series, page } = searchParams;
   const selectedPosts = await postProvider.selectPost(tag, series);
 

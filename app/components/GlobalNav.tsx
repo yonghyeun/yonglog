@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import ThemeButton from './client/ThemeButton';
-import { FaSearch, FaGithub } from './Icons';
+import { FaGithub } from './Icons';
+import SearchZone from './client/SearchZone';
 
 const GlobalNav = () => {
   return (
@@ -15,11 +16,10 @@ const GlobalNav = () => {
           </h1>
         </li>
         <ul className='flex gap-4 items-center'>
-          <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
-            <FaSearch size={20} />
+          <li>
+            <SearchZone />
           </li>
           <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
-            {/* <FiMoon size={20} /> */}
             <ThemeButton />
           </li>
           <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>

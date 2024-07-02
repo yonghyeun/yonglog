@@ -1,7 +1,6 @@
 import ActiveLink from './client/ActiveLink';
 
 import { getPageList } from '@/app/lib/pagination';
-import postProvider from '@/app/lib/postProvider';
 import { PostInfo } from '@/types/post';
 
 const paginationClasses = {

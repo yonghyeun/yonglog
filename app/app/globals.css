@@ -30,10 +30,10 @@
 }
 
 [data-theme='dark'] {
-  --background-color: #111;
+  --background-color: #242424;
   --color: rgb(248 250 252); /* bg-slate-50 */
   --side-bar-title: rgb(129 140 248);
-  --blockquote-background: rgb(39 39 42); /* bg-zinc-600 */
+  --blockquote-background: rgb(75 85 99); /* bg-gray-600 */
   --blockquote-border-color: rgb(228 228 231); /* bg-zinc-200 */
   --blockquote-color: rgb(228 228 231); /* bg-gray-400 */
   --active-sidebar-color: rgb(199 210 254); /* text-indigo-200*/
@@ -175,6 +175,14 @@ code > [data-line]::before {
   margin-right: 2rem;
   text-align: right;
   color: gray;
+}
+
+/* /search 에서 쓰인 그래디언트 텍스트 */
+.gradient-text {
+  background: linear-gradient(to right, rgb(99 102 241), rgb(6 182 212));
+  background-clip: border-box;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 code[data-line-numbers-max-digits='2'] > [data-line]::before {
