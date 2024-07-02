@@ -16,8 +16,7 @@ const SearchZone = () => {
     setSearchText(event.target.value);
   };
 
-  const translateX = isSerach ? '280' : '0';
-  console.log(translateX);
+  const translateX = isSerach ? '0' : '280';
 
   return (
     <div className='w-[300px] h-[40px] overflow-hidden'>
