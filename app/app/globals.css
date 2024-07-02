@@ -27,17 +27,19 @@
   --blockquote-color: rgb(75 85 99); /* bg-gray-600 */
   --active-sidebar-color: rgb(55 48 163); /* bg-indigo-800 */
   --underactive-sidebar-color: rgb(30 27 75); /* bg-indigo-950 */
+  --card-background: #fefefe;
 }
 
 [data-theme='dark'] {
   --background-color: #242424;
   --color: rgb(248 250 252); /* bg-slate-50 */
   --side-bar-title: rgb(129 140 248);
-  --blockquote-background: rgb(75 85 99); /* bg-gray-600 */
+  --blockquote-background: rgba(15, 23, 42, 0.377); /* bg-gray-600 */
   --blockquote-border-color: rgb(228 228 231); /* bg-zinc-200 */
   --blockquote-color: rgb(228 228 231); /* bg-gray-400 */
   --active-sidebar-color: rgb(199 210 254); /* text-indigo-200*/
   --underactive-sidebar-color: rgb(129 140 248); /* text-indigo-400 */
+  --card-background: #353535;
 }
 
 html {
@@ -89,6 +91,10 @@ section[data-comment] {
 
 section[data-comment-theme] {
   background-color: var(--blockquote-background);
+}
+
+div[data-card] {
+  background-color: var(--card-background);
 }
 
 table {

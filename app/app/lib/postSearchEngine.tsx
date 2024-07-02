@@ -16,18 +16,18 @@ class PostSearchEngine {
 
     const searchedPosts: PostMeta[] = [];
 
-    const matchedAmount = new Map();
+    const machedMap = new Map();
 
     posts.forEach(({ meta, content }) => {
       const matches = content.match(regex);
       if (matches) {
-        matchedAmount.set(meta.title, matches.length);
+        machedMap.set(meta.title, matches.length);
         searchedPosts.push(meta);
       }
     });
 
     return searchedPosts.toSorted((prev, cur) => {
-      return matchedAmount.get(cur.title) - matchedAmount.get(prev.title);
+      return machedMap.get(cur.title) - machedMap.get(prev.title);
     });
   }
 }
