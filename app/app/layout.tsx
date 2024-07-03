@@ -3,6 +3,8 @@ import './globals.css';
 import SearchEngineMeta from '@/components/SearchEngineMeta';
 import GlobalNav from '@/components/GlobalNav';
 
+import { Analytics } from '@vercel/analytics/react';
+
 import type { Metadata } from 'next';
 
 const layoutMeta = {
@@ -56,16 +58,13 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <head>
+        <Analytics />
         <SearchEngineMeta />
         {/* 모바일 유저의 인터페이스를 변경하기 위한 메타 태그 */}
         <meta name='theme-color' content='rgb(248,240,252)' />
         <script
           dangerouslySetInnerHTML={{ __html: setThemeFromLocalStorage }}
         ></script>
-        <link
-          rel='stylesheet'
-          href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/github.min.css'
-        ></link>
       </head>
       <body>
         <header>

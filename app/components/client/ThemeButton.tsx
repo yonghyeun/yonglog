@@ -23,11 +23,11 @@ const ThemeButton = () => {
   };
 
   return theme === 'light' ? (
-    <button className='py-2' onClick={handleTheme}>
+    <button className='py-2' onClick={handleTheme} aria-label='Toggle Theme'>
       <FiSun size={20} />
     </button>
   ) : (
-    <button className='py-2' onClick={handleTheme}>
+    <button className='py-2' onClick={handleTheme} aria-label='Toggle Theme'>
       <FiMoon size={20} />
     </button>
   );

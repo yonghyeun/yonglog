@@ -50,14 +50,20 @@ const Pagination = async ({
                 newParams={{ page: '1' }}
                 classNames={paginationClasses.leftDouble}
                 replace={false}
-              ></ActiveLink>
+                aria-label='Go to first Page'
+              >
+                <span className='visually-hidden'>Go to page 1</span>
+              </ActiveLink>
             </li>
             <li>
               <ActiveLink
                 newParams={{ page: String(currentPage - 1) }}
                 classNames={paginationClasses.left}
                 replace={false}
-              ></ActiveLink>
+                aria-label='Go to previous Page'
+              >
+                <span className='visually-hidden'>Go to previous Page</span>
+              </ActiveLink>
             </li>
           </>
         )}
@@ -67,6 +73,7 @@ const Pagination = async ({
               newParams={{ page: String(page) }}
               classNames={paginationClasses.indigator}
               replace={false}
+              aria-label='Go to current Page'
             >
               {page}
             </ActiveLink>
@@ -79,14 +86,20 @@ const Pagination = async ({
                 newParams={{ page: String(currentPage + 1) }}
                 classNames={paginationClasses.right}
                 replace={false}
-              ></ActiveLink>
+                aria-label='Go to Next Page'
+              >
+                <span className='visually-hidden'>Go to Next Page</span>
+              </ActiveLink>
             </li>
             <li>
               <ActiveLink
                 newParams={{ page: String(totalPages) }}
                 classNames={paginationClasses.rightDouble}
                 replace={false}
-              ></ActiveLink>
+                aria-label='Go to Last Page'
+              >
+                <span className='visually-hidden'>Go to Last Page</span>
+              </ActiveLink>
             </li>
           </>
         )}

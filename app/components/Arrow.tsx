@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const Up = () => {
   return (
-    <Link href='#page-header' className='mr-2'>
+    <Link href='#page-header' className='mr-2' replace>
       <svg
         data-theme
         width='40'
@@ -30,7 +30,7 @@ export const Up = () => {
 
 export const Down = () => {
   return (
-    <Link href='#page-footer' className='mr-2'>
+    <Link href='#page-footer' className='mr-2' replace>
       <svg
         data-theme
         width='40'

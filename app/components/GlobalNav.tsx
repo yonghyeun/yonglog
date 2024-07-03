@@ -15,17 +15,19 @@ const GlobalNav = () => {
             <Link href='/'>abonglog</Link>
           </h1>
         </li>
-        <ul className='flex gap-4 items-center'>
-          <li>
-            <SearchZone />
-          </li>
-          <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
-            <ThemeButton />
-          </li>
-          <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
-            <FaGithub size={20} />
-          </li>
-        </ul>
+        <li>
+          <ul className='flex gap-4 items-center'>
+            <li>
+              <SearchZone />
+            </li>
+            <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
+              <ThemeButton />
+            </li>
+            <li className='text-base hover:text-blue-500 cursor-pointer font-semibold'>
+              <FaGithub size={20} />
+            </li>
+          </ul>
+        </li>
       </ul>
     </nav>
   );
