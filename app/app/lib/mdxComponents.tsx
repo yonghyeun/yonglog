@@ -54,7 +54,7 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='indent-2 whitespace-pre-wrap break-all mb-3 leading-slug text-[18px] indent-[1px]'>
+      <p className='indent-2 whitespace-pre-wrap break-all mb-3  leading-slug text-[18px] '>
         {children}
       </p>
     ),
@@ -76,12 +76,12 @@ export const useMDXComponents = (
         : '';
 
       return (
-        <span className='grid justify-center  mx-auto w-full my-8'>
+        <span className='grid justify-center items-center  mx-auto w-full my-8'>
           <Image
             src={imageSrc}
             alt={alt || 'image'}
-            width={width}
-            height={height}
+            width={800}
+            height={600}
             style={{
               width: 'auto',
               height: 'auto',
