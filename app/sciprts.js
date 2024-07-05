@@ -1,178 +1,160 @@
-class Node {
+class AVLNode {
   constructor(key) {
     this.key = key;
     this.left = this.right = this.parent = null;
+    this.height = 1;
   }
 }
 
-class BinarySearchTree {
+class AVLTree {
   constructor() {
     this.root = null;
   }
 
-  /* findLocation 은 해당 key를 갖는 node를 발견하면 해당 node를 반환하고 
-  존재하지 않을 경우엔 마지막 탐색이 일어난 노드의 부모 노드를 반환함 */
-  findLocation(key) {
-    if (!this.root) {
-      return null;
+  preorder(node) {
+    if (!node) {
+      return;
     }
-
-    let searchTarget = this.root;
-    let parent = searchTarget.parent;
-
-    while (searchTarget !== null && searchTarget.key !== key) {
-      parent = searchTarget;
-      searchTarget =
-        key < searchTarget.key ? searchTarget.left : searchTarget.right;
-    }
-    return searchTarget?.key === key ? searchTarget : parent;
-  }
-
-  preorder(node = this.root) {
     process.stdout.write(`${node.key},`);
-    if (node.left) {
-      this.preorder(node.left);
-    }
-    if (node.right) {
-      this.preorder(node.right);
-    }
+    this.preorder(node.left);
+    this.preorder(node.right);
   }
 
-  linkingNode(parent, node) {
-    if (!parent) {
-      this.root = node;
-      return;
+  printPreorder() {
+    this.preorder(this.root);
+  }
+
+  getHeight(node) {
+    return node ? node.height : 0;
+  }
+
+  getMaxHeight(node) {
+    return Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
+  }
+
+  getBalance(node) {
+    return this.getHeight(node.left) - this.getHeight(node.right);
+  }
+
+  leftRotate(node) {
+    const parent = node.parent;
+    const rightChild = node.right;
+    const leftGrandChild = rightChild.left;
+
+    // 1. rotation
+    rightChild.left = node;
+    node.right = leftGrandChild;
+
+    // 2. pointing from child to parent
+    rightChild.parent = parent;
+    node.parent = rightChild;
+    if (leftGrandChild) {
+      leftGrandChild.parent = node;
     }
 
-    if (parent.key === node.key) {
-      return;
-    }
-
-    if (node.key < parent.key) {
-      parent.left = node;
+    // 3. pointing from parent to child
+    if (parent) {
+      if (node === parent.left) {
+        parent.left = rightChild;
+      } else {
+        parent.right = rightChild;
+      }
     } else {
-      parent.right = node;
+      this.root = rightChild;
     }
-    node.parent = parent;
+
+    // 4. updateHeight
+    node.height = this.getMaxHeight(node);
+    rightChild.height = this.getMaxHeight(rightChild);
+
+    return rightChild;
   }
 
-  unLinkNode(parent, node) {
-    if (!parent) {
-      this.root = null;
-      return;
+  rightRotate(node) {
+    const parent = node.parent;
+    const leftChild = node.left;
+    const rightGrandChild = leftChild.right;
+
+    // 1. rotation
+    leftChild.right = node;
+    node.left = rightGrandChild;
+
+    // 2. child to parent pointing
+    leftChild.parent = parent;
+    node.parent = leftChild;
+    if (rightGrandChild) {
+      rightGrandChild.parent = node;
     }
-    if (node.key < parent.key) {
-      parent.left = null;
+
+    // 3. parent to child pointing
+    if (parent) {
+      if (node === parent.left) {
+        parent.left = leftChild;
+      } else {
+        parent.right = leftChild;
+      }
     } else {
-      parent.right = null;
+      this.root = leftChild;
     }
-    node.parent = null;
+
+    // 4. updateHeight
+    node.height = this.getMaxHeight(node);
+    leftChild.height = this.getMaxHeight(leftChild);
+
+    return leftChild;
   }
 
-  insert(key) {
-    const node = new Node(key);
-    const parent = this.findLocation(key);
-    this.linkingNode(parent, node);
-  }
-
-  search(key) {
-    const target = this.findLocation(key);
-    return target.key === key ? target : null;
-  }
-
-  findMaxLeaf(rootNode) {
-    let MaxLeaf = rootNode;
-
-    while (MaxLeaf.right !== null) {
-      MaxLeaf = rootNode.right;
-    }
-    return MaxLeaf;
-  }
-
-  deleteByMerging(key) {
+  insert(node, key) {
     if (!this.root) {
-      return;
-    }
-    const deleteTarget = this.search(key);
-
-    if (!deleteTarget) {
+      this.root = new AVLNode(key);
       return;
     }
 
-    const parent = deleteTarget.parent;
-    const leftSubtree = deleteTarget.left;
-    const rightSubtree = deleteTarget.right;
-
-    if (!parent) {
-      /* 지우고자 하는 노드가 root Node라면 */
-      this.root = null;
+    if (node === null) {
+      return new AVLNode(key);
     }
 
-    if (!leftSubtree && !rightSubtree) {
-      /* 지우고자 하는 노드가 leaf Node라면 */
-      this.unLinkNode(parent, deleteTarget);
+    if (node.key === key) {
       return;
     }
 
-    if (leftSubtree && !rightSubtree) {
-      /* 지우고자 하는 노드가 leftSubtree 만 존재한다면 */
-      this.linkingNode(parent, leftSubtree);
-      return;
-    }
-    if (!leftSubtree && rightSubtree) {
-      /* 지우고자 하는 노드가 rightSubtree 만 존재한다면 */
-      this.linkingNode(parent, rightSubtree);
-      return;
+    if (key < node.key) {
+      node.left = this.insert(node.left, key);
+      node.left.parent = node;
+    } else {
+      node.right = this.insert(node.right, key);
+      node.right.parent = node;
     }
 
-    /* 지우고자 하는 노드가 leftSubtree, rightSubtree 모두가 존재한다면 */
-    const LeftNodeMaxLeaf = this.findMaxLeaf(leftSubtree);
+    node.height = this.getMaxHeight(node);
+    const balance = this.getBalance(node);
 
-    this.linkingNode(parent, leftSubtree);
-    this.linkingNode(LeftNodeMaxLeaf, rightSubtree);
+    /* 회전이 한 번만 필요한 경우 */
+    if (balance > 1 && key < node.left.key) {
+      return this.rightRotate(node);
+    }
+    if (balance < -1 && key > node.right.key) {
+      return this.leftRotate(node);
+    }
+    /* 회전이 두 번 필요한 경우 */
+    if (balance > 1 && key > node.left.key) {
+      node.left = this.leftRotate(node.left);
+      return this.rightRotate(node);
+    }
+
+    if (balance < -1 && key < node.right.key) {
+      node.right = this.rightRotate(node.right);
+      return this.leftRotate(node);
+    }
+
+    return node;
   }
 
-  deleteByCopying(key) {
-    if (!this.root) {
-      return;
-    }
-    const deleteTarget = this.search(key);
-
-    if (!deleteTarget) {
-      return;
-    }
-
-    const parent = deleteTarget.parent;
-    const leftSubtree = deleteTarget.left;
-    const rightSubtree = deleteTarget.right;
-
-    if (!leftSubtree && !rightSubtree) {
-      /* 지우고자 하는 노드가 leaf Node라면 */
-      this.unLinkNode(parent, deleteTarget);
-      return;
-    }
-
-    if (!leftSubtree && rightSubtree) {
-      this.linkingNode(parent, rightSubtree);
-      return;
-    }
-
-    /* leftSubtree 가 존재하는 경우 로직이 존재 */
-
-    const LeftNodeMaxLeaf = this.findMaxLeaf(leftSubtree);
-    deleteTarget.key = LeftNodeMaxLeaf.key;
-
-    if (leftSubtree.left) {
-      this.linkingNode(LeftNodeMaxLeaf.parent, LeftNodeMaxLeaf.left);
-    }
+  add(key) {
+    this.insert(this.root, key);
   }
 }
 
-const bst = new BinarySearchTree();
-
-[15, 4, 2, 20, 17, 19, 18, 16, 32].forEach((key) => bst.insert(key));
-console.log('기존 서브 트리를 전위 순회한 결과');
-bst.preorder();
-console.log('\n deleteByCopying 시행한 결과');
-bst.deleteByCopying(20);
-bst.preorder();
+const avl = new AVLTree();
+[1, 2, 3, 4, 5, 6, 7].forEach((key) => avl.add(key));
+avl.printPreorder();
