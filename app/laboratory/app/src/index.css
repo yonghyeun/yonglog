@@ -1,0 +1,72 @@
+body {
+  background-color: #fff;
+}
+
+.main-page {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.post-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 33.3%);
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.header select {
+  margin-left: 1rem;
+}
+
+.post {
+  box-sizing: border-box;
+  background-color: #eee;
+  border-radius: 10px;
+  width: 100%;
+  margin: 0 auto 1rem auto;
+  padding: 1rem 2rem;
+}
+
+.post-date {
+  text-align: end;
+  font-style: italic;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 255, 0.219);
+  font-weight: 800;
+  margin-top: 1rem;
+  margin-right: 1rem;
+}
+
+.emogi-list {
+  display: flex;
+  gap: 1rem;
+}
+
+p > span {
+  font-style: italic;
+}
+
+.reaction {
+  background-color: skyblue;
+  padding: 0.5rem;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  border: none;
+}
+
+.flex {
+  display: flex;
+}
