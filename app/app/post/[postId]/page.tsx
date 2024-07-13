@@ -65,7 +65,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
         <PostTitle meta={meta} />
       </header>
       <main className='w-[100%] lg:w-[150%] flex'>
-        <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+        <section className=' w-[100%]  lg:w-[70%] lg:mr-[2rem]'>
           <SeriesAccordions meta={meta} />
           <Suspense fallback={<LoadingContnet />}>
             <MDXRemote
@@ -78,7 +78,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
                     [
                       rehypePrettyCode,
                       {
-                        theme: 'material-theme-ocean',
+                        theme: 'dracula',
                       },
                     ],
                   ],

@@ -8,7 +8,7 @@ import AddPage from '@/pages/add/page';
 const router = createBrowserRouter([
   { path: '/', element: <MainPage /> },
   { path: '/post', element: <PostPage /> },
-  { path: '/edit?:postTitle', element: <EditPage /> },
+  { path: '/edit', element: <EditPage /> },
   { path: '/add?:postTitle', element: <AddPage /> },
 ]);
 

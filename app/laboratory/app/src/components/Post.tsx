@@ -29,7 +29,7 @@ export const PostComponent = ({
         ))}
       </div>
       <Link to={`post?title=${post.title}`}>View</Link>
-      <Link to={`edit/${post.title}`}>Edit</Link>
+      <Link to={`edit?title=${post.title}`}>Edit</Link>
     </section>
   );
 };
