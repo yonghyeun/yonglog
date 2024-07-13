@@ -29,9 +29,11 @@ const PostCard = ({ postMeta }: { postMeta: PostMeta }) => {
 
 const PostGrid = ({ postMetas }: { postMetas: PostMeta[] }) => {
   return (
-    <section className='grid grid-cols-3 gap-4'>
+    <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
       {postMetas.map((postMeta, idx) => (
-        <PostCard postMeta={postMeta} key={idx} />
+        <div key={idx} className='flex justify-center item-center'>
+          <PostCard postMeta={postMeta} />
+        </div>
       ))}
     </section>
   );

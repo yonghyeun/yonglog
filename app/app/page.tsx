@@ -12,8 +12,8 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const selectedPosts = await postProvider.selectPost(tag, series);
 
   return (
-    <section className='mx-0 sm:mx-auto w-full lg:w-1/2'>
-      <div className='hidden md:block'>
+    <section className='mx-0 sm:mx-auto w-full lg:w-[800px]'>
+      <div className='px-2'>
         <Introduce />
       </div>
       <CategoryList />

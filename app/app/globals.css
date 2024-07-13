@@ -28,6 +28,7 @@
   --active-sidebar-color: rgb(55 48 163); /* bg-indigo-800 */
   --underactive-sidebar-color: rgb(30 27 75); /* bg-indigo-950 */
   --card-background: #fefefe;
+  --tag-background: rgb(209 213 219);
 }
 
 [data-theme='dark'] {
@@ -40,6 +41,21 @@
   --active-sidebar-color: rgb(199 210 254); /* text-indigo-200*/
   --underactive-sidebar-color: rgb(129 140 248); /* text-indigo-400 */
   --card-background: #353535;
+  --tag-background: rgb(75 85 99);
+}
+
+::-webkit-scrollbar {
+  width: 12px; /* 스크롤바 너비 */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--blockquote-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--active-sidebar-color); /* 스크롤바 색상 */
+  border-radius: 6px; /* 스크롤바 모서리 반경 */
+  min-height: 24px;
 }
 
 html {
@@ -50,6 +66,10 @@ html {
 body {
   background-color: var(--background-color);
   color: var(--color);
+}
+
+.tag {
+  background-color: var(--tag-background);
 }
 
 h2[data-sidebar-title='true'] {

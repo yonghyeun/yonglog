@@ -13,7 +13,7 @@ const SearchPage = async ({
 
   return (
     <>
-      <section className='mx-0 sm:mx-auto w-full lg:w-1/2'>
+      <section className='mx-0 sm:mx-auto w-full lg:w-[800px]'>
         <SearchTitle text={text} postNum={searchedPostMeta.length} />
         <PostGrid postMetas={searchedPostMeta} />
       </section>

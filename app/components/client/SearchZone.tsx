@@ -16,10 +16,10 @@ const SearchZone = () => {
     setSearchText(event.target.value);
   };
 
-  const translateX = isSerach ? '0' : '280';
+  const translateX = isSerach ? '0' : '180';
 
   return (
-    <div className='w-[300px] h-[40px] overflow-hidden'>
+    <div className='w-[200px] h-[40px] overflow-hidden'>
       <div
         className={`flex transition-transform`}
         style={{ transform: `translateX(${translateX}px)` }}
@@ -29,15 +29,14 @@ const SearchZone = () => {
           size={20}
           onClick={handleClick}
         />
-        <div className='flex w-[270px] font-semibold'>
+        <div className='flex w-[170px] font-semibold'>
           <input
-            className='w-[200px] px-2 bg-transparent border-b-[2px] focus:outline-none'
+            className='w-[100px] px-2 bg-transparent border-b-[2px] focus:outline-none'
             type='text'
             onChange={handleText}
-            placeholder='검색어를 입력해주세요 :)'
           />
           <Link
-            className='flex items-center justify-center ml-[5px]  w-[60px]  border-none bg-indigo-800 rounded-2xl hover:bg-indigo-500'
+            className='flex items-center justify-center ml-[5px]  px-2  border-none bg-indigo-800 rounded-2xl hover:bg-indigo-500'
             href={searchText ? `/search?text=${searchText}` : '#'}
           >
             Search

@@ -98,7 +98,7 @@ const CommentForm = ({
 
   const placeholder = token
     ? '마크다운 문법을 이용해 댓글 작성이 가능합니다 \n\n 궁금하신 점이나 틀린 부분이 있다면 부담없이 말씀해주세요 :)'
-    : ` 로그인 후 사용해주세요 ! \n\n 로그인은 yonghyuen/abonglog에 대한 깃허브 액세스 토큰을 발급 받아 작동합니다. \r\n 액세스 토큰에 대한 범위는 abonglog 레파지토리에 대해서만 유효하니 걱정마세요 :)`;
+    : ` 로그인 후 사용해주세요 :)   `;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
