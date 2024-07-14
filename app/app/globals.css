@@ -12,6 +12,16 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: Menlo;
+
+  src: url('/fonts/Menlo-Regular.ttf') format('woff2'),
+    url('/fonts/Menlo-Regular.ttf') format('woff'),
+    url('/fonts/Menlo-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --font-freesensation: 'Freesensation', sans-serif;
   --font-jetBrainsMono: 'JetBrains Mono', monospace;
@@ -45,7 +55,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 12px; /* 스크롤바 너비 */
+  width: 16px; /* 스크롤바 너비 */
 }
 
 ::-webkit-scrollbar-track {
@@ -54,13 +64,11 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--active-sidebar-color); /* 스크롤바 색상 */
-  border-radius: 6px; /* 스크롤바 모서리 반경 */
   min-height: 24px;
 }
 
 html {
-  /* scroll-behavior: smooth !important; */
-  font-family: 'freesentation', 'sans-serif';
+  font-family: freesentation, sans-serif;
 }
 
 body {
@@ -168,10 +176,12 @@ pre > code {
 
 pre span[data-line] {
   @apply inline-block px-4 py-0.5;
+  font-family: Menlo;
+  font-weight: 600;
 }
 
 code {
-  font-family: var(--font-jetBrainsMono);
+  font-family: Melon;
   font-size: 80%;
 }
 
@@ -183,9 +193,9 @@ code {
 p > code,
 strong > code,
 li > code {
+  font-family: Menlo;
   background-color: #aaaaaa63;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 2px 5px;
   border-radius: 5px;
 }
 

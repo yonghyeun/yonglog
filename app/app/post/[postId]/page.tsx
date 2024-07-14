@@ -78,7 +78,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
                     [
                       rehypePrettyCode,
                       {
-                        theme: 'dracula',
+                        theme: 'aurora-x',
                       },
                     ],
                   ],

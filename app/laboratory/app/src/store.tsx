@@ -1,15 +1,42 @@
-import { configureStore } from '@reduxjs/toolkit';
-import postReducer from '@/feature/posts/postSlice';
-import userReducer from '@/feature/user/userSlice';
+import { createContext, Dispatch, useReducer } from 'react';
+import { State, Action, Store } from './types';
+import appReducer from './reducer';
 
-const store = configureStore({
-  reducer: {
-    posts: postReducer,
-    user: userReducer,
-  },
-});
+export const StateContext = createContext<Store | null>(null);
+export const DispatchContext = createContext<Dispatch<Action> | null>(null);
 
-export default store;
+const initialState = {
+  counter: 0,
+  increase: 1,
+};
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const Provider = ({ children }: { children: React.ReactNode }) => {
+  const [state, dispatch] = useReducer<React.Reducer<State, Action>>(
+    appReducer,
+    initialState,
+  );
+  const listeners: (() => void)[] = [];
+
+  const store = {
+    state,
+    getState: () => state,
+    dispatch,
+    subscribe: (listener: () => void) => {
+      listeners.push(listener);
+      return () => {
+        const index = listeners.indexOf(listener);
+        if (index > -1) {
+          listeners.splice(index, 1);
+        }
+      };
+    },
+  };
+
+  return (
+    <StateContext.Provider value={store}>
+      <DispatchContext.Provider value={dispatch}>
+        {children}
+      </DispatchContext.Provider>
+    </StateContext.Provider>
+  );
+};
