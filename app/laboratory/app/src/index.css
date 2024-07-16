@@ -13,25 +13,12 @@ body {
   padding: 1rem 0.5rem;
 }
 
+input,
 button {
+  padding: 0.5rem;
+}
+
+.wrapper {
+  border: 2px solid white;
   padding: 1rem;
-  font-size: 24px;
-}
-
-label {
-  display: flex;
-  align-items: center;
-  font-size: 24px;
-}
-
-.view {
-  border: 2px solid royalblue;
-}
-
-.counter {
-  border: 2px solid purple;
-}
-
-.increase {
-  border: 2px solid orangered;
 }

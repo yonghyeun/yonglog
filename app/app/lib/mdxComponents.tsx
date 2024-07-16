@@ -16,7 +16,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className='text-3xl border-b-[2px]   pt-16 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit'
+            className='text-3xl border-b-[2px]   pt-8 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit'
             id={children as string}
           >
             {children}
@@ -26,7 +26,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className='   text-2xl border-b-[1px]   pt-16 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className='   text-2xl border-b-[1px]   pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -34,7 +34,7 @@ export const useMDXComponents = (
     ),
     h3: ({ children }) => (
       <h3
-        className='   text-xl border-b-[1px]  pt-16 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className='   text-xl border-b-[1px]  pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
