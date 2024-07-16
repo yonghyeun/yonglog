@@ -24,6 +24,15 @@ const GET = async () => {
 
 const POST = async (req: NextRequest) => {
   await delay(1000);
+  if (req.method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 204 });
+    // Handle preflight requests
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    return response;
+  }
+
   const newTodo: Todo = await req.json();
   if (!newTodo || !newTodo.id || !newTodo.content) {
     const errorResponse = NextResponse.json(
@@ -37,7 +46,20 @@ const POST = async (req: NextRequest) => {
   todos.push(newTodo);
   const response = NextResponse.json(todos);
   response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
   return response;
 };
 
-export { GET, POST };
+const OPTIONS = (req: NextRequest) => {
+  const response = new NextResponse();
+
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
+  return response;
+};
+
+export { GET, POST, OPTIONS };

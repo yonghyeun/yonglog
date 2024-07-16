@@ -13,36 +13,71 @@ const fetchTodo = async (): Promise<Todo[]> => {
   return data;
 };
 
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 
 const Todo = () => {
-  const [dummy, setDummy] = useState<number>(0);
-  const {
-    data: todos = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['todo', dummy],
+  const { data: todos, isLoading } = useQuery({
     queryFn: fetchTodo,
+    queryKey: ['todo'],
   });
 
-  if (isLoading) return <div>Loading..</div>;
-  if (isError) return <div>Error is occured</div>;
+  if (isLoading) return <div>Loading ...</div>;
+
   return (
-    <div className='wrapper'>
-      <p>dummy : {dummy}</p>
-      <ul>
-        {todos.map(({ id, content }) => (
-          <li key={id}>{content}</li>
-        ))}
-      </ul>
+    <ul className='wrapper'>
+      {todos?.map((todo) => (
+        <li key={todo.id}>{todo.content}</li>
+      ))}
+    </ul>
+  );
+};
+
+const postTodo = async (newTodo: Todo) => {
+  try {
+    const response = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(newTodo),
+    });
+    if (!response.ok) {
+      throw new Error('Fail to Post');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw Error(
+      error instanceof Error ? error.message : 'Unexcpected Error is occured',
+    );
+  }
+};
+
+const TodoForm = () => {
+  const [text, setText] = useState<string>('');
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['postTodo'],
+    mutationFn: postTodo,
+  });
+
+  return (
+    <div className='flex'>
+      <input
+        type='text'
+        onChange={(e) => {
+          setText(e.target.value);
+        }}
+      />
       <button
         onClick={() => {
-          setDummy((prev) => ++prev);
+          mutate({
+            id: Math.floor(Math.random() * 1000),
+            content: text,
+          });
         }}
       >
-        re-render!
+        {isPending ? 'Loading ...' : 'Post'}
       </button>
     </div>
   );
@@ -50,9 +85,9 @@ const Todo = () => {
 
 const App = () => {
   return (
-    <div className='flex'>
+    <div className='wrapper'>
       <Todo />
-      <Todo />
+      <TodoForm />
     </div>
   );
 };
