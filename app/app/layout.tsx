@@ -62,6 +62,15 @@ export default function RootLayout({
         <SearchEngineMeta />
         {/* 모바일 유저의 인터페이스를 변경하기 위한 메타 태그 */}
         <meta name='theme-color' content='rgb(248,240,252)' />
+        <link
+          rel='apple-touch-icon'
+          sizes='180x180'
+          href='/asset/apple-touch-icon.png'
+        />
+        <link rel='icon' sizes='48x48' href='/asset/favicon.ico' />
+        <link rel='icon' sizes='32x32' href='/asset/favicon-32x32.png' />
+        <link rel='icon' sizes='64x64' href='/asset/favicon-64x64.png' />
+
         <script
           dangerouslySetInnerHTML={{ __html: setThemeFromLocalStorage }}
         ></script>
