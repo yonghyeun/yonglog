@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import Image from 'next/image';
 
 import PostTitle from '@/components/PostTitle';
 import SeriesAccordions from '@/components/SeriesAccordions';
@@ -14,6 +15,7 @@ import { LoadingContnet } from '@/components/Loading';
 
 import { useMDXComponents } from '../../lib/mdxComponents';
 import postProvider from '@/app/lib/postProvider';
+import PostHeadThumbnail from '@/components/PostHeadThumbnail';
 
 export async function generateStaticParams(): Promise<{ postId: string }[]> {
   const allPost = await postProvider.getAllPosts();
@@ -68,6 +70,10 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
         <section className=' w-[100%]  lg:w-[70%] lg:mr-[2rem]'>
           <SeriesAccordions meta={meta} />
           <Suspense fallback={<LoadingContnet />}>
+            <PostHeadThumbnail
+              imageSrc={meta.validThumbnail}
+              title={meta.title}
+            />
             <MDXRemote
               source={content}
               components={components}
