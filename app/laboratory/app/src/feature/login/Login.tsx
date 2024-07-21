@@ -4,7 +4,7 @@ import useAuth from './api';
 const Login = () => {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const mutation = useAuth();
+  const { mutation, errorMessage } = useAuth();
 
   const typeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.target.value);
@@ -17,6 +17,7 @@ const Login = () => {
 
   return (
     <section className='wrapper'>
+      {errorMessage && <p>{errorMessage}</p>}
       <div className='flex'>
         <label htmlFor='id'>ID : </label>
         <input type='text' id='id' data-testid='id' onChange={typeId} />

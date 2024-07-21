@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import useSessionStore from './store';
+import { useState } from 'react';
 
 type UserSession = {
   userName: string;
@@ -8,6 +9,7 @@ type UserSession = {
 
 const useAuth = () => {
   const sessionStore = useSessionStore();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const mutation = useMutation({
     mutationFn: async ({ id, password }: { id: string; password: string }) => {
@@ -18,31 +20,34 @@ const useAuth = () => {
         },
         body: JSON.stringify({ id, password }),
       });
+
       if (!response.ok) {
-        throw new Error(response.statusText);
+        const { message } = await response.json();
+        throw new Error(message || 'Unhandled Error');
       }
+
       const data = await response.json();
       return data;
     },
     retry: (failureCount, error) => {
-      if (error.message.includes('Network response was not ok')) {
-        return failureCount < 3;
-      }
-      if (error.message.includes('Server State was not ok')) {
+      if (error.message.includes('서버나 네트워크 상황이 불안정합니다.')) {
         return failureCount < 3;
       }
       return false;
     },
-    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30000),
-
-    onError: () => {},
+    retryDelay: 1000,
+    onError: (error) => {
+      setErrorMessage(error.message);
+      window.alert(error.message);
+    },
     onSuccess: (data: UserSession) => {
       sessionStore.setToken(data.token);
       sessionStore.setUserName(data.userName);
+      setErrorMessage(null);
     },
   });
 
-  return mutation;
+  return { mutation, errorMessage };
 };
 
 export default useAuth;

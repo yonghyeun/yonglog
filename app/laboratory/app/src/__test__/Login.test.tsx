@@ -4,6 +4,8 @@ import Login from '../feature/login/Login';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+jest.setTimeout(10 * 1000);
+
 const renderSetup = () => {
   render(
     <QueryStore>
@@ -29,22 +31,16 @@ const apiRenderSetup = () => {
   return { $idInput, $passwordInput, $submitButton };
 };
 
-const afterSubmitSetup = async (
-  {
-    id,
-    password,
-  }: {
-    id: string;
-    password: string;
-  },
-  mockupCallback: () => Promise<any>,
-) => {
-  global.fetch = jest.fn(mockupCallback) as jest.Mock;
-  const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
-  await userEvent.type($idInput, id);
-  await userEvent.type($passwordInput, password);
-  return { $idInput, $passwordInput, $submitButton };
-};
+beforeEach(() => {
+  jest.spyOn(console, 'error');
+  // @ts-ignore jest.spyOn adds this functionallity
+  console.error.mockImplementation(() => null);
+});
+
+afterEach(() => {
+  // @ts-ignore jest.spyOn adds this functionallity
+  console.error.mockRestore();
+});
 
 describe('Login Form이 렌더링 되었을 때', () => {
   it('ID가 입력되지 않았다면 제출 버튼은 비활성화 되어 있어야 한다.', async () => {
@@ -144,7 +140,7 @@ describe('로그인 요청을 보냈을 때', () => {
           return Promise.resolve({
             ok: false,
             status: 500,
-            statusText: 'Server State was not ok',
+            json: () => ({ message: '서버나 네트워크 상황이 불안정합니다.' }),
           });
         }) as jest.Mock;
 
@@ -152,9 +148,15 @@ describe('로그인 요청을 보냈을 때', () => {
         await userEvent.type($passwordInput, 'password');
         await userEvent.click($submitButton);
 
-        await waitFor(() => {
-          expect(global.fetch).toBeCalledTimes(4); // 초기 시도 + 재시도 3회
-        });
+        await waitFor(
+          () => {
+            expect(global.fetch).toBeCalledTimes(4); // 초기 시도 + 재시도 3회,
+          },
+          {
+            timeout: 5000,
+            interval: 50,
+          },
+        );
       });
       it('네트워크 문제가 발생하면 동일한 요청을 성공 할 때 까지 3회 재전송 한다.', async () => {
         const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
@@ -162,7 +164,7 @@ describe('로그인 요청을 보냈을 때', () => {
           return Promise.resolve({
             ok: false,
             status: 500,
-            statusText: 'Network response was not ok',
+            json: () => ({ message: '서버나 네트워크 상황이 불안정합니다.' }),
           });
         }) as jest.Mock;
 
@@ -170,18 +172,73 @@ describe('로그인 요청을 보냈을 때', () => {
         await userEvent.type($passwordInput, 'password');
         await userEvent.click($submitButton);
 
-        await waitFor(() => {
-          expect(global.fetch).toBeCalledTimes(4); // 초기 시도 + 재시도 3회
-        });
+        await waitFor(
+          () => {
+            expect(global.fetch).toBeCalledTimes(4); // 초기 시도 + 재시도 3회
+          },
+          {
+            timeout: 5000,
+            interval: 50,
+          },
+        );
       });
 
-      it('최종적으로 로그인에 실패하면 에러 메시지를 alert 창을 이용해 띄운다.', () => {});
+      it('최종적으로 네트워크나 서버 문제로 인해 로그인에 실패했을 경우 에러 메시지를 alert 창을 이용해 띄운다.', async () => {
+        const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
+        global.fetch = jest.fn(() => {
+          return Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => ({ message: '서버나 네트워크 상황이 불안정합니다.' }),
+          });
+        }) as jest.Mock;
+
+        const alertMock = jest.spyOn(window, 'alert');
+
+        await userEvent.type($idInput, 'user');
+        await userEvent.type($passwordInput, 'password');
+        await userEvent.click($submitButton);
+
+        await waitFor(
+          () => {
+            expect(alertMock).toBeCalledWith(
+              '서버나 네트워크 상황이 불안정합니다.',
+            );
+          },
+          {
+            timeout: 5000,
+            interval: 50,
+          },
+        );
+      });
     });
   });
-});
 
-describe('로그인이 완료 된 상태에서', () => {
-  it('로그인 페이지에 접근하면 로그아웃 버튼이 노출된다.', () => {});
-  it('로그인 페이지에서 유저의 정보를 렌더링 한다.', () => {});
-  it('로그인 후 사용자는 홈 페이지로 리디렉션된다.', () => {});
+  it('인증에 실패하면 아이디나 비밀번호를 확인하라는 문구가 렌더링 된다.', async () => {
+    const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
+    global.fetch = jest.fn(() => {
+      return Promise.resolve({
+        ok: false,
+        status: 401,
+        json: () => ({ message: 'ID나 PASSWORD를 확인해주세요' }),
+      });
+    }) as jest.Mock;
+
+    await userEvent.type($idInput, 'wrongUser');
+    await userEvent.type($passwordInput, 'wrongPassword');
+    await userEvent.click($submitButton);
+
+    await waitFor(
+      async () => {
+        const $errorMessage = await screen.findByText(
+          /ID나 PASSWORD를 확인해주세요/i,
+        );
+        expect($errorMessage).toBeInTheDocument();
+      },
+      {
+        timeout: 5000,
+        interval: 50,
+      },
+    );
+  });
 });

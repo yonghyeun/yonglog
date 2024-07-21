@@ -1,7 +1,7 @@
 ---
 title: 프론트엔드에서 테스트 코드를 사용해야 하는 이유와 사용 예시 - 실전편
-description: 나중에 작성하기
-thumb: /posts/웹 개발 공부/5. 프론트엔드에서 테스트 주도 개발 하기/thumb.png
+description: 로그인 컴포넌트를 기능과 함께 테스트 주도 개발로 생성해보자
+thumb: /posts/웹 개발 공부/6. 프론트엔드에서 테스트 주도 개발 하기/thumb.png
 tag:
   - react
 postId: 243799
@@ -18,9 +18,29 @@ issueNumber: 305
 
 만들고자 하는 프로덕트를 가정해보자
 
-> "애봉님, 간단한 투두리스트 프로젝트를 개발해주세요. 로그인 이후에만 접근 가능한 투두 리스트 페이지를 생성해주시고, 로그인이 되지 않은 상태에선 로그인 페이지로 리다이렉션 해주세요 , 필요한 테스트는 알잘딱하게 해주세요"
+> "애봉님, 로그인 컴포넌트를 개발해주시고 테스트 코드를 작성해주세요.
 
 > 라이브러리는 `react-router-dom, zustand , react-query` 를 사용 할 예정이다.
+
+이번 `jest` 를 경험해보면서 시행한 테스트들의 목록은 다음과 같다.
+
+```bash title="시도해본 테스트 케이스들의 종류"
+  Login Form이 렌더링 되었을 때
+    √ ID가 입력되지 않았다면 제출 버튼은 비활성화 되어 있어야 한다. (168 ms)
+    √ PASSWORD가 입력되지 않았다면 제출 버튼은 비활성화 되어 있어야 한다. (36 ms)
+    √ ID,PASSWORD가 모두 입력 되었다면 제출 버튼은 활성화 되어 있어야 한다. (29 ms)
+  로그인 요청을 보냈을 때
+    √ 제출 버튼을 클릭 하면 API요청이 올바르게 전송 된다. (37 ms)
+    √ 인증에 실패하면 아이디나 비밀번호를 확인하라는 문구가 렌더링 된다. (37 ms)
+    로그인에 성공하면
+      √ 세션 스토어에 전송 받은 토큰이 저장된다. (85 ms)
+      √ 세션 스토어에 전송 받은 유저 이름이 저장된다. (36 ms)
+    로그인에 다음과 같은 이유로 실패하면
+      (네트워크나 서버 문제)
+        √ 서버 오류로 실패한 경우 동일한 요청을 성공 할 때 까지 3회 재전송 한다. (3054 ms)
+        √ 네트워크 문제가 발생하면 동일한 요청을 성공 할 때 까지 3회 재전송 한다. (3056 ms)
+        √ 최종적으로 네트워크나 서버 문제로 인해 로그인에 실패했을 경우 에러 메시지를 alert 창을 이용해 띄운다. (3045 ms)
+```
 
 # 뼈대 생성하기
 
@@ -187,21 +207,6 @@ export default Login;
 ```
 
 ## API 요청 별 테스트 코드 작성
-
-```tsx
-describe('로그인 요청을 보냈을 때', () => {
-  it('제출 버튼을 클릭 하면 API요청이 올바르게 전송 된다.', () => {});
-
-  it('서버 오류가 발생하면 적절한 오류 메시지가 표시된다.', () => {});
-  it('네트워크 문제가 발생하면 적절한 오류 메시지가 표시된다.', () => {});
-});
-```
-
-우선 테스트 할 목록들을 먼저 정의해준다.
-
-이 부분은 예상보다 복잡한 부분들이 있기 때문에 하나씩 살펴보며 작성해보자
-
-다만 `API` 요청 부분의 테스트 코드를 작성하기 전 미리 짚고 가야 할 내용들이 있다.
 
 ### fetch 와 Jest 모킹
 
@@ -532,73 +537,215 @@ export default useAuth;
 
 다음처럼 `mutation` 이 성공적으로 일어나고 나면 `onSuccess` 메소드를 통해 `Zustand` 로 생성된 `sessionStore` 내부에 상태 값을 저장해주자
 
-### 서버나 네트워크로 인해 로그인에 실패하면
+## API 요청에서 로그인에 실패할 경우의 테스트 코드 작성
 
-이번엔 서버나 네트워크 문제로 인해 로그인에 실패한 테스트 케이스를 작성해보자
-
-````tsx title="네트워크나 서버로 인한 문제에 대한 테스트 케이스 종류"
-describe('로그인 요청을 보냈을 때', () => {
-  ...
+```tsx title="로그인 실패와 관련된 테스트 코드 작성" showLineNumbers{135}
   describe('로그인에 다음과 같은 이유로 실패하면', () => {
     describe('(네트워크나 서버 문제)', () => {
-      it('서버 오류로 실패한 경우 동일한 요청을 성공 할 때 까지 3회 재전송 한다.', () => {});
-      it('네트워크 문제가 발생하면 동일한 요청을 성공 할 때 까지 3회 재전송 한다.', () => {});
-      it('최종적으로 로그인에 실패하면 에러 메시지를 alert 창을 이용해 띄운다.', () => {});
-    });
-    ```
-````
-
-### 3회 재전송 테스트 코드 작성
-
-```tsx title="3회 재전송 테스트 코드"
-const afterSubmitSetup = async ({
-  id,
-  password,
-}: {
-  id: string;
-  password: string;
-}) => {
-  const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
-  await userEvent.type($idInput, id);
-  await userEvent.type($passwordInput, password);
-  return { $idInput, $passwordInput, $submitButton };
-};
-...
-
- describe('로그인에 다음과 같은 이유로 실패하면', () => {
-    describe('(네트워크나 서버 문제)', () => {
       it('서버 오류로 실패한 경우 동일한 요청을 성공 할 때 까지 3회 재전송 한다.', async () => {
+        const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
         global.fetch = jest.fn(() => {
           return Promise.resolve({
             ok: false,
             status: 500,
-            message: '서버에서 오류가 발생했습니다.',
+            json: () => ({ message: '서버나 네트워크 상황이 불안정합니다.' }),
           });
         }) as jest.Mock;
 
-        const inputExample = { id: 'user', password: 'password' };
-        await afterSubmitSetup(inputExample);
-        await waitFor(() => {
-          expect(global.fetch).toBeCalledTimes(3);
-        });
+        await userEvent.type($idInput, 'user');
+        await userEvent.type($passwordInput, 'password');
+        await userEvent.click($submitButton);
+
+        await waitFor(
+          () => {
+            expect(global.fetch).toBeCalledTimes(4); // 초기 시도 + 재시도 3회,
+          },
+          {
+            timeout: 5000,
+            interval: 50,
+          },
+        );
       });
       it('네트워크 문제가 발생하면 동일한 요청을 성공 할 때 까지 3회 재전송 한다.', async () => {
+        const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
         global.fetch = jest.fn(() => {
           return Promise.resolve({
             ok: false,
             status: 500,
-            message: '네트워크 문제가 발생했습니다..',
+            json: () => ({ message: '서버나 네트워크 상황이 불안정합니다.' }),
           });
         }) as jest.Mock;
 
-        const inputExample = { id: 'user', password: 'password' };
-        await afterSubmitSetup(inputExample);
-        await waitFor(() => {
-          expect(global.fetch).toBeCalledTimes(3);
-        });
+        await userEvent.type($idInput, 'user');
+        await userEvent.type($passwordInput, 'password');
+        await userEvent.click($submitButton);
+
+        await waitFor(
+          () => {
+            expect(global.fetch).toBeCalledTimes(4); // 초기 시도 + 재시도 3회
+          },
+          {
+            timeout: 5000,
+            interval: 50,
+          },
+        );
       });
+
+      it('최종적으로 네트워크나 서버 문제로 인해 로그인에 실패했을 경우 에러 메시지를 alert 창을 이용해 띄운다.', async () => {
+        const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
+        global.fetch = jest.fn(() => {
+          return Promise.resolve({
+            ok: false,
+            status: 500,
+            json: () => ({ message: '서버나 네트워크 상황이 불안정합니다.' }),
+          });
+        }) as jest.Mock;
+
+        const alertMock = jest.spyOn(window, 'alert');
+
+        await userEvent.type($idInput, 'user');
+        await userEvent.type($passwordInput, 'password');
+        await userEvent.click($submitButton);
+
+        await waitFor(
+          () => {
+            expect(alertMock).toBeCalledWith(
+              '서버나 네트워크 상황이 불안정합니다.',
+            );
+          },
+          {
+            timeout: 5000,
+            interval: 50,
+          },
+        );
+      });
+    });
+  });
+
+  it('인증에 실패하면 아이디나 비밀번호를 확인하라는 문구가 렌더링 된다.', async () => {
+    const { $idInput, $passwordInput, $submitButton } = apiRenderSetup();
+    global.fetch = jest.fn(() => {
+      return Promise.resolve({
+        ok: false,
+        status: 401,
+        json: () => ({ message: 'ID나 PASSWORD를 확인해주세요' }),
+      });
+    }) as jest.Mock;
+
+    await userEvent.type($idInput, 'wrongUser');
+    await userEvent.type($passwordInput, 'wrongPassword');
+    await userEvent.click($submitButton);
+
+    await waitFor(
+      async () => {
+        const $errorMessage = await screen.findByText(
+          /ID나 PASSWORD를 확인해주세요/i,
+        );
+        expect($errorMessage).toBeInTheDocument();
+      },
+      {
+        timeout: 5000,
+        interval: 50,
+      },
+    );
+  });
+});
+
 ```
 
-다음과 같이 전송에 실패하는 `API` 요청을 목업 데이터로 생성해두고 만약 제출에 실패했다면 `API` 요청이 3회 호출 되는지 확인하는 테스트코드를 작성해주었다.
+위 코드들은 모두 로그인이 실패했을 경우에 대한 테스트 코드 들이다.
 
-이제는 조금씩 익숙해져가는 것 같다.
+각 테스트 케이스 별 `API` 요청을 흉내낸 목업 함수들의 모습을 잘 살펴보고 넘어가도록 하자
+
+위 테스트 코드들에서 `jest.spyOn` 에 대해서만 설명하고 넘어가도록 해보자
+
+**jest.spyOn**
+
+`jest.spyOn` 은 `jest.fn` 과 같이 목업 함수를 생성하는 메소드이다. 다만 차이점을 둔다면 `jest.fn` 은 새로운 목업 함수를 생성하여 덮어씌우는 것에 중점을 둔다면
+
+`jest.spyOn` 은 기존 메소드를 감시하는 목업 메소드를 생성하고 , 기존 메소드가 호출 된 경우를 감시 할 수 있도록 한다.
+
+즉 위 예시에서 `jest.spyOn(window , 'alert')` 의 경우는 `window` 객체의 `alert` 메소드를 모킹한 목업 함수를 생성해주고 , 해당 목업 메소드가 되었는가를 감시해줄 수 있다.
+
+```tsx title="로그인 실패 시에 대한 기능을 추가한 useAuth 훅" {12,24-27, 32-42 ,46, 50}#add
+import { useMutation } from '@tanstack/react-query';
+import useSessionStore from './store';
+import { useState } from 'react';
+
+type UserSession = {
+  userName: string;
+  token: string;
+};
+
+const useAuth = () => {
+  const sessionStore = useSessionStore();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: async ({ id, password }: { id: string; password: string }) => {
+      const response = await fetch('http://localhost:3000/api/dev/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, password }),
+      });
+
+      if (!response.ok) {
+        const { message } = await response.json();
+        throw new Error(message || 'Unhandled Error');
+      }
+
+      const data = await response.json();
+      return data;
+    },
+    retry: (failureCount, error) => {
+      if (error.message.includes('서버나 네트워크 상황이 불안정합니다.')) {
+        return failureCount < 3;
+      }
+      return false;
+    },
+    retryDelay: 1000,
+    onError: (error) => {
+      setErrorMessage(error.message);
+      window.alert(error.message);
+    },
+    onSuccess: (data: UserSession) => {
+      sessionStore.setToken(data.token);
+      sessionStore.setUserName(data.userName);
+      setErrorMessage(null);
+    },
+  });
+
+  return { mutation, errorMessage };
+};
+
+export default useAuth;
+```
+
+에러를 핸들링 하기 위해 `useMutation` 내부 메소드인 `retry , onError` 를 이용해 에러를 핸들링 하고 컴포넌트 측으로 에러 메시지를 전송하기 위해 따로 지역 상태인 `errorMessage` 상태를 생성해 반환해주었다.
+
+```bash title="모두 테스트 케이스를 잘 통과한다."
+ PASS  src/__test__/Login.test.tsx (11.076 s)
+  Login Form이 렌더링 되었을 때
+    √ ID가 입력되지 않았다면 제출 버튼은 비활성화 되어 있어야 한다. (107 ms)
+    √ PASSWORD가 입력되지 않았다면 제출 버튼은 비활성화 되어 있어야 한다. (25 ms)
+    √ ID,PASSWORD가 모두 입력 되었다면 제출 버튼은 활성화 되어 있어야 한다. (31 ms)
+  로그인 요청을 보냈을 때
+    √ 제출 버튼을 클릭 하면 API요청이 올바르게 전송 된다. (30 ms)
+    √ 인증에 실패하면 아이디나 비밀번호를 확인하라는 문구가 렌더링 된다. (53 ms)
+    로그인에 성공하면
+      √ 세션 스토어에 전송 받은 토큰이 저장된다. (90 ms)
+      √ 세션 스토어에 전송 받은 유저 이름이 저장된다. (28 ms)
+    로그인에 다음과 같은 이유로 실패하면
+      (네트워크나 서버 문제)
+        √ 서버 오류로 실패한 경우 동일한 요청을 성공 할 때 까지 3회 재전송 한다. (3060 ms)
+        √ 네트워크 문제가 발생하면 동일한 요청을 성공 할 때 까지 3회 재전송 한다. (3085 ms)
+        √ 최종적으로 네트워크나 서버 문제로 인해 로그인에 실패했을 경우 에러 메시지를 alert 창을 이용해 띄운다. (3057 ms)
+```
+
+이번 테스트 케이스를 주도하여 개발하는 연습을 할 때 배웠던 점은 다음과 같다.
+
+- `retry , retryDelay` 에 대한 사용 예시를 배웠다.
+- `retry , onError` 가 같이 존재 할 경우 `retry` 로 에러를 먼저 캐치한 후 캐치되지 않은 에러 객체는 `onError` 콜백 함수에 넘어가 핸들링 되게 된다.
+- `retry , onError` 에서 핸들링 할 에러 객체를 `mutationFn` 부분에서 커스텀화 한 후 넘겨주는 것이 도움이 된다.
