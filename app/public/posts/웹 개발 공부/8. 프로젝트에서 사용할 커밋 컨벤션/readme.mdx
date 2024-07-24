@@ -1,0 +1,169 @@
+---
+title: 팀 프로젝트에서 자주 사용되는 커밋 컨벤션
+description: Udacity Commit Convention에 대해 알아보자
+tag:
+  - github
+thumb: /posts/웹 개발 공부/8. 프로젝트에서 사용할 커밋 컨벤션/thumb.png
+postId: 875139
+date: Wed Jul 24 2024
+time: 1721792507677
+issueNumber: 307
+---
+
+# Commit Convntion 관련 개발 문서
+
+해당 프로젝트에선 프로젝트의 흐름을 명확하게 하기 위해 특정 커밋 컨벤션을 이용하려 한다.
+
+해당 문서에서는 사용 할 커밋 컨벤션인 [Udacity Convntion](https://udacity.github.io/git-styleguide/) 을 활용하여 사용 할 커밋 컨벤션을 소개하고 몇 가지 사용 방법들을 추가적으로 설명한다.
+
+## 필요 이유
+
+```bash title="커밋 컨벤션이 지켜지지 않은 예시 vs 지켜진 예시"
+// 커밋 컨벤션이 지켜지지 않은 예시
+commit 8h9i0j1k
+Author: Jane Doe <jane.doe@example.com>
+Date:   Tue Jul 20 10:00:00 2024 +0900
+
+    update stuff
+
+commit 9i0j1k2l
+Author: John Smith <john.smith@example.com>
+Date:   Tue Jul 20 11:00:00 2024 +0900
+
+    fix bug
+
+// 커밋 컨벤션이 지켜진 예시
+
+commit 1a2b3c4d
+Author: Jane Doe <jane.doe@example.com>
+Date:   Tue Jul 20 10:00:00 2024 +0900
+
+    feat: add user authentication module
+
+commit 2b3c4d5e
+Author: John Smith <john.smith@example.com>
+Date:   Tue Jul 20 11:00:00 2024 +0900
+
+    fix(cart): resolve discount calculation error
+```
+
+협업자들이 모두 동일한 컨벤션을 사용함으로서 커밋 메시지의 일관성을 보장하고 쉽게 기록하고 검색 할 수 있도록 한다.
+
+표준화 된 커밋 메시지를 통해 문제 추적 , 버전 관리와 같은 자동화 된 도구 및 프로세스를 용이하게 하며 각 변경의 범위와 목적을 쉽게 파악하여 의사소통을 향상 시킨다.
+
+## 커밋 메시지 구조
+
+```bash title="사용 할 커밋 메시지 구조"
+<type><!isbreakchange(optional)>: <subject>
+<blank line>
+<body> (optional)
+<blank line>
+<footer> (optional)
+```
+
+기본적인 커밋 메시지의 구조는 다음과 같이 작성한다.
+
+### type (Commit type)
+
+| 유형         | 설명                                        | 예시                                          |
+| ------------ | ------------------------------------------- | --------------------------------------------- |
+| **feat**     | 새로운 기능 추가                            | `feat: 사용자 인증 모듈 추가`                 |
+| **fix**      | 버그 수정                                   | `fix: 할인 계산 오류 해결`                    |
+| **docs**     | 문서 변경                                   | `docs: 새로운 엔드포인트로 API 문서 업데이트` |
+| **style**    | 코드 스타일 변경 (포맷팅, 세미콜론 누락 등) | `style: Prettier로 코드 포맷팅`               |
+| **refactor** | 버그 수정 또는 기능 추가가 아닌 코드 변경   | `refactor: 로그인 로직 간소화`                |
+| **perf**     | 성능 향상을 위한 코드 변경                  | `perf: 응답 시간 개선`                        |
+| **test**     | 누락된 테스트 추가 또는 기존 테스트 수정    | `test: 사용자 서비스에 대한 단위 테스트 추가` |
+| **chore**    | 빌드 프로세스 또는 보조 도구에 대한 변경    | `chore: 종속성 업데이트`                      |
+| **revert**   | 이전 커밋 되돌리기                          | `revert: "feat: 인증 모듈 추가" 되돌리기`     |
+
+`type` 의 경우엔 변경하고자 하는 진행사항의 유형에 맞춰 작성한다.
+
+### subject
+
+`subject` 의 경우엔 해당 커밋의 제목에 해당한다.
+
+프로젝트에선 커밋의 제목을 한글로 작성하도록 하며 제목의 글자 수는 50글자를 넘지 않도록 한다.
+
+제목은 문장형이 아닌 명사형으로 작성하도록 하며 온점은 표기하지 않는다.
+
+```bash title="subject의 예시"
+// 옳은 예시
+feat : 로그인 정규표현식 추가
+
+// 옳지 않은 예시
+feat : 로그인 정규표현식 추가 했음|추가함|추가했다
+```
+
+### isbreakChange , body
+
+두 영역은 조건적으로 사용하며 `body` 영역은 `subject` 만으로 표현 할 수 없는 부분을 설명 할 때 사용한다.
+
+`isbreakChange` 는 변화가 많아 `subject` 만으로 표현 할 수 없을 때 사용하며 `type` 옆에 `!` 를 붙혀 사용하며 `isbreakChange` 가 사용된 경우엔 필수적으로 `body` 영역을 사용한다.
+
+```bash title="isbreakChange, body 사용 예시" {6-99}
+git commit
+
+Author: yonghyeun <ttddcc119@naver.com>
+Date:   Wed Jul 24 16:31:32 2024 +0900
+
+    feat!: 로그인 기능 추가
+
+    ID,PASSWORD Input에 다음과 같은 정규 표현식을 이용하여 유효성 검증을 시행
+    - ... 예시들
+
+    유효성 검증에 실패 할 경우 다음과 같이 정보를 전달
+    - 검증 실패 시 input focus 색상 변경
+    - 만족하지 않는 정규표현식에 대한 정보 렌더링
+
+```
+
+### footer
+
+`footer` 영역은 커밋 내용의 일부는 아니지만 `issue , pull request` 의 메타 데이터를 참조하는데 사용 된다. 다음과 같이 작성된다.
+
+```bash title="commit footer 예시" {3,4,5}
+This pull request implements feature X and addresses the following issues:
+
+Fixes #123, #456
+Closes #789
+Resolves #1011
+```
+
+`footer` 에서 사용 할 단어들은 커밋 상단의 `type` 과 대부분 동일하게 사용하며 추가로 다음과 같은 단어들을 더 사용 가능하다.
+
+- `ref` : 레퍼런스 삼을 관련된 `issue` 나 `pull request` 의 번호를 의미한다. 이는 해당 기능과 관련된 이슈를 표현하는데 사용된다.
+- `resolve` : `fix` 와 동일한 기능을 가지고 있으며 해당 `issue` 나 `pull request` 를 `close` 시킨다.
+
+## 커밋 컨벤션을 사용한 커밋의 예시
+
+### feat
+
+```bash title="feat"
+feat: add user authentication via OAuth2
+
+Implemented OAuth2 authentication for user login. This includes
+integration with external providers and token management.
+
+Fixes #102
+```
+
+### fix
+
+```bash title="fix"
+fix: correct typo in error message on login page
+
+The error message displayed to users upon incorrect password entry
+had a spelling mistake. This commit corrects the typo.
+
+Ref #205
+```
+
+### style
+
+```bash title="style"
+style: format code according to linter rules
+
+Applied code formatting to adhere to the project's style guide.
+This includes adjustments to indentation, spacing, and line length.
+```
