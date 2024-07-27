@@ -33,7 +33,6 @@ const PostHeadThumbnail = ({ imageSrc, title }: Props) => {
           display: 'block',
         }}
       />
-      <span className={`italic block text-center text-[90%]`}>{title}</span>
     </span>
   );
 };
