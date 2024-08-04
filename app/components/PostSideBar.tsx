@@ -8,6 +8,7 @@ import type { PostInfo } from '@/types/post';
 const PostSideBar = ({ content }: { content: PostInfo['content'] }) => {
   const headers = parsingHeaders(content);
   const { list: PostHeaderList } = createList(headers);
+
   return (
     <nav className='sticky top-[10rem] w-[300px] border-l-[2px] ml-10 post-side-bar'>
       <ActiveProvider>{PostHeaderList}</ActiveProvider>
