@@ -99,31 +99,19 @@ function getUserLocation(): Promise<{ latitude: number; longitude: number }> {
 
 > The Media Capture and Streams API, often called the Media Streams API or MediaStream API, is an API related to WebRTC which provides support for streaming audio and video data.
 
-`Stream API` 방식이란 `audio , video` 와 같이 연속적인 데이터들을 브라우저로 스트리밍 하듯이 연속적으로 전송하는 방식을 의미한다.
+`Stream API` 방식이란 `audio , video` 와 같이 연속적인 데이터들을 브라우저로 스트리밍 하듯이 연속적으로 전송하는 방식을 의미한다. 우리가 실시간 방송을 브라우저를 통해 볼 때 네트워크 창에서 지속적으로 영상과 관련된 정보가 네트워크를 통해 전송되는 모습을 볼 수 있는데, 이게 바로 `Stream API` 방식이다.
 
-우리가 실시간 방송을 브라우저를 통해 볼 때 네트워크 창에서 지속적으로 영상과 관련된 정보가 네트워크를 통해 전송되는 모습을 볼 수 있는데, 이게 바로 `Stream API` 방식이다.
+`Stream API` 방식은 지속적으로 연속적인 데이터들을 작은 단위의 `Chunk` 로 나눈 후 `Chunk` 를 끊임 없이 전송하는 방식이다. 이렇게 `Chunk` 가 오고 가는 데이터의 흐름을 `Stream` 이라고 한다. (_그래서 실시간 방송을 스트리밍이라고 했구나!_)
 
-`Stream API` 방식은 지속적으로 연속적인 데이터들을 작은 단위의 `Chunk` 로 나눈 후 `Chunk` 를 끊임 없이 전송하는 방식이다.
+브라우저에서 사용하는 `Stream API` 방식은 `MediaStream` 객체를 이용하며 `MediaStream` 은 `MediaStreamTrack` 객체들로 이뤄져있다. 예를 들어 실시간으로 축구 영상을 시청한다고 한다면 하나의 `MediaStream` 에서 영상을 송신하는 `MediaStreamTrack` , 음성을 송신하는 `MediaStreamTrack` 으로 이뤄져있다.
 
-이렇게 `Chunk` 가 오고 가는 데이터의 흐름을 `Stream` 이라고 한다. (_그래서 실시간 방송을 스트리밍이라고 했구나!_)
-
-브라우저에서 사용하는 `Stream API` 방식은 `MediaStream` 객체를 이용하며 `MediaStream` 은 `MediaStreamTrack` 객체들로 이뤄져있다.
-
-예를 들어 실시간으로 축구 영상을 시청한다고 한다면 하나의 `MediaStream` 에서 영상을 송신하는 `MediaStreamTrack` , 음성을 송신하는 `MediaStreamTrack` 으로 이뤄져있다.
-
-`MediaStream` 은 `navigator.mediaDevices.getUserMedia()` 메소드를 통해 생성되며 **하나의 `input` 과 하나의 `output` 으로 이뤄져있다.**
-
-전송하고자 하는 데이터의 `input` 은 유저 에이전트 로컬에 존재하며 디바이스의 카메라나 마이크가 될 것이다. 이런 `input` 들을 `local` 이라고 칭한다.
-
-디바이스가 유저 에이전트 `local` 에서 송출되는 `output` 은 `non-local` 이라 부르며 해당 부분은 송출 되는 데이터를 보여줄 미디어 엘리먼트 태그들을 의미한다. 예를 들어 `video , audio` 엘리먼트들이 그렇다.
+`MediaStream` 은 `navigator.mediaDevices.getUserMedia()` 메소드를 통해 생성되며 **하나의 `input` 과 하나의 `output` 으로 이뤄져있다.** 전송하고자 하는 데이터의 `input` 은 유저 에이전트 로컬에 존재하며 디바이스의 카메라나 마이크가 될 것이다. 이런 `input` 들을 `local` 이라고 칭한다. 디바이스가 유저 에이전트 `local` 에서 송출되는 `output` 은 `non-local` 이라 부르며 해당 부분은 송출 되는 데이터를 보여줄 미디어 엘리먼트 태그들을 의미한다. 예를 들어 `video , audio` 엘리먼트들이 그렇다.
 
 `MediaStream` 은 결국 `local` 에서 생성된 데이터를 브라우저인 `video , audio`와 같은 미디어 엘리먼트에게 `Stream API` 방식으로 연결한다.
 
 ### 코드를 보기 전에 마지막으로 개념을 정리해보자
 
-`window.navigator.mediaDevices` 인터페이스는 `user agent` 의 모바일 디바이스에 접근 할 수 있게 해준다.
-
-`window.navigator.mediaDevices.getUserMedia()` 프로토타입 메소드를 시행하면 `user agent` 메모리(`local`)에 `MediaStream` 객체가 생성되며 해당 객체를 통해 디바이스의 `input` 데이터를 브라우저의 미디어 엘리먼트 태그 (`non local`) 로 보내준다.
+`window.navigator.mediaDevices` 인터페이스는 `user agent` 의 모바일 디바이스에 접근 할 수 있게 해준다. `window.navigator.mediaDevices.getUserMedia()` 프로토타입 메소드를 시행하면 `user agent` 메모리(`local`)에 `MediaStream` 객체가 생성되며 해당 객체를 통해 디바이스의 `input` 데이터를 브라우저의 미디어 엘리먼트 태그 (`non local`) 로 보내준다.
 
 이 얼마나 브라우저스러운 방법으로 마치 앱처럼 접근하는지 방법을 알고 나선 너무 웃기고 해당 방법을 만들어준 똑똑이 개발자분들께 무한한 리스펙을 보냈다.
 
@@ -131,9 +119,7 @@ function getUserLocation(): Promise<{ latitude: number; longitude: number }> {
 
 ## 백문이 불여일견이라고 코드로 접근해보자
 
-내가 원하는 기능은 **모바일 디바이스에 접근해서 사진을 촬영해서 서버에 전송하는 것** 이였다.
-
-지금은 기능 구현 연습 단계라 서버에 전송까지 하지 않더라도 이미지 파일로 저장 하는 방식으로만 구현해보자
+내가 원하는 기능은 **모바일 디바이스에 접근해서 사진을 촬영해서 서버에 전송하는 것** 이였다. 지금은 기능 구현 연습 단계라 서버에 전송까지 하지 않더라도 이미지 파일로 저장 하는 방식으로만 구현해보자
 
 ```tsx title="feature/Phone/ui" {38-42 , 24-30}
 'use client';
@@ -212,13 +198,9 @@ const LiveScreen = () => {
 export default LiveScreen;
 ```
 
-위 코드에서 사용된 `useClientEffect` 훅은 `NextJS` 에서 `useEffect` 로 매번 `window` 객체에 접근하려고 하면 타입 가드를 설정해주는게 너무 귀찮아서 생성해준 커스텀 훅이다.
+위 코드에서 사용된 `useClientEffect` 훅은 `NextJS` 에서 `useEffect` 로 매번 `window` 객체에 접근하려고 하면 타입 가드를 설정해주는게 너무 귀찮아서 생성해준 커스텀 훅이다. 단순히 `useEffect` 에서 `if (typeof window !== undefinded) ..` 와 같은 타입 가드만 존재하는 거라 생각하면 된다. :)
 
-단순히 `useEffect` 에서 `if (typeof window !== undefinded) ..` 와 같은 타입 가드만 존재하는 거라 생각하면 된다. :)
-
-정말 별거 없다. `navigator.mediaDevices.getUserMedia` 를 통해서 `user agent` 측에 `MediaStream` 객체를 생성해주었다. (`video` 에 접근 할 수 있도록)
-
-이후 `Stream API` 를 소비 할 미디어 엘리먼트 태그인 `video` 에 `srcObject` 에 `MediaStream` 을 연결해주었다.
+정말 별거 없다. `navigator.mediaDevices.getUserMedia` 를 통해서 `user agent` 측에 `MediaStream` 객체를 생성해주었다(`video` 에 접근 할 수 있도록). 이후 `Stream API` 를 소비 할 미디어 엘리먼트 태그인 `video` 에 `srcObject` 에 `MediaStream` 을 연결해주었다.
 
 > `video` 태그의 `srcObject` 는 소스가 될 객체인 `MediaStream , MediaStream , Blob , File` 등을 받는다.
 >
@@ -230,17 +212,13 @@ export default LiveScreen;
 
 나는 노트북에서 테스트 해봤기에 노트북 웹캠에 접근해서 실험해봤다. 물론 `vercel` 에 배포해서 모바일 디바이스로도 테스트해봤는데 잘 되더라 :)
 
-물론 모바일 앱 처럼 직접 네이티브 앱인 카메라를 열어서는 못하더라도 카메라를 통해 송출되는 화면을 캔버스에 그리는 방식으로 사진을 촬영해봤다.
-
-혹시나 화질이 네이티브 앱에 비해 떨어지면 어떡하나 하고 걱정했는데 그럴 걱정 없이 온전하게 네이티브 앱과 같은 픽셀 수를 잘 유지 한다
+물론 모바일 앱 처럼 직접 네이티브 앱인 카메라를 열어서는 못하더라도 카메라를 통해 송출되는 화면을 캔버스에 그리는 방식으로 사진을 촬영해봤다. 혹시나 화질이 네이티브 앱에 비해 떨어지면 어떡하나 하고 걱정했는데 그럴 걱정 없이 온전하게 네이티브 앱과 같은 픽셀 수를 잘 유지 한다
 
 > 물론 브라우저 렌더링 방식, 색상 깊이, 압축 등 다양한 요인에 따라 다를 수 있지만 이는 네이티브 앱에서 촬영한 사진이여도 동일한 문제일 것이다.
 
 ## 추신
 
-아 ! 코드에선 설명을 다 하진 못했지만 다양한 설정값을 통해 전면카메라나 후면 카메라 중 어디에 접근 할지도 결정 할 수 있다고 한다.
-
-기본 설정은 전면카메라로 되어있기에 해당 코드에선 전면 카메라에서 촬영이 가능하다.
+아 ! 코드에선 설명을 다 하진 못했지만 다양한 설정값을 통해 전면카메라나 후면 카메라 중 어디에 접근 할지도 결정 할 수 있다고 한다. 기본 설정은 전면카메라로 되어있기에 해당 코드에선 전면 카메라에서 촬영이 가능하다.
 
 이번에 프로젝트 하면서 `FSD (Feature Slice Design)` 파일구조로 개발하고 있는데 엄~청나게 매력적인 파일구조인 것 같다.
 
