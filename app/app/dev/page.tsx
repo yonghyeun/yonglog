@@ -1,14 +1,12 @@
-import { LoadingTitle, LoadingContnet } from '@/components/Loading';
-
-const PostLoading = () => (
-  <>
-    <header className='pt-14 mb-12'>
-      <LoadingTitle />
-    </header>
-    <main className='px-14'>
-      <LoadingContnet />
-    </main>
-  </>
-);
+const PostLoading = () => {
+  return (
+    <>
+      <header className='pt-20 mb-12'>
+        <a href='/api/login'>OAuth</a>
+        <div></div>
+      </header>
+    </>
+  );
+};
 
 export default PostLoading;

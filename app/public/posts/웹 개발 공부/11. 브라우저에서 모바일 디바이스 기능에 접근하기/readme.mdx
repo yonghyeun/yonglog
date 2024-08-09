@@ -1,0 +1,247 @@
+---
+title: 브라우저(웹)에서 모바일 카메라에 접근하는 방법
+description: 나중에 작성하기
+tag:
+  - browser
+thumb: /posts/웹 개발 공부/11. 브라우저에서 모바일 디바이스 기능에 접근하기/media.gif
+postId: 649546
+date: Sat Aug 10 2024
+time: 1723220642852
+issueNumber: 312
+---
+
+최근 프로젝트 경험이 없어 직접 인프런에서 프로젝트 경험이 없는 사람들을 모집해 프로젝트를 진행 하던 중 배운 기술을 정리하고자 글을 쓴다.
+
+현재는 프로젝트가 실제로 진행되진 않았고 디자인이 나오는 중이라 우리끼리 정의한 유저 플로우에 따라 필요한 기능을 연습해보고 있는데 그 중 해당 기능에 대한 이야기가 나왔다.
+
+> "아 ~ 브라우저에서 직접 카메라에 접근하여 사진을 촬영해서 서버로 보낼 수는 없을까요 ?"
+
+나는 해본 개발이라곤 웹 개발 밖에 없어서 다른 개발 환경에선 어떤지 몰랐을 뿐 더러 개발에서 안되는게 어딨어?! 하는 마음이 있었는데 안되는건 안되더라
+
+우리가 원하던 기능은 촬영 버튼을 누르면 실제 모바일 디바이스의 카메라 어플리케이션이 켜져서 사진이 촬영되는 것이였는데 (_마치 카카오톡에서 사진 촬영을 누르면 사진을 촬영해서 전송하듯 말이다._) 그런 기능은 모바일 디바이스에 친화적인 **모바일 네이티브 언어들에서만 가능**하다고 한다.
+
+엄청난 좌절감을 느꼈지만 위에서 말했던 것 처럼 정말 개발에 안되는게 어딨냐고 말해주듯이 비슷한 방법이 존재했다. 그것도 매우 브라우저스러운 방식으로 말이다.
+
+# WebRTC (Web Real Time Communication) 이란
+
+`WebRTC` 란 단어 그대로 모바일에서 구동되는 웹에서 별도의 소프트위어 설치 없이 실시간으로 디바이스와 소통 하는 기술을 말한다.
+
+이는 오픈 소스 프로젝트로 `W3C (World Wide Web Consoritium)` 과 `IETF (Internet Engineering Task Force)` 가 주도해서 표준화 했다고 한다.
+
+내가 하고자 하는 모바일 디바이스에 접근하는 기능 또한 브라우저의 `window.navigator` 내부에서 구현되어 있다.
+
+`MDN` 공식문서를 키고 하나씩 알아가보자
+
+# Window.navigator 란
+
+[MDN - Window.naviagtor](https://developer.mozilla.org/en-US/docs/Web/API/Navigator)
+
+> The Navigator interface represents the state and the identity of the user agent.
+> It allows scripts to query it and to register themselves to carry on some activities.
+>
+> A Navigator object can be retrieved using the read-only window.navigator property.
+
+`navigator` 란 웹 사용자(유저 에이전트) 의 상태 및 정보에 접근 할 수 있는 인터페이스로 네비게이터 오브젝트는 항상 `read-only` 로 관리 되기 때문에 `navigator` 로 유저 에이전트의 정보를 조작하기 위해선 `navigator` 의 프로토타입 메소드 내부에서 콜백 함수를 이용해 정보를 읽어와 사용한다.
+
+예를 들어 `navigator` 를 이용해 사용자의 위치 정보를 가져오는 방법을 살펴보자
+
+```tsx title="navigator.geolocation 을 이용해 위경도를 가져오자"
+// 사용자의 위치 정보를 가져오는 함수
+function getUserLocation(): Promise<{ latitude: number; longitude: number }> {
+  return new Promise((resolve, reject) => {
+    // Geolocation API가 브라우저에서 지원되는지 확인
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation is not supported by your browser'));
+    } else {
+      // 위치 정보를 비동기적으로 요청
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          resolve({ latitude, longitude });
+        },
+        (error) => {
+          reject(
+            new Error('Unable to retrieve your location: ' + error.message),
+          );
+        },
+      );
+    }
+  });
+}
+```
+
+`navigator` 에서 일어나는 조작에서 `Promise` 객체로 접근하는 이유는 `navigator` 를 이용해 `user agent` 에 접근 할 때 `prompt` 창을 통해 **사용자가 허용을 해야만 다음 함수들이 실행되기 때문에 비동기적으로 콜백 함수들을 시행**하도록 메소드를 생성해준다.
+
+> 모든 것들이 유저의 허용을 필요로 하진 않는다. 예를 들어 `navigator.userAgent` 와 같은 속성은 동의 없이도 동기적으로 값을 반환한다.
+
+# Window.navigator.mediaDevice() 에 대해 알아보자
+
+[MDN - navigator.mediaDevice](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/mediaDevices)
+
+> The mediaDevices read-only property of the Navigator interface returns a MediaDevices object, which provides access to connected media input devices like cameras and microphones, as well as screen sharing.
+
+`meidaDevice` 는 `user agent` 의 미디어 디바이스를 조작 할 프로토타입 메소드를 갖는 `MediaDevice` 객체에 접근하기 위한 인터페이스이다.
+
+예를 들어 카메라나 마이크와 같은 것들에 대해 말이다.
+
+## MediaDevice Object는 뭔데 ?
+
+[MDN - MediaDevices](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices)
+
+> The MediaDevices interface of the Media Capture and Streams API provides access to connected media input devices like cameras and microphones, as well as screen sharing. In essence, it lets you obtain access to any hardware source of media data.
+
+`MediaDevices` 는 `Media Catpure , Stream API` 방식으로 디바이스의 입력 값들을 **`Stream API` 방식으로 브라우저와 연결** 해주는 객체이다.
+
+### Stream API 방식이 뭔데 ?
+
+[MDN - Media Capture and Streams API (Media Stream)](https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API)
+
+> The Media Capture and Streams API, often called the Media Streams API or MediaStream API, is an API related to WebRTC which provides support for streaming audio and video data.
+
+`Stream API` 방식이란 `audio , video` 와 같이 연속적인 데이터들을 브라우저로 스트리밍 하듯이 연속적으로 전송하는 방식을 의미한다.
+
+우리가 실시간 방송을 브라우저를 통해 볼 때 네트워크 창에서 지속적으로 영상과 관련된 정보가 네트워크를 통해 전송되는 모습을 볼 수 있는데, 이게 바로 `Stream API` 방식이다.
+
+`Stream API` 방식은 지속적으로 연속적인 데이터들을 작은 단위의 `Chunk` 로 나눈 후 `Chunk` 를 끊임 없이 전송하는 방식이다.
+
+이렇게 `Chunk` 가 오고 가는 데이터의 흐름을 `Stream` 이라고 한다. (_그래서 실시간 방송을 스트리밍이라고 했구나!_)
+
+브라우저에서 사용하는 `Stream API` 방식은 `MediaStream` 객체를 이용하며 `MediaStream` 은 `MediaStreamTrack` 객체들로 이뤄져있다.
+
+예를 들어 실시간으로 축구 영상을 시청한다고 한다면 하나의 `MediaStream` 에서 영상을 송신하는 `MediaStreamTrack` , 음성을 송신하는 `MediaStreamTrack` 으로 이뤄져있다.
+
+`MediaStream` 은 `navigator.mediaDevices.getUserMedia()` 메소드를 통해 생성되며 **하나의 `input` 과 하나의 `output` 으로 이뤄져있다.**
+
+전송하고자 하는 데이터의 `input` 은 유저 에이전트 로컬에 존재하며 디바이스의 카메라나 마이크가 될 것이다. 이런 `input` 들을 `local` 이라고 칭한다.
+
+디바이스가 유저 에이전트 `local` 에서 송출되는 `output` 은 `non-local` 이라 부르며 해당 부분은 송출 되는 데이터를 보여줄 미디어 엘리먼트 태그들을 의미한다. 예를 들어 `video , audio` 엘리먼트들이 그렇다.
+
+`MediaStream` 은 결국 `local` 에서 생성된 데이터를 브라우저인 `video , audio`와 같은 미디어 엘리먼트에게 `Stream API` 방식으로 연결한다.
+
+### 코드를 보기 전에 마지막으로 개념을 정리해보자
+
+`window.navigator.mediaDevices` 인터페이스는 `user agent` 의 모바일 디바이스에 접근 할 수 있게 해준다.
+
+`window.navigator.mediaDevices.getUserMedia()` 프로토타입 메소드를 시행하면 `user agent` 메모리(`local`)에 `MediaStream` 객체가 생성되며 해당 객체를 통해 디바이스의 `input` 데이터를 브라우저의 미디어 엘리먼트 태그 (`non local`) 로 보내준다.
+
+이 얼마나 브라우저스러운 방법으로 마치 앱처럼 접근하는지 방법을 알고 나선 너무 웃기고 해당 방법을 만들어준 똑똑이 개발자분들께 무한한 리스펙을 보냈다.
+
+> 해당 방법은 2017년에 표준화 되었다고 한다.
+
+## 백문이 불여일견이라고 코드로 접근해보자
+
+내가 원하는 기능은 **모바일 디바이스에 접근해서 사진을 촬영해서 서버에 전송하는 것** 이였다.
+
+지금은 기능 구현 연습 단계라 서버에 전송까지 하지 않더라도 이미지 파일로 저장 하는 방식으로만 구현해보자
+
+```tsx title="feature/Phone/ui" {38-42 , 24-30}
+'use client';
+
+import { useClientEffect } from '@/shared/hooks/devhoney';
+import { useState, useRef } from 'react';
+
+const LiveScreen = () => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [photo, setPhoto] = useState<string | null>(null);
+
+  const handleCapture = () => {
+    if (!videoRef.current || !canvasRef.current) {
+      return;
+    }
+
+    const $canvas = canvasRef.current;
+    const $video = videoRef.current;
+
+    const context = $canvas.getContext('2d');
+    if (!context) {
+      return;
+    }
+
+    $canvas.width = $video.videoWidth;
+    $canvas.height = $video.videoHeight;
+
+    context.drawImage($video, 0, 0, $canvas.width, $canvas.height);
+    const imageToDataUrl = $canvas.toDataURL('image/png');
+    setPhoto(imageToDataUrl);
+  };
+
+  useClientEffect(() => {
+    const connectCamera = async () => {
+      if (!videoRef.current || !canvasRef.current) {
+        return;
+      }
+
+      // navigator.mediaDevices.getUserMedia 는 브라우저에서 사용자의 카메라나 마이크에 접근할 수 있게 해주는 API
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false,
+      });
+
+      // videoRef.current.srcObject = stream; 을 통해 video 태그에 카메라 스트림을 연결
+      videoRef.current.srcObject = stream;
+    };
+
+    connectCamera();
+  }, []);
+
+  return (
+    <section>
+      <video ref={videoRef} autoPlay playsInline style={{ width: '100%' }} />
+      <button
+        onClick={handleCapture}
+        style={{
+          backgroundColor: 'gray',
+          padding: '1rem',
+        }}
+      >
+        Capture Photo
+      </button>
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      {photo && (
+        <div>
+          <h1>캡쳐된 이미지</h1>
+          <img src={photo} alt='Captured' />
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default LiveScreen;
+```
+
+위 코드에서 사용된 `useClientEffect` 훅은 `NextJS` 에서 `useEffect` 로 매번 `window` 객체에 접근하려고 하면 타입 가드를 설정해주는게 너무 귀찮아서 생성해준 커스텀 훅이다.
+
+단순히 `useEffect` 에서 `if (typeof window !== undefinded) ..` 와 같은 타입 가드만 존재하는 거라 생각하면 된다. :)
+
+정말 별거 없다. `navigator.mediaDevices.getUserMedia` 를 통해서 `user agent` 측에 `MediaStream` 객체를 생성해주었다. (`video` 에 접근 할 수 있도록)
+
+이후 `Stream API` 를 소비 할 미디어 엘리먼트 태그인 `video` 에 `srcObject` 에 `MediaStream` 을 연결해주었다.
+
+> `video` 태그의 `srcObject` 는 소스가 될 객체인 `MediaStream , MediaStream , Blob , File` 등을 받는다.
+>
+> `getUserMedia` 는 `MediaStraam` 객체를 반환한다.
+
+## 결과물
+
+![브라우저에서 웹캠에 접근한 모습](media.gif)
+
+나는 노트북에서 테스트 해봤기에 노트북 웹캠에 접근해서 실험해봤다. 물론 `vercel` 에 배포해서 모바일 디바이스로도 테스트해봤는데 잘 되더라 :)
+
+물론 모바일 앱 처럼 직접 네이티브 앱인 카메라를 열어서는 못하더라도 카메라를 통해 송출되는 화면을 캔버스에 그리는 방식으로 사진을 촬영해봤다.
+
+혹시나 화질이 네이티브 앱에 비해 떨어지면 어떡하나 하고 걱정했는데 그럴 걱정 없이 온전하게 네이티브 앱과 같은 픽셀 수를 잘 유지 한다
+
+> 물론 브라우저 렌더링 방식, 색상 깊이, 압축 등 다양한 요인에 따라 다를 수 있지만 이는 네이티브 앱에서 촬영한 사진이여도 동일한 문제일 것이다.
+
+## 추신
+
+아 ! 코드에선 설명을 다 하진 못했지만 다양한 설정값을 통해 전면카메라나 후면 카메라 중 어디에 접근 할지도 결정 할 수 있다고 한다.
+
+기본 설정은 전면카메라로 되어있기에 해당 코드에선 전면 카메라에서 촬영이 가능하다.
+
+이번에 프로젝트 하면서 `FSD (Feature Slice Design)` 파일구조로 개발하고 있는데 엄~청나게 매력적인 파일구조인 것 같다.
+
+이것도 열심히 써보고 또 포스팅을 남겨봐야겠다. :)

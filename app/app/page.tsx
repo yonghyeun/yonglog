@@ -6,10 +6,16 @@ import { PostList } from '@/components/PostList';
 
 import type { SearchParams } from '@/types/global.d.ts';
 import postProvider from './lib/postProvider';
+import { headers } from 'next/headers';
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const { tag, series, page } = searchParams;
   const selectedPosts = await postProvider.selectPost(tag, series);
+
+  /* !실험 */
+
+  const headerList = headers();
+  console.log(headerList.get('Authorization'));
 
   return (
     <section className='mx-0 sm:mx-auto w-full lg:w-[800px]'>
