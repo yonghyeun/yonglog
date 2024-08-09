@@ -54,7 +54,7 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='indent-2 whitespace-pre-wrap break-all mb-3  leading-slug text-[18px] '>
+      <p className='indent-2 whitespace-pre-wrap break-all mb-[1rem]  leading-slug text-[18px] '>
         {children}
       </p>
     ),
