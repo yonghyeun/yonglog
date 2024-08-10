@@ -1,4 +1,5 @@
 import nextMDX from '@next/mdx';
+import withBundleAnalyzer from '@next/bundle-analyzer';
 /** @type {import('rehype-pretty-code').Options} */
 
 const withMDX = nextMDX({
@@ -25,4 +26,8 @@ const nextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+const withBundleAnalyzerConfig = withBundleAnalyzer({
+  enabled: true,
+});
+
+export default withBundleAnalyzerConfig(withMDX(nextConfig));
