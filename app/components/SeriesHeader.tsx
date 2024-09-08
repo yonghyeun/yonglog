@@ -1,5 +1,5 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { useMDXComponents } from '@/app/lib/mdxComponents';
+import { useMDXComponents } from '@/hooks/mdxComponents';
 
 import type { PostMeta } from '@/types/post';
 

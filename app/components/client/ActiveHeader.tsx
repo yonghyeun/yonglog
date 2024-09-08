@@ -1,9 +1,9 @@
 'use client';
 
-import { useActiveContext } from '@/app/context/ActiveContext';
+import { useActiveContext } from '@/context/ActiveContext';
 import { useEffect } from 'react';
 
-import type { HeadingText, HeadingNumber } from '@/app/lib/interactiveSidebar';
+import type { HeadingText, HeadingNumber } from '@/lib/interactiveSidebar';
 
 const ActiveHeader = ({
   headingText,

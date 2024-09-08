@@ -88,6 +88,19 @@ blockquote[theme-block='true'] {
   background-color: var(--blockquote-background);
   border-color: var(--blockquote-border-color);
   color: var(--blockquote-color);
+  position: relative;
+}
+
+blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 6px;
+  background-color: var(--blockquote-border-color);
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
 }
 
 li[data-active='true'] {
@@ -447,4 +460,9 @@ figcaption[data-rehype-pretty-code-title] {
   position: absolute;
   width: 1px;
   white-space: nowrap; /* Added line */
+}
+
+.text-list {
+  list-style-type: disc;
+  margin-left: 1rem;
 }

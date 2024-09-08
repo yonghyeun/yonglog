@@ -16,7 +16,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className='text-3xl border-b-[2px]   pt-8 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit'
+            className='text-3xl border-b-[2px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit'
             id={children as string}
           >
             {children}
@@ -26,7 +26,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className='   text-2xl border-b-[1px]   pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className='   text-2xl border-b-[1px]  mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -34,7 +34,7 @@ export const useMDXComponents = (
     ),
     h3: ({ children }) => (
       <h3
-        className='   text-xl border-b-[1px]  pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className='   text-xl border-b-[1px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
         id={children as string}
       >
         {children}
@@ -48,13 +48,13 @@ export const useMDXComponents = (
     blockquote: ({ children }) => (
       <blockquote
         theme-block='true'
-        className='text-wrap border-l-4  pl-4 pr-2 mt-2 mb-2 py-2 italic  leading-7 '
+        className='text-wrap   px-4 pr-2 mt-2 rounded-xl mb-2 py-2 italic  leading-7 '
       >
         {children}
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='indent-2 whitespace-pre-wrap break-all mb-[1rem]  leading-slug text-[18px] '>
+      <p className='indent-2 whitespace-pre-wrap break-all mt-4  leading-slug text-[18px] '>
         {children}
       </p>
     ),
@@ -118,7 +118,9 @@ export const useMDXComponents = (
     ol: ({ children }) => (
       <ol className='list-decimal pl-8 my-2 text-[18px] '>{children}</ol>
     ),
-    li: ({ children }) => <li className='break-all ml-2 mb-2'>{children}</li>,
+    li: ({ children }) => (
+      <li className='text-list break-all mb-2'>{children}</li>
+    ),
     ...components,
   };
 };

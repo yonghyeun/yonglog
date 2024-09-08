@@ -5,20 +5,14 @@ import Pagination from '@/components/Pagination';
 import { PostList } from '@/components/PostList';
 
 import type { SearchParams } from '@/types/global.d.ts';
-import postProvider from './lib/postProvider';
-import { headers } from 'next/headers';
+import postProvider from '../lib/postProvider';
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const { tag, series, page } = searchParams;
   const selectedPosts = await postProvider.selectPost(tag, series);
 
-  /* !실험 */
-
-  const headerList = headers();
-  console.log(headerList.get('Authorization'));
-
   return (
-    <section className='mx-0 sm:mx-auto w-full lg:w-[800px]'>
+    <section className='mx-0 sm:mx-auto w-full lg:w-[800px] '>
       <div className='px-2'>
         <Introduce />
       </div>

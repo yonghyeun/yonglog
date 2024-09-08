@@ -1,4 +1,4 @@
-import postProvider from '@/app/lib/postProvider';
+import postProvider from '@/lib/postProvider';
 import ActiveLink from './client/ActiveLink';
 
 const sideBarClasses = {

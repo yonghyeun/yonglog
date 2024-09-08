@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { useSearchParams } from 'next/navigation';
-import { checkIsActive, getNewSearchParms } from '@/app/lib/route';
+import { checkIsActive, getNewSearchParms } from '@/lib/route';
 
 import type { SearchParams } from '@/types/global';
 

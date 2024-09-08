@@ -27,7 +27,7 @@ const nextConfig = {
 };
 
 const withBundleAnalyzerConfig = withBundleAnalyzer({
-  enabled: true,
+  enabled: false, // ! 매번 npm run dev 를 할 때 마다 bundle analyzer 를 보고 싶다면 true 로 변경
 });
 
 export default withBundleAnalyzerConfig(withMDX(nextConfig));

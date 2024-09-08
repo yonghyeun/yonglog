@@ -13,8 +13,8 @@ import PostPagination from '@/components/PostPagination';
 import Comments from '@/components/client/Comments';
 import { LoadingContnet } from '@/components/Loading';
 
-import { useMDXComponents } from '../../lib/mdxComponents';
-import postProvider from '@/app/lib/postProvider';
+import { useMDXComponents } from '../../../hooks/mdxComponents';
+import postProvider from '@/lib/postProvider';
 import PostHeadThumbnail from '@/components/PostHeadThumbnail';
 
 export async function generateStaticParams(): Promise<{ postId: string }[]> {
@@ -84,7 +84,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
                     [
                       rehypePrettyCode,
                       {
-                        theme: 'github-dark-dimmed',
+                        theme: 'material-theme-palenight',
                       },
                     ],
                   ],

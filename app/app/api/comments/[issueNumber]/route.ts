@@ -1,4 +1,4 @@
-import GithubAPIModel from '@/app/lib/GithubAPIModel';
+import GithubAPIModel from '@/lib/GithubAPIModel';
 
 import { NextRequest, NextResponse } from 'next/server';
 

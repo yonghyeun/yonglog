@@ -3,13 +3,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import Image from 'next/image';
-import useGetComments from '@/app/hooks/useGetComments';
+import useGetComments from '@/hooks/useGetComments';
 import Spinner from '@/components/Spinner';
 import { Login, Logout } from './OAuth';
 
 import type { PostMeta } from '@/types/post';
 import type { Comment } from '@/types/api';
-import { getCookie } from '@/app/lib/cookie';
+import { getCookie } from '@/lib/cookie';
 
 const UserProfile = ({ comment }: { comment: Comment }) => (
   <div className='flex justify-between'>

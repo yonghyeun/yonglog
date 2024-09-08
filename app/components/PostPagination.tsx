@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import type { PostInfo } from '@/types/post';
-import postProvider from '@/app/lib/postProvider';
+import postProvider from '@/lib/postProvider';
 
 const PostPagination = async ({ meta }: { meta: PostInfo['meta'] }) => {
   const { series, postId: currentPostId } = meta;

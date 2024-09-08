@@ -1,6 +1,6 @@
 import ActiveLink from './client/ActiveLink';
 
-import postProvider from '@/app/lib/postProvider';
+import postProvider from '@/lib/postProvider';
 
 const CategoryClassNames = {
   default:

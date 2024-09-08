@@ -1,4 +1,4 @@
-import postProvider from '@/app/lib/postProvider';
+import postProvider from '@/lib/postProvider';
 import AccordionsWithState from './client/AccordionsWithState';
 import SeriesHeader from './SeriesHeader';
 

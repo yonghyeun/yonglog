@@ -1,7 +1,7 @@
 import SearchTitle from '@/components/SearchTitle';
 import PostGrid from '@/components/PostGrid';
 
-import postSearchEngine from '../lib/postSearchEngine';
+import postSearchEngine from '../../lib/postSearchEngine';
 
 const SearchPage = async ({
   searchParams,

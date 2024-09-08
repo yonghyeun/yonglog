@@ -1,5 +1,5 @@
 'use client';
-import { deleteCookie } from '@/app/lib/cookie';
+import { deleteCookie } from '@/lib/cookie';
 import Link from 'next/link';
 import type { Dispatch, SetStateAction } from 'react';
 

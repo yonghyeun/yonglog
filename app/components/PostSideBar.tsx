@@ -1,7 +1,7 @@
-import { ActiveProvider } from '@/app/context/ActiveContext';
+import { ActiveProvider } from '@/context/ActiveContext';
 import { Up, Down } from '@/components/Arrow';
 
-import { parsingHeaders, createList } from '@/app/lib/interactiveSidebar';
+import { parsingHeaders, createList } from '@/lib/interactiveSidebar';
 
 import type { PostInfo } from '@/types/post';
 
