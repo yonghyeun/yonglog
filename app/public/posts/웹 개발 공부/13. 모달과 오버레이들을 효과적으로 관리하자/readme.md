@@ -1,6 +1,7 @@
 ---
 title: 리액트에서 모달같은 오버레이들을 하나의 훅으로 관리해보자
-description: 나중에 적을게
+description: 리액트에서 모달같은 오버레이들을 하나의 커스텀 훅과 전역 상태 관리 저장소로 관리해보자
+thumb: app/public/posts/웹 개발 공부/13. 모달과 오버레이들을 효과적으로 관리하자/animation.gif
 tag:
   - react
 postId: 158633
