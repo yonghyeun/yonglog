@@ -158,3 +158,88 @@ outer : 3 , inner : 1
 이는 데이터의 개수가 늘어날 때 마다 연산 횟수가 제곱하여 늘어나는 경우로 가장 최악의 시간 복잡도로 버블 정렬이 실제로 사용 되는 경우는 거의 없다.
 
 > 데이터가 100개에서 200개로 늘어나기만 해도 필요한 연산 횟수는 10000 번에서 40000번으로 4배가 늘어난다.
+
+# 칵테일 정렬 혹은 쉐이커 정렬
+
+![칵테일 정렬의 예시](Sorting_shaker_sort_anim.gif)
+
+칵테일 정렬은 버블 정렬의 발전된 버전으로 버블 정렬이 원소 순회를 `start -> end` 순으로 선형적으로 순회 했다면 **칵테일 정렬은 원소를 `start -> end -> start ..` 와 같이 양방향적으로 순회하며 정렬한다.**
+
+`start -> end` 방향 일 때는 최대값을 찾아 원소 마지막 부분에 정렬하고 `end -> start` 방향 일 땐 최소값을 찾아 원소 맨 처음 부분에 정렬 한다.
+
+칵테일 정렬은 특정 상항 일 때 버블 정렬보다 효과적이다.
+
+예를 들어 배열이 거의 **정렬 되어 있는 상황 일 때 칵테일 정렬은 더욱 빠르게 순회가 가능**하다.
+
+예를 들어 `1,2,3,4,6,5` 의 경우 오름차순 정렬을 하게 되면 버블 정렬은 1~6까지 모두 순회해야지만 정렬이 완료 되지만
+
+칵테일 정렬의 경우엔 1 (`start ->end`) , 5 (`end -> start` , 6과 5 스왑) 두 번만 순회 해도 정렬이 완료 된다.
+
+혹은 가장 큰 수나 가장 작은 수가 배열의 끝단에 존재 할 때에도 그렇다.
+
+`6,2,3,4,5,1` 과 같은 경우도 칵테일 정렬은 2번의 순회만으로 정렬을 마칠 수 있다.
+
+> **하지만 여전히 칵테일 정렬도 버블정렬이기에 최악의 경우엔 O(N^2) 이라는 최악의 시간 복잡도를 갖는다.**
+
+코드를 통해 알아보자
+
+```tsx title="칵테일 정렬"
+const cocktailSort = (arr) => {
+  for (let start = 0, end = arr.length - 1; start < end; ) {
+    // 정방향 순회 시작
+    for (let index = start; index < end; index++) {
+      if (arr[index] > arr[index + 1]) {
+        const temp = arr[index];
+        arr[index] = arr[index + 1];
+        arr[index + 1] = temp;
+      }
+    }
+    // 가장 마지막 배열엔 가장 큰 값이 위치하게 됨
+    end--;
+
+    // 역방향 순회 시작
+    for (let index = end; index > start; index--) {
+      if (arr[index] < arr[index - 1]) {
+        const temp = arr[index];
+        arr[index] = arr[index - 1];
+        arr[index - 1] = temp;
+      }
+    }
+    // 가장 첫 번째 배열엔 가장 작은 값이 위치 하게 됨
+    start++;
+  }
+};
+
+cocktailSort(arr);
+```
+
+칵테일 정렬은 위와 같이 배열을 한 번 순회 할 때 최대값과 최소값을 찾아 `start , end` 를 항상 정렬 된 순서로 만든다.
+
+# 플래그를 넣어 버블정렬을 빠르게 끝내보자
+
+여전히 버블정렬과 칵테일 정렬은 `N` 크기의 배열 모두를 순회하기 때문에 여전히 느리다는 문제가 존재한다.
+
+이에 정렬이 완료 되었을 때 순회를 멈출 수 있게 하는 플래그를 만들어 정렬이 끝난 경우엔 빠르게 끝내보자
+
+```tsx title="플래그를 넣은 bubble sort" {5,12,4}
+const bubbleSort = (arr) => {
+  let isSorted = true;
+
+  for (let start = 0, end = arr.length - 1; start < end && isSorted; ) {
+    isSorted = false;
+
+    for (let index = start; index < end; index++) {
+      if (arr[index] > arr[index + 1]) {
+        const temp = arr[index];
+        arr[index] = arr[index + 1];
+        arr[index + 1] = temp;
+        isSorted = true;
+      }
+    }
+  }
+};
+
+bubbleSort(arr);
+```
+
+위와 같이 플래그를 세워 만약 내부를 순회 할 때 `arr[index] > arr[index+1]` 이 한 번이라도 작동하지 않았다면 모든 배열이 정렬 된 것으로 삼아 반복문을 종료 할 수 있다.

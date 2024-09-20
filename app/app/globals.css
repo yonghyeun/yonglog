@@ -466,3 +466,11 @@ figcaption[data-rehype-pretty-code-title] {
   list-style-type: disc;
   margin-left: 1rem;
 }
+
+.wavy {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #ff6347; /* 자몽색 */
+  text-underline-offset: 0.2rem;
+  font-weight: 600;
+}
