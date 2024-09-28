@@ -1,11 +1,9 @@
 const PostLoading = () => {
   return (
-    <>
-      <header className='pt-20 mb-12'>
-        <a href='/api/login'>OAuth</a>
-        <div></div>
-      </header>
-    </>
+    <div className='mt-24'>
+      <label htmlFor='camera'>camera</label>
+      <input type='file' capture='environment' accept='*' />
+    </div>
   );
 };
 
