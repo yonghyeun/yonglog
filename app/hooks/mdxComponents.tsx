@@ -80,15 +80,6 @@ export const useMDXComponents = (
           <Image
             src={imageSrc}
             alt={alt || 'image'}
-            width={800}
-            height={600}
-            sizes='
-            (max-width: 640px) 100vw,      
-            (max-width: 768px) 100vw,      
-            (max-width: 1024px) 100vw,     
-            (max-width: 1280px) 800px,     
-            800px                          
-          '
             style={{
               width: 'auto',
               height: 'auto',
