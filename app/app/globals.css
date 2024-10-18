@@ -200,7 +200,7 @@ pre span[data-line] {
 }
 
 code {
-  font-family: Melon;
+  font-family: var(--font-ibmPlexMono);
   font-size: 80%;
 }
 

@@ -58,7 +58,7 @@ export const useMDXComponents = (
         {children}
       </p>
     ),
-    strong: ({ children }) => <strong className='wavy '>{children}</strong>,
+    strong: ({ children }) => <strong>{children}</strong>,
     img: ({
       src,
       alt,
