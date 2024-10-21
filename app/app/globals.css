@@ -22,6 +22,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 :root {
   --font-freesensation: 'Freesensation', sans-serif;
   --font-jetBrainsMono: 'JetBrains Mono', monospace;
@@ -29,11 +37,19 @@
 }
 
 :root {
-  --background-color: rgb(248 250 252); /* bg-slate-50 */
+  --background: radial-gradient(ellipse at 10% 90%, #8fbfff 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 90%, #ffc7c2 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 10%, #b7a3ff 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 10%, #d4cfff 0%, transparent 55%);
   --color: #111;
   --side-bar-title: rgb(49 46 129); /* bg-indigo-900 */
-  --blockquote-background: rgb(226 232 240); /* bg-stale-200 */
-  --blockquote-border-color: rgb(209 213 219); /* bg-gray-300 */
+  --blockquote-background: linear-gradient(
+    176deg,
+    #202737 10%,
+    #12181b 50%,
+    #111 transparent 55%
+  );
+  --blockquote-border-color: #12181b;
   --blockquote-color: rgb(75 85 99); /* bg-gray-600 */
   --active-sidebar-color: rgb(55 48 163); /* bg-indigo-800 */
   --underactive-sidebar-color: rgb(30 27 75); /* bg-indigo-950 */
@@ -42,10 +58,16 @@
 }
 
 [data-theme='dark'] {
-  --background-color: #111;
-  --color: #ddd;
+  /* --background-color: linear-gradient(176deg, #111 10%, #12181b 50%, #202737); */
+  --background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
+  --color: #fefefe;
   --side-bar-title: rgb(129 140 248);
-  --blockquote-background: rgb(39, 49, 63); /* bg-gray-600 */
+  --blockquote-background: linear-gradient(
+    176deg,
+    #202737 10%,
+    #12181b 50%,
+    #111 transparent 55%
+  );
   --blockquote-border-color: rgb(228 228 231); /* bg-zinc-200 */
   --blockquote-color: #ddd; /* bg-gray-400 */
   --active-sidebar-color: rgb(199 210 254); /* text-indigo-200*/
@@ -55,11 +77,11 @@
 }
 
 ::-webkit-scrollbar {
-  width: 16px; /* 스크롤바 너비 */
+  width: 4px; /* 스크롤바 너비 */
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--blockquote-background);
+  background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -68,12 +90,18 @@
 }
 
 html {
-  font-family: freesentation, sans-serif;
+  font-family: freesentation, Pretendard-Regular, sans-serif;
 }
 
 body {
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
+  background: var(--background);
+  background-attachment: fixed;
   color: var(--color);
+}
+
+body[data-theme='dark'] {
+  background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
 }
 
 .tag {
@@ -85,10 +113,15 @@ h2[data-sidebar-title='true'] {
 }
 
 blockquote[theme-block='true'] {
-  background-color: var(--blockquote-background);
   border-color: var(--blockquote-border-color);
+  backdrop-filter: saturate(50%) blur(100px);
   color: var(--blockquote-color);
   position: relative;
+  margin: 1rem 0;
+}
+
+blockquote[theme-block='true'] > p {
+  margin: 0;
 }
 
 blockquote::before {
@@ -200,7 +233,7 @@ pre span[data-line] {
 }
 
 code {
-  font-family: var(--font-ibmPlexMono);
+  font-family: var(--font-jetBrainsMono);
   font-size: 80%;
 }
 
@@ -212,9 +245,9 @@ code {
 p > code,
 strong > code,
 li > code {
-  font-family: Menlo;
+  font-family: jetBrainsMono;
   background-color: #aaaaaa63;
-  padding: 2px 5px;
+  padding: 0px 5px;
   border-radius: 5px;
 }
 

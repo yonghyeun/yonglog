@@ -54,7 +54,7 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='indent-2 whitespace-pre-wrap break-all mt-4  leading-slug text-[18px] '>
+      <p className='indent-2 whitespace-pre-wrap break-all mb-2  leading-slug text-lg '>
         {children}
       </p>
     ),
@@ -80,6 +80,8 @@ export const useMDXComponents = (
           <Image
             src={imageSrc}
             alt={alt || 'image'}
+            width={800}
+            height={600}
             style={{
               width: 'auto',
               height: 'auto',
