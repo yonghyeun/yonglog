@@ -4,7 +4,7 @@ import postProvider from '@/lib/postProvider';
 
 const CategoryClassNames = {
   default:
-    'border border-gray-300 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none font-light text-sm',
+    'border border-gray-400 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none font-light text-sm',
   active:
     'bg-indigo-800 text-white  rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none  mb-2 text-sm ',
 };
