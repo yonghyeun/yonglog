@@ -4,10 +4,18 @@
 
 @font-face {
   font-family: freesentation;
-  src: url('/fonts/Freesentation-4Regular.ttf') format('woff2'),
-    url('/fonts/Freesentation-4Regular.ttf') format('woff'),
-    url('/fonts/Freesentation-4Regular.ttf') format('truetype');
+  src: url("/fonts/Freesentation-4Regular.ttf") format("woff2"),
+    url("/fonts/Freesentation-4Regular.ttf") format("woff"),
+    url("/fonts/Freesentation-4Regular.ttf") format("truetype");
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: D2Coding;
+  src: url("/fonts/D2Coding-Ver1.3.2-20180524.ttf") format("truetype");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -15,25 +23,25 @@
 @font-face {
   font-family: Menlo;
 
-  src: url('/fonts/Menlo-Regular.ttf') format('woff2'),
-    url('/fonts/Menlo-Regular.ttf') format('woff'),
-    url('/fonts/Menlo-Regular.ttf') format('truetype');
+  src: url("/fonts/Menlo-Regular.ttf") format("woff2"),
+    url("/fonts/Menlo-Regular.ttf") format("woff"),
+    url("/fonts/Menlo-Regular.ttf") format("truetype");
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
-  font-weight: 400;
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 500;
   font-style: normal;
 }
 
 :root {
-  --font-freesensation: 'Freesensation', sans-serif;
-  --font-jetBrainsMono: 'JetBrains Mono', monospace;
-  --font-ibmPlexMono: 'IBM Plex Mono', monospace;
+  --font-freesensation: "Freesensation", sans-serif;
+  --font-jetBrainsMono: "JetBrains Mono", monospace;
+  --font-ibmPlexMono: "IBM Plex Mono", monospace;
 }
 
 :root {
@@ -57,7 +65,7 @@
   --tag-background: rgb(209 213 219);
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   /* --background-color: linear-gradient(176deg, #111 10%, #12181b 50%, #202737); */
   --background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
   --color: #fefefe;
@@ -100,7 +108,7 @@ body {
   color: var(--color);
 }
 
-body[data-theme='dark'] {
+body[data-theme="dark"] {
   background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
 }
 
@@ -108,11 +116,11 @@ body[data-theme='dark'] {
   background-color: var(--tag-background);
 }
 
-h2[data-sidebar-title='true'] {
+h2[data-sidebar-title="true"] {
   color: var(--side-bar-title);
 }
 
-blockquote[theme-block='true'] {
+blockquote[theme-block="true"] {
   border-color: var(--blockquote-border-color);
   backdrop-filter: saturate(50%) blur(100px);
   color: var(--blockquote-color);
@@ -120,12 +128,12 @@ blockquote[theme-block='true'] {
   margin: 1rem 0;
 }
 
-blockquote[theme-block='true'] > p {
+blockquote[theme-block="true"] > p {
   margin: 0;
 }
 
 blockquote::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0px;
   top: 0px;
@@ -136,20 +144,20 @@ blockquote::before {
   border-bottom-left-radius: 1rem;
 }
 
-li[data-active='true'] {
+li[data-active="true"] {
   color: var(--active-sidebar-color);
   font-weight: 700;
   font-size: 120%;
   transition: 0.3s ease-in-out;
 }
 
-li[data-under-active='true'] {
+li[data-under-active="true"] {
   color: var(--underactive-sidebar-color);
   font-weight: 700;
   transition: 0.3s ease-in-out;
 }
 
-ol[data-active='true'] {
+ol[data-active="true"] {
   color: rgb(199 210 254);
   font-weight: 700;
   font-size: 105%;
@@ -205,7 +213,7 @@ hr {
 
 pre {
   overflow-x: auto;
-  font-family: var(--font-jetBrainsMono);
+  font-family: D2Coding;
   padding-top: 1rem;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
@@ -228,13 +236,13 @@ pre > code {
 
 pre span[data-line] {
   @apply inline-block px-4 py-0.5;
-  font-family: var(--font-jetBrainsMono), Menlo;
+  font-family: D2Coding, Menlo;
   font-weight: 500;
+  font-size: medium;
 }
 
 code {
-  font-family: var(--font-jetBrainsMono);
-  font-size: 80%;
+  font-family: D2Coding;
 }
 
 code {
@@ -245,7 +253,7 @@ code {
 p > code,
 strong > code,
 li > code {
-  font-family: jetBrainsMono;
+  font-family: D2Coding;
   background-color: #aaaaaa63;
   padding: 0px 5px;
   border-radius: 5px;
@@ -274,11 +282,11 @@ code > [data-line]::before {
   -webkit-text-fill-color: transparent;
 }
 
-code[data-line-numbers-max-digits='2'] > [data-line]::before {
+code[data-line-numbers-max-digits="2"] > [data-line]::before {
   width: 2rem;
 }
 
-code[data-line-numbers-max-digits='3'] > [data-line]::before {
+code[data-line-numbers-max-digits="3"] > [data-line]::before {
   width: 3rem;
 }
 
@@ -286,11 +294,11 @@ span[data-highlighted-line] {
   background-color: #e0e0e031;
 }
 
-span[data-highlighted-line-id='add'] {
+span[data-highlighted-line-id="add"] {
   background-color: rgba(195, 255, 0, 0.1);
 }
 
-span[data-highlighted-line-id='remove'] {
+span[data-highlighted-line-id="remove"] {
   background-color: rgba(255, 99, 71, 0.1);
 }
 
@@ -308,7 +316,7 @@ figcaption[data-rehype-pretty-code-title] {
 
 @layer components {
   .bg-left-double-arrow {
-    background-image: url('/assets/arr_left_d.svg');
+    background-image: url("/assets/arr_left_d.svg");
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
@@ -320,7 +328,7 @@ figcaption[data-rehype-pretty-code-title] {
   }
 
   .bg-right-double-arrow {
-    background-image: url('/assets/arr_right_d.svg');
+    background-image: url("/assets/arr_right_d.svg");
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
@@ -332,7 +340,7 @@ figcaption[data-rehype-pretty-code-title] {
   }
 
   .bg-left-arrow {
-    background-image: url('/assets/arr_left-arrow.svg');
+    background-image: url("/assets/arr_left-arrow.svg");
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
@@ -344,7 +352,7 @@ figcaption[data-rehype-pretty-code-title] {
   }
 
   .bg-right-arrow {
-    background-image: url('/assets/arr_right.svg');
+    background-image: url("/assets/arr_right.svg");
     background-size: auto 0.8em;
     width: 1.5em;
     height: 1.5em;
