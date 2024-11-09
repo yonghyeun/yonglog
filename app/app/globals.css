@@ -38,17 +38,16 @@
   font-style: normal;
 }
 
-:root {
-  --font-freesensation: "Freesensation", sans-serif;
-  --font-jetBrainsMono: "JetBrains Mono", monospace;
-  --font-ibmPlexMono: "IBM Plex Mono", monospace;
+@font-face {
+  font-family: "LeferiBaseType-RegularA";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiBaseType-RegularA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 
 :root {
-  --background: radial-gradient(ellipse at 10% 90%, #8fbfff 0%, transparent 55%),
-    radial-gradient(ellipse at 90% 90%, #ffc7c2 0%, transparent 55%),
-    radial-gradient(ellipse at 90% 10%, #b7a3ff 0%, transparent 55%),
-    radial-gradient(ellipse at 10% 10%, #d4cfff 0%, transparent 55%);
+  --background: linear-gradient(176deg, #ffffff 10%, #fafafa 50%, #f0f0f0);
   --color: #111;
   --side-bar-title: rgb(49 46 129); /* bg-indigo-900 */
   --blockquote-background: linear-gradient(
@@ -110,6 +109,10 @@ body {
 
 body[data-theme="dark"] {
   background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
+}
+
+p {
+  text-indent: 0.5rem;
 }
 
 .tag {
@@ -238,11 +241,11 @@ pre span[data-line] {
   @apply inline-block px-4 py-0.5;
   font-family: D2Coding, Menlo;
   font-weight: 500;
-  font-size: medium;
 }
 
 code {
   font-family: D2Coding;
+  font-size: 80%;
 }
 
 code {

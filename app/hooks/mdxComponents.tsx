@@ -1,7 +1,7 @@
-import path from 'path';
-import Image from 'next/image';
+import path from "path";
+import Image from "next/image";
 
-import { MDXComponents } from 'mdx/types';
+import { MDXComponents } from "mdx/types";
 
 /**
  * @param {MDXComponents}   [components = []] - 서드파티 라이브러리 등에서 제공하는 컴포넌트를 인수로 받을 수 있음
@@ -9,14 +9,14 @@ import { MDXComponents } from 'mdx/types';
  */
 export const useMDXComponents = (
   components: MDXComponents = {},
-  postPath?: string,
+  postPath?: string
 ): MDXComponents => {
   return {
     h1: ({ children }) => {
       return (
         <>
           <h1
-            className='text-3xl border-b-[2px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit'
+            className="text-3xl border-b-[2px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit"
             id={children as string}
           >
             {children}
@@ -26,7 +26,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className='   text-2xl border-b-[1px]  mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className="   text-2xl border-b-[1px]  mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 "
         id={children as string}
       >
         {children}
@@ -34,27 +34,27 @@ export const useMDXComponents = (
     ),
     h3: ({ children }) => (
       <h3
-        className='   text-xl border-b-[1px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 '
+        className="   text-xl border-b-[1px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 "
         id={children as string}
       >
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className='text-l border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7'>
+      <h4 className="text-lg border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7">
         {children}
       </h4>
     ),
     blockquote: ({ children }) => (
       <blockquote
-        theme-block='true'
-        className='text-wrap   px-4 pr-2 mt-2 rounded-xl mb-2 py-2 italic  leading-7 '
+        theme-block="true"
+        className="text-wrap   px-4 pr-2 mt-2 rounded-xl mb-2 py-2 italic  leading-7 "
       >
         {children}
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className='indent-2 whitespace-pre-wrap break-all mb-2  leading-slug text-lg '>
+      <p className="whitespace-pre-wrap break-all mb-2  leading-slug text-lg">
         {children}
       </p>
     ),
@@ -72,25 +72,25 @@ export const useMDXComponents = (
       height?: number;
     }) => {
       const imageSrc = postPath
-        ? path.join(postPath, src).replace(/\\/g, '/')
-        : '';
+        ? path.join(postPath, src).replace(/\\/g, "/")
+        : "";
 
       return (
-        <span className='grid justify-center items-center  mx-auto w-full my-8'>
+        <span className="grid justify-center items-center  mx-auto w-full my-8">
           <Image
             src={imageSrc}
-            alt={alt || 'image'}
+            alt={alt || "image"}
             width={800}
             height={600}
             style={{
-              width: 'auto',
-              height: 'auto',
-              borderRadius: '8px',
-              display: 'block',
+              width: "auto",
+              height: "auto",
+              borderRadius: "8px",
+              display: "block",
             }}
             {...props}
           />
-          {alt && alt !== 'alt text' && (
+          {alt && alt !== "alt text" && (
             <span
               className={`italic block text-center text-[90%] width-${width}px`}
             >
@@ -101,18 +101,18 @@ export const useMDXComponents = (
       );
     },
     a: ({ href, children }) => (
-      <a href={href} className='text-blue-500'>
+      <a href={href} className="text-blue-500">
         🪢 {children}
       </a>
     ),
     ul: ({ children }) => (
-      <ul className='list-disc pl-8 my-2 text-[18px] '>{children}</ul>
+      <ul className="list-disc pl-8 my-2 text-[18px] ">{children}</ul>
     ),
     ol: ({ children }) => (
-      <ol className='list-decimal pl-8 my-2 text-[18px] '>{children}</ol>
+      <ol className="list-decimal pl-8 my-2 text-[18px] ">{children}</ol>
     ),
     li: ({ children }) => (
-      <li className='text-list break-all mb-2'>{children}</li>
+      <li className="text-list break-all mb-2">{children}</li>
     ),
     ...components,
   };
