@@ -70,7 +70,7 @@ issueNumber: 302
 다양한 방법이 있겠지만 가장 많이 사용되는 패턴을 사용해보겠습니다.
 
 ```tsx title="커스텀 훅으로 GET요청을 처리하는 일반적인 방법" {9-12,20-23,30,31,35,36,55}
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 type Todo = {
   id: number;
@@ -90,7 +90,7 @@ const useFetching = <T,>({
   isError: boolean;
 } => {
   const [data, setData] = useState<T | []>([]);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -108,7 +108,7 @@ const useFetching = <T,>({
         setError(
           error instanceof Error
             ? error.message
-            : 'Unexpected Error is ouccured',
+            : "Unexpected Error is ouccured"
         );
       } finally {
         if (mounted) {
@@ -131,11 +131,11 @@ const useFetching = <T,>({
 아마 이런식으로 `useEffect` 안에서 API 통신 요청과 관련된 상태 변화들을 하는 해당 패턴을 가장 많이 사용 할 것입니다.
 
 ```tsx title="데이터 패칭 콜백함수 설정"
-const ENDPOINT = 'http://localhost:3000/api/dev/todo';
+const ENDPOINT = "http://localhost:3000/api/dev/todo";
 const fetchTodo = async (): Promise<Todo[]> => {
   const response = await fetch(ENDPOINT);
   if (!response.ok) {
-    throw new Error('Fail to fetch');
+    throw new Error("Fail to fetch");
   }
   const data: Todo[] = await response.json();
   return data;
@@ -144,7 +144,7 @@ const fetchTodo = async (): Promise<Todo[]> => {
 
 ```tsx title="커스텀훅으로 데이터와 로딩 상태를 받는다." {3-9}
 const App = () => {
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>("");
   const {
     data: todos,
     isLoading,
@@ -234,7 +234,7 @@ const {
     structuralSharing,
     throwOnError,
   },
-  queryClient,
+  queryClient
 );
 ```
 
@@ -253,13 +253,13 @@ const {
 ## QueryClient
 
 ```tsx title="Context처럼 QuercyClient 인스턴스를 Provider로 내려주자" {1-2,5,7}#add
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <App />
-  </QueryClientProvider>,
+  </QueryClientProvider>
 );
 ```
 
@@ -274,14 +274,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 `useQuery` 는 데이터를 받아오는, `GET` 요청과 같이 서버의 데이터를 변경하지 않는 `API` 요청에 대해 사용합니다.
 
 ```tsx title="보일러플레이트 코드가 많이 줄어든 API 요청" {1,3-10}#add
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 const App = () => {
   const {
     data: todos = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['todo'],
+    queryKey: ["todo"],
     queryFn: fetchTodo,
   });
 
@@ -325,8 +325,8 @@ export default App;
 또 배열에 담긴 값이 변경 된 경우 , 캐싱 된 데이터들에 해당 `key` 가 존재하지 않기 때문에 새롭게 렌더링을 요청하게 됩니다.
 
 ```tsx title="queryKey에 변수가 있는 경우엔 dummy 상태가 변경 될 때 마다 렌더링이 발생하게 된다." {4,10,24-28}#add
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 const App = () => {
   const [dummy, setDummy] = useState<number>(0);
   const {
@@ -334,7 +334,7 @@ const App = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['todo', dummy],
+    queryKey: ["todo", dummy],
     queryFn: fetchTodo,
   });
 
@@ -367,7 +367,7 @@ export default App;
 ```tsx title="기존 로직을 Todo 컴포넌트로 캡슐화했다."
 const App = () => {
   return (
-    <div className='flex'>
+    <div className="flex">
       {/* 기존 코드를 캡슐화 한 Todo 컴포넌트 */}
       <Todo />
       <Todo />
