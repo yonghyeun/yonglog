@@ -3,7 +3,6 @@ import remarkGfm from "remark-gfm";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import Image from "next/image";
 
 import PostTitle from "@/components/PostTitle";
 import SeriesAccordions from "@/components/SeriesAccordions";
@@ -84,7 +83,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
                     [
                       rehypePrettyCode,
                       {
-                        theme: "houston",
+                        theme: "github-dark-default",
                       },
                     ],
                   ],

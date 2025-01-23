@@ -1,6 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Victor Mono";
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 @font-face {
   font-family: freesentation;
@@ -34,20 +43,26 @@
   font-family: "Pretendard-Regular";
   src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
     format("woff");
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "LeferiBaseType-RegularA";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiBaseType-RegularA.woff")
+  font-family: "RIDIBatang";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff")
     format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 :root {
-  --background: linear-gradient(176deg, #ffffff 10%, #fafafa 50%, #f0f0f0);
+  --font-freesensation: "Freesensation", sans-serif;
+  --font-jetBrainsMono: "JetBrains Mono", monospace;
+  --font-ibmPlexMono: "IBM Plex Mono", monospace;
+}
+
+:root {
+  --background: #eee;
   --color: #111;
   --side-bar-title: rgb(49 46 129); /* bg-indigo-900 */
   --blockquote-background: linear-gradient(
@@ -216,7 +231,7 @@ hr {
 
 pre {
   overflow-x: auto;
-  font-family: D2Coding;
+  font-family: Victor Mono, var(--font-jetBrainsMono), Menlo;
   padding-top: 1rem;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
@@ -239,7 +254,7 @@ pre > code {
 
 pre span[data-line] {
   @apply inline-block px-4 py-0.5;
-  font-family: D2Coding, Menlo;
+  font-family: Victor Mono, var(--font-jetBrainsMono), Menlo;
   font-weight: 500;
 }
 
