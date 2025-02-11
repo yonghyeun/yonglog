@@ -35,7 +35,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
       <main className='px-14'>
       <main className='w-[100%] lg:w-[150%] flex'>
         <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
-          <Suspense fallback={<LoadingContnet />}>
+          <Suspense fallback={<LoadingContent />}>
             <MDXRemote
               source={content}
               components={components}
@@ -234,7 +234,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
       </header>
       <main className="w-[100%] lg:w-[150%] flex">
         <section className="px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]">
-          <Suspense fallback={<LoadingContnet />}>
+          <Suspense fallback={<LoadingContent />}>
             <MDXRemote
               source={content}
               components={components}
@@ -282,7 +282,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
         <PostTitle meta={meta} />
       </header>
       <main className="px-14">
-        <Suspense fallback={<LoadingContnet />}>
+        <Suspense fallback={<LoadingContent />}>
           <MDXRemote
             source={content}
             components={components}

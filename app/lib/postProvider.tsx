@@ -1,8 +1,8 @@
-import { PostInfo } from '@/types/post';
-import postParser, { PostParser } from './postParserModel';
-import PostUtilsModel from './postUtilsModel';
+import { PostInfo } from "@/types/post";
+import postParser, { PostParser } from "./postParserModel";
+import PostUtilsModel from "./postUtilsModel";
 
-import type { CountObject, CountArray, SearchParams } from '@/types/global';
+import type { CountObject, CountArray, SearchParams } from "@/types/global";
 
 class PostProvder extends PostUtilsModel {
   posts: Promise<PostInfo[]>;
@@ -33,10 +33,10 @@ class PostProvder extends PostUtilsModel {
     });
   }
 
-  async getPostcontent(postId: string): Promise<PostInfo> {
+  async getPostContent(postId: string): Promise<PostInfo> {
     const allPosts = await this.posts;
     const searchedPost = allPosts.find(
-      (post) => post.meta.postId === Number(postId),
+      (post) => post.meta.postId === Number(postId)
     );
 
     return searchedPost as PostInfo;

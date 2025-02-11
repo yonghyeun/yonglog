@@ -1,5 +1,5 @@
 ---
-title: '리팩토링 : Promise 패턴을 이용하여 비동기 처리중인 전역 객체에 접근하기'
+title: "리팩토링 : Promise 패턴을 이용하여 비동기 처리중인 전역 객체에 접근하기"
 description: Promise 패턴을 이용하여 Pending 중인 전역 객체에 접근해보자. 또 거대한 하나의 파일을 여러 모델들로 나눠 리팩토링 해보자
 thumb: public/posts/개발 블로그 개발 여정/21. 기술블로그 SEO 최적화 part2/image-1.png
 tag:
@@ -38,7 +38,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
 };
 
 export const getAllPosts = async (): Promise<Array<PostInfo>> => {
-  const POST_PATH = path.join(process.cwd(), 'public/posts');
+  const POST_PATH = path.join(process.cwd(), "public/posts");
   const posts = await parsePosts(POST_PATH);
 
   return posts.toSorted((prev, cur) => {
@@ -87,26 +87,26 @@ const objectAPromise = new Promise((resolve, reject) => {
 
 function initializeObjectA() {
   setTimeout(() => {
-    const objectA = { value: 'A is resolved' };
+    const objectA = { value: "A is resolved" };
     resolveA(objectA); /* resolveA 객체는 objectA를 resolve 한다. */
   }, 2000);
 }
 
 function methodB() {
   objectAPromise.then((objectA) => {
-    console.log('Method B executed with', objectA);
+    console.log("Method B executed with", objectA);
   });
 }
 
 function methodC() {
   objectAPromise.then((objectA) => {
-    console.log('Method C executed with', objectA);
+    console.log("Method C executed with", objectA);
   });
 }
 
 function methodD() {
   objectAPromise.then((objectA) => {
-    console.log('Method D executed with', objectA);
+    console.log("Method D executed with", objectA);
   });
 }
 
@@ -149,11 +149,11 @@ Method D executed with { value: 'A is resolved' }
 # 필요한 유틸 함수들을 캡슐화 해둔 PostUtilsModel
 
 ```tsx title="@/lib/postUtilsModel, 코드 내용은 생략"
-import type { Source, Directory, MDXSource, PostInfo } from '@/types/post';
-import type { CountObject } from '@/types/global';
+import type { Source, Directory, MDXSource, PostInfo } from "@/types/post";
+import type { CountObject } from "@/types/global";
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 class PostUtilsModel {
   isDirectory(source: Source): source is Directory {}
@@ -162,7 +162,7 @@ class PostUtilsModel {
 
   translatePath(source: Source): Source {}
 
-  isPostHasTag(postTag: PostInfo['meta']['tag'], searchParmsTag: string) {}
+  isPostHasTag(postTag: PostInfo["meta"]["tag"], searchParmsTag: string) {}
 
   incrementCount(collection: CountObject, key: string) {}
 
@@ -181,12 +181,12 @@ export default PostUtilsModel;
 # Promise 객체를 생성해두는 PostParserModel
 
 ```tsx title="@/lib/postParserModel"{10-11, 16-20,61 , 66, 68}
-import PostUtilsModel from './postUtilsModel';
-import { POST_createIssue } from './api';
+import PostUtilsModel from "./postUtilsModel";
+import { POST_createIssue } from "./api";
 
-const fs = require('fs');
-const path = require('path');
-const matter = require('gray-matter');
+const fs = require("fs");
+const path = require("path");
+const matter = require("gray-matter");
 
 export class PostParser extends PostUtilsModel {
   source: Source;
@@ -216,8 +216,8 @@ export class PostParser extends PostUtilsModel {
           if (this.isMDX(fileSource)) {
             const { data, content } = await this.getMDXData(fileSource);
 
-            const directoryPath = path.join(fileSource, '..');
-            const relatevePath = directoryPath.split('public')[1];
+            const directoryPath = path.join(fileSource, "..");
+            const relatevePath = directoryPath.split("public")[1];
 
             Posts.push({
               meta: {
@@ -245,7 +245,7 @@ export class PostParser extends PostUtilsModel {
   }
 }
 
-const PostPath = path.join(process.cwd(), 'public/posts');
+const PostPath = path.join(process.cwd(), "public/posts");
 const postParser = new PostParser(PostPath);
 
 export default postParser;
@@ -264,11 +264,11 @@ export default postParser;
 # 실제 컴포넌트들에게 값을 전달하는 PostProvider
 
 ```tsx title="@/lib/postProvider" {31, 33 , 12 , 15-18 , 2}
-import { PostInfo } from '@/types/post';
-import postParser, { PostParser } from './postParserModel';
-import PostUtilsModel from './postUtilsModel';
+import { PostInfo } from "@/types/post";
+import postParser, { PostParser } from "./postParserModel";
+import PostUtilsModel from "./postUtilsModel";
 
-import type { CountObject, CountArray } from '@/types/global';
+import type { CountObject, CountArray } from "@/types/global";
 
 class PostProvder extends PostUtilsModel {
   posts: Promise<PostInfo[]>;
@@ -285,7 +285,7 @@ class PostProvder extends PostUtilsModel {
 
   async selectPost(searchParams: URLSearchParams): Promise<PostInfo[]> {}
 
-  async getPostcontent(postId: string): Promise<PostInfo> {}
+  async getPostContent(postId: string): Promise<PostInfo> {}
 
   async getSeriesArray(series: string) {}
 
@@ -308,14 +308,14 @@ export default postProvider;
 # 실제 사용 예시
 
 ```tsx title="컴포넌트에선 postProvider를 이용해 Promise<Post> 를 전달받는다." {9}
-import postProvider from '@/app/lib/postProvider';
+import postProvider from "@/app/lib/postProvider";
 
 export const PostList = async ({
   searchParams,
 }: {
   searchParams: URLSearchParams;
 }) => {
-  const page = searchParams.get('page') || '1';
+  const page = searchParams.get("page") || "1";
   const postList = await postProvider.selectPost(searchParams);
 
   const POSTS_PER_PAGES = Number(process.env.POSTS_PER_PAGES);

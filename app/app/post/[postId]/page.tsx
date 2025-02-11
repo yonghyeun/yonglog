@@ -10,7 +10,7 @@ import PostSideBar from "@/components/PostSideBar";
 
 import PostPagination from "@/components/PostPagination";
 import Comments from "@/components/client/Comments";
-import { LoadingContnet } from "@/components/Loading";
+import { LoadingContent } from "@/components/Loading";
 
 import { getMdxComponents } from "@/lib/getMdxComponents";
 import postProvider from "@/lib/postProvider";
@@ -26,7 +26,7 @@ export async function generateMetadata({
 }: {
   params: { postId: string };
 }): Promise<Metadata> {
-  const { meta } = await postProvider.getPostcontent(params.postId);
+  const { meta } = await postProvider.getPostContent(params.postId);
 
   const baseUrl = "https://abonglog.me";
 
@@ -56,7 +56,7 @@ export async function generateMetadata({
 }
 
 const PostPage = async ({ params }: { params: { postId: string } }) => {
-  const { meta, content } = await postProvider.getPostcontent(params.postId);
+  const { meta, content } = await postProvider.getPostContent(params.postId);
 
   const components = getMdxComponents({}, meta.path);
 
@@ -68,7 +68,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
       <main className="w-[100%] lg:w-[150%] flex">
         <section className=" w-[100%]  lg:w-[70%] lg:mr-[2rem]">
           <SeriesAccordions meta={meta} />
-          <Suspense fallback={<LoadingContnet />}>
+          <Suspense fallback={<LoadingContent />}>
             <PostHeadThumbnail
               imageSrc={meta.validThumbnail}
               title={meta.title}

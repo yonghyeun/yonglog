@@ -1,12 +1,12 @@
-import { LoadingTitle, LoadingContnet } from '@/components/Loading';
+import { LoadingTitle, LoadingContent } from "@/components/Loading";
 
 const PostLoading = () => (
   <>
-    <header className='pt-14 mb-12'>
+    <header className="pt-14 mb-12">
       <LoadingTitle />
     </header>
-    <main className='px-14'>
-      <LoadingContnet />
+    <main className="px-14">
+      <LoadingContent />
     </main>
   </>
 );

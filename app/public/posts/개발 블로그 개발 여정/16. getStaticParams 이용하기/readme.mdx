@@ -25,7 +25,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
         <PostTitle meta={meta} />
       </header>
       <main className="px-14">
-        <Suspense fallback={<LoadingContnet />}>
+        <Suspense fallback={<LoadingContent />}>
           <MDXRemote
             source={content}
             components={components}
@@ -63,7 +63,7 @@ export default PostPage;
 ![Suspense 컴포넌트 도입 전](<loadingtsx fail.gif>)
 
 ```tsx title="app/[postId]/loading.tsx"
-import { LoadingTitle, LoadingContnet } from "@/components/Loading";
+import { LoadingTitle, LoadingContent } from "@/components/Loading";
 
 const PostLoading = () => (
   <>
@@ -71,7 +71,7 @@ const PostLoading = () => (
       <LoadingTitle />
     </header>
     <main className="px-14">
-      <LoadingContnet />
+      <LoadingContent />
     </main>
   </>
 );
@@ -142,7 +142,7 @@ import remarkGfm from "remark-gfm";
 import PostTitle from "@/components/PostTitle";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
-import { LoadingContnet } from "@/components/Loading";
+import { LoadingContent } from "@/components/Loading";
 
 import { getMdxComponents } from "../lib/mdxComponents";
 import { getPostContent } from "../lib/post";
@@ -157,7 +157,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
         <PostTitle meta={meta} />
       </header>
       <main className="px-14">
-        <Suspense fallback={<LoadingContnet />}>
+        <Suspense fallback={<LoadingContent />}>
           <MDXRemote
             source={content}
             components={components}
