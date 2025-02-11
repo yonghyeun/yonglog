@@ -9,6 +9,7 @@
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  font-signature: "none";
 }
 
 @font-face {
@@ -31,7 +32,6 @@
 
 @font-face {
   font-family: Menlo;
-
   src: url("/fonts/Menlo-Regular.ttf") format("woff2"),
     url("/fonts/Menlo-Regular.ttf") format("woff"),
     url("/fonts/Menlo-Regular.ttf") format("truetype");
@@ -81,8 +81,9 @@
 
 [data-theme="dark"] {
   /* --background-color: linear-gradient(176deg, #111 10%, #12181b 50%, #202737); */
-  --background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
-  --color: #fefefe;
+  /* --background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737); */
+  --background: #12181b;
+  --color: #e0e0e0;
   --side-bar-title: rgb(129 140 248);
   --blockquote-background: linear-gradient(
     176deg,
@@ -122,12 +123,10 @@ body {
   color: var(--color);
 }
 
-body[data-theme="dark"] {
-  background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737);
-}
-
 p {
   text-indent: 0.5rem;
+  font-size: 1.1rem;
+  margin: 1rem 0rem;
 }
 
 .tag {
@@ -231,12 +230,13 @@ hr {
 
 pre {
   overflow-x: auto;
-  font-family: Victor Mono, var(--font-jetBrainsMono), Menlo;
+  font-family: Victor Mono, D2Coding, var(--font-jetBrainsMono), Menlo;
   padding-top: 1rem;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
   border-radius: 0px 0px 10px 10px;
   scrollbar-width: none;
+  font-signature: "none";
 }
 
 pre::-webkit-scrollbar {
@@ -249,17 +249,18 @@ pre {
 
 pre > code {
   display: grid;
-  font-size: 80%;
+  font-size: inherit;
 }
 
 pre span[data-line] {
   @apply inline-block px-4 py-0.5;
-  font-family: Victor Mono, var(--font-jetBrainsMono), Menlo;
+  font-family: Victor Mono, D2Coding, var(--font-jetBrainsMono), Menlo;
   font-weight: 500;
+  font-size: 90%;
 }
 
 code {
-  font-family: D2Coding;
+  font-family: inherit;
   font-size: 80%;
 }
 
@@ -271,10 +272,12 @@ code {
 p > code,
 strong > code,
 li > code {
-  font-family: D2Coding;
-  background-color: #aaaaaa63;
+  font-family: inherit;
+  background-color: #aaaaaa65;
   padding: 0px 5px;
-  border-radius: 5px;
+  border-radius: 4px;
+  font-size: inherit;
+  margin: 0 0.2rem;
 }
 
 code > [data-line]::before {

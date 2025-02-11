@@ -16,7 +16,7 @@ export const useMDXComponents = (
       return (
         <>
           <h1
-            className="text-3xl border-b-[2px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold  bg-inherit"
+            className="text-4xl border-b-[2px] my-8 py-4  border-gray-300  bg-inherit"
             id={children as string}
           >
             {children}
@@ -26,7 +26,7 @@ export const useMDXComponents = (
     },
     h2: ({ children }) => (
       <h2
-        className="   text-2xl border-b-[1px]  mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 "
+        className="   text-3xl border-b-[1px]  my-8 py-4  border-gray-300 leading-7 "
         id={children as string}
       >
         {children}
@@ -34,14 +34,14 @@ export const useMDXComponents = (
     ),
     h3: ({ children }) => (
       <h3
-        className="   text-xl border-b-[1px] mt-4 pt-8 pb-2 mb-2 border-gray-300 font-semibold leading-7 "
+        className="   text-2xl border-b-[1px] my-8 py-4  border-gray-300  leading-7 "
         id={children as string}
       >
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="text-lg border-b-[1px]  py-2 mb-2 border-gray-300 font-semibold leading-7">
+      <h4 className="text-xl border-b-[1px]  my-8 py-4 border-gray-300 font-semibold leading-7">
         {children}
       </h4>
     ),
@@ -54,11 +54,13 @@ export const useMDXComponents = (
       </blockquote>
     ),
     p: ({ children }) => (
-      <p className="whitespace-pre-wrap break-all mb-2  leading-slug text-lg">
+      <p className="whitespace-pre-wrap break-all mb-2  leading-slug ">
         {children}
       </p>
     ),
-    strong: ({ children }) => <strong>{children}</strong>,
+    strong: ({ children }) => (
+      <strong className="font-normal">{children}</strong>
+    ),
     img: ({
       src,
       alt,
@@ -102,7 +104,7 @@ export const useMDXComponents = (
     },
     a: ({ href, children }) => (
       <a href={href} className="text-blue-500">
-        🪢 {children}
+        {children}
       </a>
     ),
     ul: ({ children }) => (

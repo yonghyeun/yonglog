@@ -13,7 +13,7 @@ const Profile = () => (
 
 const Title = () => (
   <section className="py-4">
-    <section className="text-xl font-bold">
+    <section className="text-xl">
       <p className="block mb-2">열심히 공부한 내용을 기록 하고 공유 하여</p>
       <p className="block mb-2">함께 성장 하고싶어 만든 </p>
       <p className="block  mb-2">기술 블로그입니다.</p>
@@ -31,6 +31,7 @@ const Introduce = () => {
       <div className="flex gap-2">
         <a
           href="https://velog.io/@yonghyeun/posts"
+          target="blank"
           className="border border-gray-400 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none font-light text-sm
           italic"
         >
@@ -38,10 +39,19 @@ const Introduce = () => {
         </a>
         <a
           href="https://www.highlightcode.site/"
+          target="blank"
           className="border border-gray-400 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none font-light text-sm
     italic"
         >
           HighlightCode
+        </a>
+        <a
+          href="https://chromewebstore.google.com/detail/refnote/blbabamfjjhmbmcfcpjajlkngfgjmknm?hl=ko&utm_source=ext_sidebar"
+          target="blank"
+          className="border border-gray-400 rounded-l-3xl rounded-r-3xl text-center px-4 py-2 focus:outline-none font-light text-sm
+    italic"
+        >
+          RefNote
         </a>
       </div>
     </section>
