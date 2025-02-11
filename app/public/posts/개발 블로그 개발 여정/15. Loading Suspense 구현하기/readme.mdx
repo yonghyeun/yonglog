@@ -16,25 +16,25 @@ seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 �
 # Loading Suspense 가 필요한 이유
 
 ```tsx title="app/[postId]/page.tsx" {11,17,20-36}
-import rehypePrettyCode from 'rehype-pretty-code';
-import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 
-import PostTitle from '@/components/PostTitle';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import PostTitle from "@/components/PostTitle";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
-import { useMDXComponents } from '../lib/mdxComponents';
-import { getPostContent } from '../lib/post';
+import { getMdxComponents } from "../lib/mdxComponents";
+import { getPostContent } from "../lib/post";
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <MDXRemote
           source={content}
           components={components}
@@ -45,7 +45,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                 [
                   rehypePrettyCode,
                   {
-                    theme: 'material-theme-palenight',
+                    theme: "material-theme-palenight",
                   },
                 ],
               ],
@@ -112,14 +112,14 @@ export default PostPage;
 ```tsx title="app/[postId]/page.tsx" {11-27} showLineNumbers{12}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <MDXRemote
           source={content}
           components={components}
@@ -130,7 +130,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                 [
                   rehypePrettyCode,
                   {
-                    theme: 'material-theme-palenight',
+                    theme: "material-theme-palenight",
                   },
                 ],
               ],
@@ -172,7 +172,7 @@ export default PostPage;
 ```tsx title="기본 layout의 모습"
 const PostLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <article className='break-words  mx-auto max-w-screen-lg xl:max-w-[960px] px-4'>
+    <article className="break-words  mx-auto max-w-screen-lg xl:max-w-[960px] px-4">
       <Suspense fallback={/* loading.tsx 파일 */}>
         {children} {/* page.tsx 파일 */}
       </Suspense>
@@ -188,7 +188,7 @@ export default PostLayout;
 ```tsx title="사실 page.tsx 는 Suspense로 감싸져있어요" {4,6}#add
 const PostLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <article className='break-words  mx-auto max-w-screen-lg xl:max-w-[960px] px-4'>
+    <article className="break-words  mx-auto max-w-screen-lg xl:max-w-[960px] px-4">
       <Suspense fallback={/* loading.tsx 파일 */}>
         {children} {/* page.tsx 파일 */}
       </Suspense>
@@ -200,14 +200,14 @@ export default PostLayout;
 ```
 
 ```tsx title="app/[postId]/loading.tsx"
-import { LoadingTitle, LoadingContnet } from '@/components/Loading';
+import { LoadingTitle, LoadingContnet } from "@/components/Loading";
 
 const PostLoading = () => (
   <>
-    <header className='pt-14 mb-12'>
+    <header className="pt-14 mb-12">
       <LoadingTitle />
     </header>
-    <main className='px-14'>
+    <main className="px-14">
       <LoadingContnet />
     </main>
   </>
@@ -298,7 +298,7 @@ export const LoadingContnet = () => (
 ```tsx title="app/[postId]/page.tsx" {1-10} {11}#remove showLineNumbers{12}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
@@ -340,27 +340,27 @@ export default PostPage;
 그!래!서! `MDXRemote` 컴포넌트가 `RSCP` 형태로 클라이언트에게 보내질 때 해당 부분을 `loading.tsx` 에서 사용했던 컴포넌틀르 이용해 `Suspense` 로 감싸 보내주었다.
 
 ```tsx {6,22,40}#add title="app/[postId]/page.tsx"
-import rehypePrettyCode from 'rehype-pretty-code';
-import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 
-import PostTitle from '@/components/PostTitle';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { Suspense } from 'react';
-import { LoadingContnet } from '@/components/Loading';
+import PostTitle from "@/components/PostTitle";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { Suspense } from "react";
+import { LoadingContnet } from "@/components/Loading";
 
-import { useMDXComponents } from '../lib/mdxComponents';
-import { getPostContent } from '../lib/post';
+import { getMdxComponents } from "../lib/mdxComponents";
+import { getPostContent } from "../lib/post";
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <Suspense fallback={<LoadingContnet />}>
           <MDXRemote
             source={content}
@@ -372,7 +372,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                   [
                     rehypePrettyCode,
                     {
-                      theme: 'material-theme-palenight',
+                      theme: "material-theme-palenight",
                     },
                   ],
                 ],

@@ -134,13 +134,13 @@ export const PostItem = ({ meta }: { meta: PostInfo['meta'] }) => (
 ![게시글 아코디언의 예시 , 시리즈의 게시글들을 가져와 시간 순으로 렌더링 한다.](image-1.png)
 
 ```tsx title="@/components/SeriesAccordions" {1-99}#add
-import AccordionsWithState from './client/AccordionsWithState';
+import AccordionsWithState from "./client/AccordionsWithState";
 
-import { getSeriesArray } from '@/app/lib/post';
+import { getSeriesArray } from "@/app/lib/post";
 
-import type { PostInfo } from '@/types/post';
+import type { PostInfo } from "@/types/post";
 
-const SeriesAccordions = ({ meta }: { meta: PostInfo['meta'] }) => {
+const SeriesAccordions = ({ meta }: { meta: PostInfo["meta"] }) => {
   const { series, postId: currentPostId } = meta;
   const allSeries = getSeriesArray(series);
 
@@ -169,7 +169,7 @@ export default SeriesAccordions;
 ```tsx title="post/[postId]/page.tsx" {7}#add showLineNumbers{21}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>

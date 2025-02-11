@@ -12,7 +12,7 @@ import PostPagination from "@/components/PostPagination";
 import Comments from "@/components/client/Comments";
 import { LoadingContnet } from "@/components/Loading";
 
-import { useMDXComponents } from "../../../hooks/mdxComponents";
+import { getMdxComponents } from "@/lib/getMdxComponents";
 import postProvider from "@/lib/postProvider";
 import PostHeadThumbnail from "@/components/PostHeadThumbnail";
 
@@ -58,7 +58,7 @@ export async function generateMetadata({
 const PostPage = async ({ params }: { params: { postId: string } }) => {
   const { meta, content } = await postProvider.getPostcontent(params.postId);
 
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>

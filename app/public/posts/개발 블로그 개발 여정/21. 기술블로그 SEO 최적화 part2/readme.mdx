@@ -162,13 +162,13 @@ seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 �
 ```tsx title="/layout.tsx" {2-36}#add
 /* 생략 */
 const layoutMeta = {
-  title: 'abonglog',
+  title: "abonglog",
   description:
-    '프론트엔드 기술 블로그입니다. 열심히 공부한 내용을 기록하고 공유하여 함께 성장하고 싶습니다.',
-  author: 'choiyonghyeun',
-  keywords: 'front-end, react,nextjs,html,css',
-  image: '/assets/profile.jpg',
-  icon: '/asset/favicon.ico',
+    "프론트엔드 기술 블로그입니다. 열심히 공부한 내용을 기록하고 공유하여 함께 성장하고 싶습니다.",
+  author: "choiyonghyeun",
+  keywords: "front-end, react,nextjs,html,css",
+  image: "/assets/profile.jpg",
+  icon: "/asset/favicon.ico",
 };
 
 export const metadata: Metadata = {
@@ -182,12 +182,12 @@ export const metadata: Metadata = {
   icons: {
     icon: layoutMeta.icon,
   },
-  robots: 'index follow',
+  robots: "index follow",
   openGraph: {
     title: layoutMeta.title,
     description: layoutMeta.description,
-    url: 'abonsolg.me',
-    type: 'article',
+    url: "abonsolg.me",
+    type: "article",
     images: layoutMeta.image,
   },
   twitter: {
@@ -243,7 +243,7 @@ time: 1718865531544
 
 ```tsx title="/post/[postId]/page.tsx" {2,9-41}#add
 /* 생략 */
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
@@ -257,7 +257,7 @@ export function generateMetadata({
 }): Metadata {
   const { meta } = getPostContent(params.postId);
 
-  const baseUrl = 'https://abonglog.me';
+  const baseUrl = "https://abonglog.me";
 
   return {
     title: meta.title,
@@ -273,7 +273,7 @@ export function generateMetadata({
           alt: meta.title,
         },
       ],
-      type: 'article',
+      type: "article",
       publishedTime: new Date(meta.time).toISOString(),
     },
     twitter: {
@@ -286,7 +286,7 @@ export function generateMetadata({
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return {
     /* 생략 */
@@ -359,36 +359,36 @@ export default function RootLayout({
 레이아웃에서 기본 값으로 사용 할 `data-theme` 의 값을 지정해 준 후 실제 클라이언트 화면에서 하이드레이션 될 때엔 로컬 스토리지에 저장된 `theme` 값에 따라 다르게 설정해주도록 했다.
 
 ```tsx title="@/components/client/ThemeButton.tsx" {15,18-21}#add
-'use client';
+"use client";
 
-import { FiMoon, FiSun } from 'react-icons/fi';
-import { useLayoutEffect, useState } from 'react';
+import { FiMoon, FiSun } from "react-icons/fi";
+import { useLayoutEffect, useState } from "react";
 
 const ThemeButton = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
 
   useLayoutEffect(() => {
-    setTheme(localStorage.getItem('theme') || 'light');
+    setTheme(localStorage.getItem("theme") || "light");
   }, []);
 
   const handleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light';
-    const contentColor = theme === 'light' ? 'rgb(248, 240, 252)' : '#111';
+    const nextTheme = theme === "light" ? "dark" : "light";
+    const contentColor = theme === "light" ? "rgb(248, 240, 252)" : "#111";
 
     setTheme(nextTheme);
-    document.documentElement.setAttribute('data-theme', nextTheme);
+    document.documentElement.setAttribute("data-theme", nextTheme);
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', contentColor);
-    localStorage.setItem('theme', nextTheme);
+      ?.setAttribute("content", contentColor);
+    localStorage.setItem("theme", nextTheme);
   };
 
-  return theme === 'light' ? (
-    <button className='py-2' onClick={handleTheme}>
+  return theme === "light" ? (
+    <button className="py-2" onClick={handleTheme}>
       <FiSun size={20} />
     </button>
   ) : (
-    <button className='py-2' onClick={handleTheme}>
+    <button className="py-2" onClick={handleTheme}>
       <FiMoon size={20} />
     </button>
   );

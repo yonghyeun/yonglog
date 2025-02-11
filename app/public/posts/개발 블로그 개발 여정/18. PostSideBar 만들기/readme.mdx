@@ -25,7 +25,7 @@ seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 �
 ```tsx title="app/[postId]/page.tsx" showLineNumbers{17} {10}#remove {11-12,32-46}#add
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
@@ -93,27 +93,27 @@ export default PostPage;
 ## Heading 텍스트 파싱하기
 
 ```tsx title="@/app/lib/interactiveSidebar.tsx" {1-29}#add
-import type { PostInfo } from '@/types/post';
+import type { PostInfo } from "@/types/post";
 
 type HeadingSize = 1 | 2 | 3;
 type HeadingText = string;
 type HeadingInfo = [HeadingSize, HeadingText];
 export type Headers = HeadingInfo[];
 
-export const parsingHeaders = (content: PostInfo['content']): Headers => {
+export const parsingHeaders = (content: PostInfo["content"]): Headers => {
   const headers: Headers = [];
-  const splitedContent = content.split('\r\n');
+  const splitedContent = content.split("\r\n");
   splitedContent.forEach((paragraph) => {
-    const [headerSize, ...headerText] = paragraph.split(' ');
+    const [headerSize, ...headerText] = paragraph.split(" ");
     switch (headerSize) {
-      case '#':
-        headers.push([1, headerText.join(' ')]);
+      case "#":
+        headers.push([1, headerText.join(" ")]);
         break;
-      case '##':
-        headers.push([2, headerText.join(' ')]);
+      case "##":
+        headers.push([2, headerText.join(" ")]);
         break;
-      case '###':
-        headers.push([3, headerText.join(' ')]);
+      case "###":
+        headers.push([3, headerText.join(" ")]);
         break;
       default:
         break;
@@ -132,12 +132,12 @@ export const parsingHeaders = (content: PostInfo['content']): Headers => {
 
 ```tsx title="parsingHeaders의 반환값 예시"
 [
-  [1, '사이드바 프로토타입 만들기'],
-  [1, 'Header 데이터로 계층적 ul , list 생성하기'],
-  [2, 'Heading 텍스트 파싱하기'],
-  [2, '파싱한 Heading 텍스트를 이용해 계층적 ul , li 만들기'],
-  [1, 'PostSideBar 컴포넌트 생성하기'],
-  [1, '라우팅은 어떻게 할까?'],
+  [1, "사이드바 프로토타입 만들기"],
+  [1, "Header 데이터로 계층적 ul , list 생성하기"],
+  [2, "Heading 텍스트 파싱하기"],
+  [2, "파싱한 Heading 텍스트를 이용해 계층적 ul , li 만들기"],
+  [1, "PostSideBar 컴포넌트 생성하기"],
+  [1, "라우팅은 어떻게 할까?"],
 ];
 ```
 
@@ -148,25 +148,25 @@ export const createList = (
   headers: Headers,
   index: number = 0,
   beforeHeadingSize: number = 0,
-  list: React.ReactNode[] = [],
+  list: React.ReactNode[] = []
 ) => {
   while (index < headers.length) {
     const [currentHeadingSize, text] = headers[index];
     if (currentHeadingSize > beforeHeadingSize) {
       const subList = createList(headers, index, currentHeadingSize);
       list.push(
-        <ul key={`ul-${index}`} className='px-4'>
+        <ul key={`ul-${index}`} className="px-4">
           {subList.list}
-        </ul>,
+        </ul>
       );
       index = subList.nextIndex;
     } else if (currentHeadingSize < beforeHeadingSize) {
       return { list, nextIndex: index };
     } else {
       list.push(
-        <li key={`li-${index++}`} className='mb-2'>
+        <li key={`li-${index++}`} className="mb-2">
           {text}
-        </li>,
+        </li>
       );
     }
   }
@@ -189,10 +189,10 @@ export const createList = (
 [
   {
     $$typeof: Symbol(react.element),
-    type: 'ul',
-    key: 'ul-0',
+    type: "ul",
+    key: "ul-0",
     ref: null,
-    props: { className: 'px-4', children: [Array] },
+    props: { className: "px-4", children: [Array] },
     _owner: null,
     _store: {},
   },
@@ -204,16 +204,16 @@ export const createList = (
 이후 클라이언트 컴포넌트로 `PostSideBar` 컴포넌트를 생성해주자
 
 ```tsx title="@/components/client/PostSideBar.tsx" {1-18}#add
-import { parsingHeaders, createList } from '@/app/lib/interactiveSidebar';
+import { parsingHeaders, createList } from "@/app/lib/interactiveSidebar";
 
-import type { PostInfo } from '@/types/post';
+import type { PostInfo } from "@/types/post";
 
-const PostSideBar = ({ content }: { content: PostInfo['content'] }) => {
+const PostSideBar = ({ content }: { content: PostInfo["content"] }) => {
   const headers = parsingHeaders(content);
   const { list: PostHeaderList } = createList(headers);
 
   return (
-    <nav className='sticky top-[15rem] w-max-[300px] border-l-[2px] '>
+    <nav className="sticky top-[15rem] w-max-[300px] border-l-[2px] ">
       {PostHeaderList}
     </nav>
   );
@@ -225,15 +225,15 @@ export default PostSideBar;
 ```tsx title="/[postId]/page.tsx" showLineNumbers{18} {33}#add
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='w-[100%] lg:w-[150%] flex'>
-        <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+      <main className="w-[100%] lg:w-[150%] flex">
+        <section className="px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]">
           <Suspense fallback={<LoadingContnet />}>
             <MDXRemote
               source={content}
@@ -245,7 +245,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                     [
                       rehypePrettyCode,
                       {
-                        theme: 'material-theme-darker',
+                        theme: "material-theme-darker",
                       },
                     ],
                   ],
@@ -254,7 +254,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
             />
           </Suspense>
         </section>
-        <section className='hidden lg:block'>
+        <section className="hidden lg:block">
           <PostSideBar content={content} />
         </section>
       </main>
@@ -274,14 +274,14 @@ export default PostPage;
 ```tsx title="app/[postId]/page.tsx" showLineNumbers{17} {17}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <Suspense fallback={<LoadingContnet />}>
           <MDXRemote
             source={content}
@@ -293,7 +293,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                   [
                     rehypePrettyCode,
                     {
-                      theme: 'material-theme-darker',
+                      theme: "material-theme-darker",
                     },
                   ],
                 ],
@@ -358,16 +358,16 @@ export const createList = (
   headers: Headers,
   index: number = 0,
   beforeHeadingSize: number = 0,
-  list: React.ReactNode[] = [],
+  list: React.ReactNode[] = []
 ) => {
   while (index < headers.length) {
     const [currentHeadingSize, text] = headers[index];
     if (currentHeadingSize > beforeHeadingSize) {
       const subList = createList(headers, index, currentHeadingSize);
       list.push(
-        <ul key={`ul-${index}`} className='px-4'>
+        <ul key={`ul-${index}`} className="px-4">
           {subList.list}
-        </ul>,
+        </ul>
       );
       index = subList.nextIndex;
     } else if (currentHeadingSize < beforeHeadingSize) {
@@ -375,10 +375,10 @@ export const createList = (
     } else {
       list.push(
         <Link href={`#${text}`}>
-          <li key={`li-${index++}`} className='mb-2'>
+          <li key={`li-${index++}`} className="mb-2">
             {text}
           </li>
-        </Link>,
+        </Link>
       );
     }
   }
@@ -435,24 +435,24 @@ export type HeadingNumber = number;
 export type HeadingInfo = [HeadingSize, HeadingText, HeadingNumber];
 export type Headers = HeadingInfo[];
 
-export const parsingHeaders = (content: PostInfo['content']): Headers => {
+export const parsingHeaders = (content: PostInfo["content"]): Headers => {
   const headers: Headers = [];
-  const splitedContent = content.split('\n');
+  const splitedContent = content.split("\n");
 
   splitedContent.forEach((paragraph, index) => {
-    const [headerSize, ...headerText] = paragraph.split(' ');
+    const [headerSize, ...headerText] = paragraph.split(" ");
     switch (headerSize) {
-      case '#':
+      case "#":
         // headers.push([1, headerText.join(' ')]);
-        headers.push([1, headerText.join(' '), index]);
+        headers.push([1, headerText.join(" "), index]);
         break;
-      case '##':
+      case "##":
         // headers.push([1, headerText.join(' ')]);
-        headers.push([2, headerText.join(' '), index]);
+        headers.push([2, headerText.join(" "), index]);
         break;
-      case '###':
+      case "###":
         // headers.push([1, headerText.join(' ')]);
-        headers.push([3, headerText.join(' '), index]);
+        headers.push([3, headerText.join(" "), index]);
         break;
       default:
         break;
@@ -469,9 +469,9 @@ export const parsingHeaders = (content: PostInfo['content']): Headers => {
 ## ActiveContext 생성
 
 ```tsx title="@/components/client/ActiveContext.tsx" {1-27}#add
-'use client';
+"use client";
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
 type ActiveContextType = {
   activeIndex: number;
@@ -506,11 +506,11 @@ export const useActiveContext = () => {
 ## ActiveContext 를 구독 하는 ActiveHeader 컴포넌트 생성
 
 ```tsx title="@/components/client/ActiveHeader.tsx" {1-14, 17-23 , 31-35 , 38-41,44-55}#add {15-16,24-30 , 36-37 , 42-43}
-'use client';
-import { useActiveContext } from '@/app/context/ActiveContext';
-import { useEffect } from 'react';
+"use client";
+import { useActiveContext } from "@/app/context/ActiveContext";
+import { useEffect } from "react";
 
-import type { HeadingText, HeadingNumber } from '@/app/lib/interactiveSidebar';
+import type { HeadingText, HeadingNumber } from "@/app/lib/interactiveSidebar";
 
 const ActiveHeader = ({
   headingText,
@@ -525,7 +525,7 @@ const ActiveHeader = ({
 
     const options = {
       root: null,
-      rootMargin: '0px',
+      rootMargin: "0px",
       threshold: 1.0,
     };
 
@@ -546,7 +546,7 @@ const ActiveHeader = ({
 
   return (
     <li
-      className='mb-2'
+      className="mb-2"
       data-active={isActive}
       data-underActive={isUnderActive}
     >
@@ -582,16 +582,16 @@ export const createList = (
   headers: Headers,
   index: number = 0,
   beforeHeadingSize: number = 0,
-  list: React.ReactNode[] = [],
+  list: React.ReactNode[] = []
 ) => {
   while (index < headers.length) {
     const [currentHeadingSize, text] = headers[index];
     if (currentHeadingSize > beforeHeadingSize) {
       const subList = createList(headers, index, currentHeadingSize);
       list.push(
-        <ul key={`ul-${index}`} className='px-4'>
+        <ul key={`ul-${index}`} className="px-4">
           {subList.list}
-        </ul>,
+        </ul>
       );
       index = subList.nextIndex;
     } else if (currentHeadingSize < beforeHeadingSize) {
@@ -603,7 +603,7 @@ export const createList = (
             {text}
           </li> */}
           <ActiveHeader headingNumber={index} headingText={text} />
-        </Link>,
+        </Link>
       );
       index++;
     }
@@ -629,7 +629,7 @@ export const createList = (
   --underactive-sidebar-color: rgb(30 27 75); /* bg-indigo-950 */
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --background-color: #111;
   --color: rgb(248 250 252); /* bg-slate-50 */
   --side-bar-title: rgb(129 140 248);
@@ -642,14 +642,14 @@ export const createList = (
 ```
 
 ```css title="global.css" {1-12}#add showLineNumbers{63}
-li[data-active='true'] {
+li[data-active="true"] {
   color: var(--active-sidebar-color);
   font-weight: 700;
   font-size: 120%;
   transition: 0.3s ease-in-out;
 }
 
-li[data-underActive='true'] {
+li[data-underActive="true"] {
   color: var(--underactive-sidebar-color);
   font-weight: 700;
   transition: 0.3s ease-in-out;

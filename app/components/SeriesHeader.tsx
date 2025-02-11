@@ -1,19 +1,19 @@
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { useMDXComponents } from '@/hooks/mdxComponents';
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { getMdxComponents } from "@/lib/getMdxComponents";
 
-import type { PostMeta } from '@/types/post';
+import type { PostMeta } from "@/types/post";
 
 const SeriesHeader = ({
   seriesHeader,
 }: {
-  seriesHeader: PostMeta['seriesHeader'] | null;
+  seriesHeader: PostMeta["seriesHeader"] | null;
 }) => {
   const isHeaderExsit = seriesHeader !== null;
-  const components = useMDXComponents({});
+  const components = getMdxComponents({});
 
   return isHeaderExsit ? (
     <section>
-      <MDXRemote source={seriesHeader || ''} components={components} />
+      <MDXRemote source={seriesHeader || ""} components={components} />
     </section>
   ) : (
     <></>

@@ -47,19 +47,19 @@ GraphQL 을 배워볼까 했지만 할 일이 산더미기 때문에 우선은 �
 
 ```tsx title="이슈에 달린 댓글 리스트를 가져오는 GET요청의 예시" {2}
 const octokit = new Octokit({
-  auth: 'YOUR-TOKEN',
+  auth: "YOUR-TOKEN",
 });
 
 await octokit.request(
-  'GET /repos/{owner}/{repo}/issues/{issue_number}/comments',
+  "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
   {
-    owner: 'OWNER',
-    repo: 'REPO',
-    issue_number: 'ISSUE_NUMBER',
+    owner: "OWNER",
+    repo: "REPO",
+    issue_number: "ISSUE_NUMBER",
     headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
+      "X-GitHub-Api-Version": "2022-11-28",
     },
-  },
+  }
 );
 ```
 
@@ -92,13 +92,13 @@ import type {
   Header,
   RequestOptions,
   HTTPResponse,
-} from '@/types/api';
+} from "@/types/api";
 
 export default class GithubAPI {
-  private static BASE_URL = 'https://api.github.com';
+  private static BASE_URL = "https://api.github.com";
   private static baseHeader: Header = {
     Authorization: `token ${process.env.PERSONAL_ACCESS_TOKEN}`,
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 
   private static setHeaders(headers: Header) {
@@ -115,7 +115,7 @@ export default class GithubAPI {
 
   static async GET<T>(
     endPoint: string,
-    requestOptions: RequestOptions,
+    requestOptions: RequestOptions
   ): Promise<HTTPResponse<T>> {
     const { additionalHeader, queryParameter } = requestOptions;
     const url = this.setURL(endPoint, queryParameter || {});
@@ -123,7 +123,7 @@ export default class GithubAPI {
 
     try {
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers,
       });
       if (!response.ok) {
@@ -140,7 +140,7 @@ export default class GithubAPI {
 
   static async POST<T>(
     endPoint: string,
-    requestOptions: RequestOptions,
+    requestOptions: RequestOptions
   ): Promise<HTTPResponse<T>> {
     const { additionalHeader, queryParameter, body } = requestOptions;
     const url = this.setURL(endPoint, queryParameter || {});
@@ -148,7 +148,7 @@ export default class GithubAPI {
 
     try {
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers,
         body: JSON.stringify(body),
       });
@@ -185,9 +185,9 @@ export default class GithubAPI {
 [Github DOCS - List repository-issues](https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues)
 
 ```tsx title="/lib/api.tsx" {1-99}#add
-import GithubAPI from './GithubModel';
+import GithubAPI from "./GithubModel";
 
-import type { IssueList } from '@/types/api';
+import type { IssueList } from "@/types/api";
 
 /**
  * yonglog 레파지토리에 존재하는 이슈에 대한 정보를 GET 요청하여 가져오는 메소드
@@ -195,10 +195,10 @@ import type { IssueList } from '@/types/api';
  * 전체 포스트의 개수에 따라 달라질 수 있다.
  */
 export const GET_issueList = async (page: number = 1) => {
-  const endPoint = '/repos/yonghyeun/yonglog/issues';
+  const endPoint = "/repos/yonghyeun/yonglog/issues";
   const queryParameter = {
-    per_page: '30',
-    labels: 'comment',
+    per_page: "30",
+    labels: "comment",
     page: String(page),
   };
 
@@ -216,19 +216,19 @@ export const GET_issueList = async (page: number = 1) => {
 ```tsx title="GET_issueList 응답값의 일부 형태"
 [
   {
-    url: 'https://api.github.com/repos/yonghyeun/yonglog/issues/9',
+    url: "https://api.github.com/repos/yonghyeun/yonglog/issues/9",
     number: 9,
-    title: '테스트용 이슈입니다',
-    body: '바디바디바디 당근당근 ',
+    title: "테스트용 이슈입니다",
+    body: "바디바디바디 당근당근 ",
     user: {},
     labels: [[Object]],
-    state: 'open',
+    state: "open",
     comments: 0,
     reactions: {
-      url: 'https://api.github.com/repos/yonghyeun/yonglog/issues/9/reactions',
+      url: "https://api.github.com/repos/yonghyeun/yonglog/issues/9/reactions",
       total_count: 0,
-      '+1': 0,
-      '-1': 0,
+      "+1": 0,
+      "-1": 0,
       laugh: 0,
       hooray: 0,
       confused: 0,
@@ -259,17 +259,17 @@ export const GET_issueList = async (page: number = 1) => {
  * 특정 게시글의 meta 데이터를 이용해 이슈 게시글을 생성하는 메소드
  * @param {PostInfo['meta']} 특정 게시글의 메타데이터
  */
-export const POST_issuePost = async (meta: PostInfo['meta']) => {
+export const POST_issuePost = async (meta: PostInfo["meta"]) => {
   const { title, postId } = meta;
-  const endPoint = '/repos/yonghyeun/yonglog/issues';
+  const endPoint = "/repos/yonghyeun/yonglog/issues";
   const additionalHeader = {
-    Accept: 'application/json',
+    Accept: "application/json",
   };
   const body = {
     title,
     body: `<a href = 'https://abonglog.me/post/${postId}'>해당 게시글</a>의 댓글을 저장하는 저장소입니다.`,
-    labels: ['comment'],
-    assignees: ['yonghyeun'],
+    labels: ["comment"],
+    assignees: ["yonghyeun"],
   };
   const response = await GithubAPI.POST<Issue>(endPoint, {
     body,
@@ -286,7 +286,7 @@ export const POST_issuePost = async (meta: PostInfo['meta']) => {
 ```tsx title="/post/[postId]/page.tsx" {6-99}#add showLineNumbers{59}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   // 단순히 실험을 위한 즉시 실행 함수
   (async function () {
@@ -312,26 +312,26 @@ const parsePosts = (source: Source): Array<PostInfo> => {
         parseRecursively(fileSource);
       } else {
         if (isMDX(fileSource)) {
-          const fileContent = fs.readFileSync(fileSource, 'utf8');
+          const fileContent = fs.readFileSync(fileSource, "utf8");
           const { data, content } = matter(filterContent(fileContent));
 
           /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
           if (!data.postId) {
             data.postId = Math.ceil(Math.random() * 9 * 100000);
             const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+            fs.writeFileSync(fileSource, updatedContent, "utf-8");
           }
           /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
           if (!data.date) {
             data.date = new Date().toDateString();
             data.time = new Date().getTime();
             const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+            fs.writeFileSync(fileSource, updatedContent, "utf-8");
           }
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
-          const directoryPath = path.join(fileSource, '..');
-          const relatevePath = directoryPath.split('public')[1];
+          const directoryPath = path.join(fileSource, "..");
+          const relatevePath = directoryPath.split("public")[1];
 
           Posts.push({
             meta: {
@@ -371,7 +371,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
         await parseRecursively(fileSource);
       } else {
         if (isMDX(fileSource)) {
-          const fileContent = fs.readFileSync(fileSource, 'utf8');
+          const fileContent = fs.readFileSync(fileSource, "utf8");
           const { data, content } = matter(filterContent(fileContent));
 
           /* data.postId 가 존재하지 않으면 PostID 를 생성한 후 Post 저장*/
@@ -379,14 +379,14 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
             data.postId = Math.ceil(Math.random() * 9 * 100000);
 
             const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+            fs.writeFileSync(fileSource, updatedContent, "utf-8");
           }
           /* data.date , time 이 존재하지 않으면 build 타임 기준으로 하여 생성 */
           if (!data.date) {
             data.date = new Date().toDateString();
             data.time = new Date().getTime();
             const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+            fs.writeFileSync(fileSource, updatedContent, "utf-8");
           }
 
           /* data.issueNumber 가 존재하지 않을 경우 깃허브 API를 이용해 이슈 생성
@@ -395,7 +395,7 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
             // race condition 방지 위해 flag 설정하고 동기적으로 내용 수정
             data.issueFlag = true;
             const updatedContent = matter.stringify(content, data);
-            fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+            fs.writeFileSync(fileSource, updatedContent, "utf-8");
 
             // 깃허브 API를 이용해 새로운 이슈를 생성하고 이슈 넘버를 메타데이터에 저장
             try {
@@ -408,13 +408,13 @@ const parsePosts = async (source: Source): Promise<Array<PostInfo>> => {
               data.issueNumber = undefined;
             } finally {
               const updatedContent = matter.stringify(content, data);
-              fs.writeFileSync(fileSource, updatedContent, 'utf-8');
+              fs.writeFileSync(fileSource, updatedContent, "utf-8");
             }
           }
 
           /* 추후 이미지 파일에 접근하기 위해 해당 포스트가 존재하는 폴더 명을 meta 데이터에 저장 */
-          const directoryPath = path.join(fileSource, '..');
-          const relatevePath = directoryPath.split('public')[1];
+          const directoryPath = path.join(fileSource, "..");
+          const relatevePath = directoryPath.split("public")[1];
 
           Posts.push({
             meta: {

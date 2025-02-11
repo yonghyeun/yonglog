@@ -1,6 +1,6 @@
 ---
 title: 기술블로그에 giscus를 이용하여 댓글 기능을 추가하기
-description: '기술 블로그 댓글 기능의 국밥 라이브러리 Giscus , 마우스 딸깍으로 댓글 기능 추가하기'
+description: "기술 블로그 댓글 기능의 국밥 라이브러리 Giscus , 마우스 딸깍으로 댓글 기능 추가하기"
 thumb: public/posts/개발 블로그 개발 여정/19. Giscus 이용하여 댓글 기능 추가하기/image-8.png
 tag:
   - nextjs
@@ -19,18 +19,18 @@ seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 �
 // 코드들 생략
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='w-[100%] lg:w-[150%] flex'>
-        <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+      <main className="w-[100%] lg:w-[150%] flex">
+        <section className="px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]">
           {/* mdx 를 파싱하여 생성한 본문 컴포넌트 */}
         </section>
-        <section className='hidden lg:block'>{/* 사이드바 컴포넌트 */}</section>
+        <section className="hidden lg:block">{/* 사이드바 컴포넌트 */}</section>
       </main>
     </>
   );
@@ -59,7 +59,7 @@ export default PostPage;
 
 `giscus` 공식 문서에서도 큰 영감을 받았다고 설명하는 `utterances` 라이브러리의 경우에는 레파지토리의 `issue` 를 이용해 댓글을 생성해주었다.
 
-<a href='https://github.com/utterance/utterances'>utterances</a> 공식문서에서`Github
+<a href="https://github.com/utterance/utterances">utterances</a> 공식문서에서`Github
 issue searchAPI` 와 `Github OAuthflow` 를 활용한다고 설명한다.
 
 댓글이 달리기 위한 `issue` 포스트는 레파지토리에서 설치한 `utterances` 앱의 봇이 자동으로 생성해준다고 한다.
@@ -168,9 +168,9 @@ issue searchAPI` 와 `Github OAuthflow` 를 활용한다고 설명한다.
 그렇기에 컴포넌트에서 `ref , useEffect` 를 이용해 해당 태그를 `actual dom` 에 직접 추가해주자
 
 ```tsx title="@/components/client/GiscusComments.tsx"
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const Comments = () => {
   const commentRef = useRef<HTMLDivElement>(null);
@@ -181,34 +181,34 @@ const Comments = () => {
       return;
     }
 
-    const script = document.createElement('script');
-    script.src = 'https://giscus.app/client.js';
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
     script.async = true;
-    script.crossOrigin = 'anonymous';
-    script.setAttribute('data-repo', 'yonghyeun/yonglog');
-    script.setAttribute('data-category', 'Comments');
-    script.setAttribute('data-repo-id', 'R_kgDOMBOWoA');
-    script.setAttribute('data-category-id', 'DIC_kwDOMBOWoM4CgKYD');
-    script.setAttribute('data-mapping', 'pathname');
-    script.setAttribute('data-strict', '0');
-    script.setAttribute('data-reactions-enabled', '1');
-    script.setAttribute('data-emit-metadata', '0');
-    script.setAttribute('data-input-position', 'bottom');
-    script.setAttribute('data-theme', 'cobalt');
-    script.setAttribute('data-lang', 'ko');
+    script.crossOrigin = "anonymous";
+    script.setAttribute("data-repo", "yonghyeun/yonglog");
+    script.setAttribute("data-category", "Comments");
+    script.setAttribute("data-repo-id", "R_kgDOMBOWoA");
+    script.setAttribute("data-category-id", "DIC_kwDOMBOWoM4CgKYD");
+    script.setAttribute("data-mapping", "pathname");
+    script.setAttribute("data-strict", "0");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "0");
+    script.setAttribute("data-input-position", "bottom");
+    script.setAttribute("data-theme", "cobalt");
+    script.setAttribute("data-lang", "ko");
     commentRef.current.appendChild(script);
   }, []);
 
   useEffect(() => {
     const iframe = document.querySelector<HTMLIFrameElement>(
-      'iframe.giscus-frame',
+      "iframe.giscus-frame"
     );
-    iframe?.contentWindow?.postMessage('https://giscus.app');
+    iframe?.contentWindow?.postMessage("https://giscus.app");
   }, []);
 
   return (
     <section
-      className='border-t-[2px] pt-[3rem] giscus'
+      className="border-t-[2px] pt-[3rem] giscus"
       ref={commentRef}
     ></section>
   );
@@ -227,7 +227,7 @@ export default Comments;
 
 ```tsx title="/[postId]/page.tsx" {2,44}#add showLineNumbers{6}
 /* 이하 코드 생략 */
-import Comments from '@/components/client/GiscusComments';
+import Comments from "@/components/client/GiscusComments";
 
 export function generateStaticParams(): { postId: string }[] {
   const allPost = getAllPosts();
@@ -236,15 +236,15 @@ export function generateStaticParams(): { postId: string }[] {
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='w-[100%] lg:w-[150%] flex'>
-        <section className='px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]'>
+      <main className="w-[100%] lg:w-[150%] flex">
+        <section className="px-7 w-[100%] lg:px-14 lg:w-[70%] lg:mr-[2rem]">
           <Suspense fallback={<LoadingContnet />}>
             <MDXRemote
               source={content}
@@ -256,7 +256,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                     [
                       rehypePrettyCode,
                       {
-                        theme: 'material-theme-darker',
+                        theme: "material-theme-darker",
                       },
                     ],
                   ],
@@ -265,7 +265,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
             />
           </Suspense>
         </section>
-        <section className='hidden lg:block'>
+        <section className="hidden lg:block">
           <PostSideBar content={content} />
         </section>
       </main>

@@ -101,25 +101,25 @@ found 0 vulnerabilities
 > 어떻게 `md , mdx` 파일을 파싱하냐에 따라 사용 방법이 다르겠지만 **`next-mdx-remote` 의 `MDXRemote` 를 이용하는 경우엔 `MDXRemote` 옵션에 추가해줘야 한다.**
 
 ```tsx {1-2, 23-35}#add title="app/[postId]/page.tsx"
-import rehypePrettyCode from 'rehype-pretty-code';
-import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 
-import PostTitle from '@/components/PostTitle';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import PostTitle from "@/components/PostTitle";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
-import { useMDXComponents } from '../lib/mdxComponents';
-import { getPostContent } from '../lib/post';
+import { getMdxComponents } from "../lib/mdxComponents";
+import { getPostContent } from "../lib/post";
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <MDXRemote
           source={content}
           components={components}
@@ -130,7 +130,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                 [
                   rehypePrettyCode,
                   {
-                    theme: 'material-theme-palenight',
+                    theme: "material-theme-palenight",
                   },
                 ],
               ],
@@ -250,7 +250,7 @@ pre span[data-line] {
 
 ```tsx title="로컬 테마 파일 적용방법" {1-3}#add
 const options = {
-  theme: JSON.parse(fs.readFileSync('./themes/moonlight-ii.json', 'utf-8')),
+  theme: JSON.parse(fs.readFileSync("./themes/moonlight-ii.json", "utf-8")),
 };
 ```
 
@@ -271,11 +271,11 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 ````
 
 ```js {1-2,4} title="하이라이팅 결과"
-import rehypePrettyCode from 'rehype-pretty-code';
-import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 
-import PostTitle from '@/components/PostTitle';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import PostTitle from "@/components/PostTitle";
+import { MDXRemote } from "next-mdx-remote/rsc";
 ```
 
 코드 블록에서 `{}` 내부에 코드 라인 줄 수를 범위로 적어주거나, 코드 라인을 적음으로서 `span` 태그에 `data-highlighted-line` 어트리뷰트를 추가해줄 수 있다.
@@ -303,11 +303,11 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 ````
 
 ```js {1-2}#add {3-4}#remove title="그룹 하이라이팅 사용 결과"
-import rehypePrettyCode from 'rehype-pretty-code';
-import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 
-import PostTitle from '@/components/PostTitle';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import PostTitle from "@/components/PostTitle";
+import { MDXRemote } from "next-mdx-remote/rsc";
 ```
 
 ```css showLineNumbers{85} {5-11}#add title="global.css"
@@ -315,11 +315,11 @@ span[data-highlighted-line] {
   background-color: #e0e0e031;
 }
 
-span[data-highlighted-line-id='add'] {
+span[data-highlighted-line-id="add"] {
   background-color: rgba(195, 255, 0, 0.127);
 }
 
-span[data-highlighted-line-id='remove'] {
+span[data-highlighted-line-id="remove"] {
   background-color: rgba(255, 99, 71, 0.315);
 }
 ```
@@ -367,11 +367,11 @@ code > [data-line]::before {
   color: gray;
 }
 
-code[data-line-numbers-max-digits='2'] > [data-line]::before {
+code[data-line-numbers-max-digits="2"] > [data-line]::before {
   width: 2rem;
 }
 
-code[data-line-numbers-max-digits='3'] > [data-line]::before {
+code[data-line-numbers-max-digits="3"] > [data-line]::before {
   width: 3rem;
 }
 ```

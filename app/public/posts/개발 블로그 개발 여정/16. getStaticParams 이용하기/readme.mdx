@@ -17,14 +17,14 @@ seriesHeader: "해당 포스트는 NextJS를 이용하여 개발 블로그를 �
 ```tsx title="app/[postId]/page.tsx" showLineNumbers{12} {2-3 ,11-28} {11,29}#add
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <Suspense fallback={<LoadingContnet />}>
           <MDXRemote
             source={content}
@@ -36,7 +36,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                   [
                     rehypePrettyCode,
                     {
-                      theme: 'material-theme-palenight',
+                      theme: "material-theme-palenight",
                     },
                   ],
                 ],
@@ -63,14 +63,14 @@ export default PostPage;
 ![Suspense 컴포넌트 도입 전](<loadingtsx fail.gif>)
 
 ```tsx title="app/[postId]/loading.tsx"
-import { LoadingTitle, LoadingContnet } from '@/components/Loading';
+import { LoadingTitle, LoadingContnet } from "@/components/Loading";
 
 const PostLoading = () => (
   <>
-    <header className='pt-14 mb-12'>
+    <header className="pt-14 mb-12">
       <LoadingTitle />
     </header>
-    <main className='px-14'>
+    <main className="px-14">
       <LoadingContnet />
     </main>
   </>
@@ -90,7 +90,7 @@ export default PostLoading;
 ```tsx title="app/[postId]/page.tsx" {1-10} {11}#remove showLineNumbers{12}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
@@ -136,27 +136,27 @@ export default PostPage;
 그래서 나는 `MDXRemote` 컴포넌트의 렌더링이 모두 완료되기 전에 로딩 상태를 보여줄 컴포넌트를 이용해 `Suspense` 컴포넌트로 감싸주었다.
 
 ```tsx {6,22,40}#add title="app/[postId]/page.tsx"
-import rehypePrettyCode from 'rehype-pretty-code';
-import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 
-import PostTitle from '@/components/PostTitle';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { Suspense } from 'react';
-import { LoadingContnet } from '@/components/Loading';
+import PostTitle from "@/components/PostTitle";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { Suspense } from "react";
+import { LoadingContnet } from "@/components/Loading";
 
-import { useMDXComponents } from '../lib/mdxComponents';
-import { getPostContent } from '../lib/post';
+import { getMdxComponents } from "../lib/mdxComponents";
+import { getPostContent } from "../lib/post";
 
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>
-      <header className='pt-14 mb-12'>
+      <header className="pt-14 mb-12">
         <PostTitle meta={meta} />
       </header>
-      <main className='px-14'>
+      <main className="px-14">
         <Suspense fallback={<LoadingContnet />}>
           <MDXRemote
             source={content}
@@ -168,7 +168,7 @@ const PostPage = ({ params }: { params: { postId: string } }) => {
                   [
                     rehypePrettyCode,
                     {
-                      theme: 'material-theme-palenight',
+                      theme: "material-theme-palenight",
                     },
                   ],
                 ],
@@ -197,7 +197,7 @@ export default PostPage;
 ```tsx title="요청이 있을 때 마다 무거운 작업들이 호출된다." showLineNumbers{12} {2-3 , 11}
 const PostPage = ({ params }: { params: { postId: string } }) => {
   const { meta, content } = getPostContent(params.postId);
-  const components = useMDXComponents({}, meta.path);
+  const components = getMdxComponents({}, meta.path);
 
   return (
     <>

@@ -7,7 +7,7 @@ import { MDXComponents } from "mdx/types";
  * @param {MDXComponents}   [components = []] - 서드파티 라이브러리 등에서 제공하는 컴포넌트를 인수로 받을 수 있음
  * @param {string} [postPath] - post 들이 존재하는 Directory 의 경로이다. 파싱되는 img 태그의 주소를 생성 할 떄 사용된다.
  */
-export const useMDXComponents = (
+export const getMdxComponents = (
   components: MDXComponents = {},
   postPath?: string
 ): MDXComponents => {
