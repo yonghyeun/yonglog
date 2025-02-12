@@ -62,7 +62,7 @@
 }
 
 :root {
-  --background: #eee;
+  --background: #fff;
   --color: #111;
   --side-bar-title: rgb(49 46 129); /* bg-indigo-900 */
   --blockquote-background: linear-gradient(
@@ -71,7 +71,7 @@
     #12181b 50%,
     #111 transparent 55%
   );
-  --blockquote-border-color: #12181b;
+  --blockquote-border-color: rgb(75 85 99);
   --blockquote-color: rgb(75 85 99); /* bg-gray-600 */
   --active-sidebar-color: rgb(55 48 163); /* bg-indigo-800 */
   --underactive-sidebar-color: rgb(30 27 75); /* bg-indigo-950 */
@@ -139,26 +139,19 @@ h2[data-sidebar-title="true"] {
 
 blockquote[theme-block="true"] {
   border-color: var(--blockquote-border-color);
+  background: var(--blockquote-background);
   backdrop-filter: saturate(50%) blur(100px);
   color: var(--blockquote-color);
   position: relative;
   margin: 1rem 0;
+  border-left: 6px solid;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
 }
 
 blockquote[theme-block="true"] > p {
   margin: 0;
-}
-
-blockquote::before {
-  content: "";
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  bottom: 0px;
-  width: 6px;
-  background-color: var(--blockquote-border-color);
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
 }
 
 li[data-active="true"] {

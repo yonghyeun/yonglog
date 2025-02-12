@@ -48,7 +48,7 @@ export const getMdxComponents = (
     blockquote: ({ children }) => (
       <blockquote
         theme-block="true"
-        className="text-wrap   px-4 pr-2 mt-2 rounded-xl mb-2 py-2 italic  leading-7 "
+        className="text-wrap px-2 mt-2 rounded-xl mb-2 py-2 italic leading-7 "
       >
         {children}
       </blockquote>
@@ -103,8 +103,8 @@ export const getMdxComponents = (
       );
     },
     a: ({ href, children }) => (
-      <a href={href} className="text-blue-500">
-        {children}
+      <a href={href}>
+        <i>📖 {children}</i>
       </a>
     ),
     ul: ({ children }) => (
