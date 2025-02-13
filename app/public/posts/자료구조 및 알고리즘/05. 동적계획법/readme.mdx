@@ -114,9 +114,12 @@ const fibo = (n: number): number => {
 
 # 위 문제를 점화식으로 표현해보자
 
+![계단 오르기](image.png)
+
 결국 최적 부분 구조라는 것은 점화식으로 표현 가능하다는 것인데, 위 구조를 점화식으로 표현하고 코드로 구현해보자
 
 F(i) : i 번째 계단의 값
+
 G(i) : i 번째 계단까지 올랐을 때의 최대 값 (지역 최적해)
 
 i가 1 일때 G(1) = F(1)
@@ -162,7 +165,7 @@ console.log(dp[N - 1]);
 
 # 탑다운 방식으로 점화식을 문제로 표현해보기
 
-```tsx title='탑다운 방식 풀이'
+```tsx title="탑다운 방식 풀이"
 const [N, ...array] = require("fs")
   .readFileSync("./input.txt")
   .toString()
