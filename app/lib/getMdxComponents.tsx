@@ -114,7 +114,7 @@ export const getMdxComponents = (
       <ol className="list-decimal pl-8 my-2 text-[18px] ">{children}</ol>
     ),
     li: ({ children }) => (
-      <li className="text-list break-all mb-2">{children}</li>
+      <li className="text-list break-all mb-2 text-lg">{children}</li>
     ),
     ...components,
   };
