@@ -82,7 +82,7 @@
 [data-theme="dark"] {
   /* --background-color: linear-gradient(176deg, #111 10%, #12181b 50%, #202737); */
   /* --background: linear-gradient(176deg, #111 10%, #12181b 50%, #202737); */
-  --background: #12181b;
+  --background: #131313;
   --color: #e0e0e0;
   --side-bar-title: rgb(129 140 248);
   --blockquote-background: linear-gradient(
@@ -525,7 +525,6 @@ figcaption[data-rehype-pretty-code-title] {
 .wavy {
   text-decoration: underline;
   text-decoration-style: wavy;
-  text-decoration-color: #ff6347; /* 자몽색 */
   text-underline-offset: 0.2rem;
-  font-weight: 600;
+  /* font-weight: 600; */
 }

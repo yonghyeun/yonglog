@@ -59,7 +59,7 @@ export const getMdxComponents = (
       </p>
     ),
     strong: ({ children }) => (
-      <strong className="font-normal">{children}</strong>
+      <strong className="font-semibold ">{children}</strong>
     ),
     img: ({
       src,
@@ -103,7 +103,7 @@ export const getMdxComponents = (
       );
     },
     a: ({ href, children }) => (
-      <a href={href}>
+      <a href={href} className="text-blue-500 underline">
         <i>📖 {children}</i>
       </a>
     ),
